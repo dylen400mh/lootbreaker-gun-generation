@@ -1,0 +1,25 @@
+.psd-composite {
+  width: 100%;
+  max-width: 700px;
+  margin: 0 auto;
+  position: relative;
+  overflow: hidden;
+}
+
+.psd-composite__inner {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform-origin: top left;
+}
+
+/* Layer <img>s set their own px width inline; the global `img { max-width: 100% }`
+   rule was capping them at the inner's width and chopping the right edge. */
+.psd-composite__inner > img {
+  max-width: none;
+  max-height: none;
+}
+
+.psd-overlay {
+  pointer-events: auto;
+}

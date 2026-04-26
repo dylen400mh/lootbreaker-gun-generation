@@ -1,0 +1,86 @@
+.app {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 16px;
+  gap: 16px;
+}
+
+.app__header {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 4px 4px 0;
+}
+
+.app__title {
+  margin: 0;
+  font-size: 1.6rem;
+  letter-spacing: -0.02em;
+  color: var(--text);
+}
+
+.app__subtitle {
+  margin: 0;
+  color: var(--text-faint);
+  font-size: 0.85rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.app__main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-height: 0;
+}
+
+.app__empty {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  border: 1px dashed var(--border);
+  border-radius: 12px;
+  color: var(--text-faint);
+  text-align: center;
+}
+
+.app__result {
+  display: flex;
+  justify-content: center;
+}
+
+.app__controls-wrap {
+  position: sticky;
+  bottom: 0;
+  background: linear-gradient(180deg, transparent 0%, var(--bg) 30%);
+  padding-top: 8px;
+  margin: 0 -16px -16px;
+  padding-left: 16px;
+  padding-right: 16px;
+  padding-bottom: 16px;
+}
+
+@media (min-width: 768px) {
+  .app {
+    padding: 24px;
+    gap: 20px;
+  }
+
+  .app__title {
+    font-size: 2rem;
+  }
+
+
+  .app__controls-wrap {
+    position: static;
+    background: none;
+    margin: 0;
+    padding: 0;
+  }
+}
