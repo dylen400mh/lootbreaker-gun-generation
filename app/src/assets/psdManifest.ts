@@ -118,6 +118,19 @@ export function getRarityLayers(rarity: Rarity): PsdLayer[] {
   return out;
 }
 
+// The Statistics Table raster (4 dividers + Minor/Major/Grave/Lightweight row
+// labels) and the thin quote rule. The Statistics Table is post-processed at
+// extract time to strip the rasterized "Tier 1 WEAPONTYPE / Range" header and
+// the trailing "Effects" word — see `postProcessRaster` in extract-psd.mjs.
+// Live header text is overlaid as HTML by WeaponCard.
+export function getStatisticsLayers(): PsdLayer[] {
+  const out: PsdLayer[] = [];
+  const push = (l?: PsdLayer) => l && out.push(l);
+  push(findByKind('statisticsTable'));
+  push(findByKind('quoteBottomRect'));
+  return out;
+}
+
 // The 8-layer card background, in PSD bottom-up stacking order.
 export function getBackgroundLayers(): PsdLayer[] {
   const layers: PsdLayer[] = [];

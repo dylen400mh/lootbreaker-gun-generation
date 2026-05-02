@@ -1,13 +1,15 @@
-import { useMemo } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import {
   findByKind,
   getBackgroundLayers,
   getGuildLayers,
   getRarityLayers,
+  getStatisticsLayers,
   PSD_CANVAS,
 } from '../assets/psdManifest';
 import { weaponArtUrl, pickWeaponWidth } from '../assets/manifest';
 import { damageRowLayers } from '../generation/cardLayout';
+import { GUILDS } from '../generation/tables/guilds';
 import type { Weapon } from '../generation/types';
 import { PsdComposite, PsdOverlay } from './PsdComposite';
 import './WeaponCard.css';
@@ -16,12 +18,27 @@ interface Props {
   weapon: Weapon;
 }
 
+// Layout for the statistics table. The dividers and row labels come from the
+// post-processed Statistics Table raster (see extract-psd.mjs); these values
+// just place HTML overlays for the dynamic content (Tier/Range header, the
+// effects content area). Y values are in PSD canvas px.
+const STATS_LAYOUT = {
+  tableX: 60,
+  tableWidth: 881,
+  headerY: 563,
+  // Lightweight cell content begins just below the rasterized "Lightweight"
+  // label (which spans canvas y≈888-929) and aligns with its left edge.
+  effectsY: 935,
+  contentLeftX: 80,
+};
+
 export function WeaponCard({ weapon }: Props) {
   const fullName = `${weapon.name.prefix} ${weapon.name.abbrev}-${weapon.name.number} ${weapon.name.suffix}`;
 
   const baseLayers = useMemo(() => getBackgroundLayers(), []);
   const rarityLayers = useMemo(() => getRarityLayers(weapon.rarity), [weapon.rarity]);
   const guildLayers = useMemo(() => getGuildLayers(), []);
+  const statsLayers = useMemo(() => getStatisticsLayers(), []);
 
   const damageLayers = useMemo(
     () => [
@@ -33,16 +50,15 @@ export function WeaponCard({ weapon }: Props) {
   );
 
   const allLayers = useMemo(
-    () => [...baseLayers, ...rarityLayers, ...guildLayers, ...damageLayers],
-    [baseLayers, rarityLayers, guildLayers, damageLayers],
+    () => [...baseLayers, ...rarityLayers, ...guildLayers, ...statsLayers, ...damageLayers],
+    [baseLayers, rarityLayers, guildLayers, statsLayers, damageLayers],
   );
 
   // Slot anchors for HTML overlays.
   const weaponSlot = useMemo(() => findByKind('weaponArtSlot'), []);
   const nameSlot = useMemo(() => findByKind('nameTextbox'), []);
   const guildSlot = useMemo(() => findByKind('guildTextbox'), []);
-  const quoteSlot = useMemo(() => findByKind('quoteTextbox'), []);
-  const statsTable = useMemo(() => findByKind('statisticsTable'), []);
+  const quoteRect = useMemo(() => findByKind('quoteBottomRect'), []);
 
   // The PSD's weaponArtSlot bounds (610×387, aspect 1.576) extend up into the
   // rarity strip and down into the guild strip. Our source weapon PNGs are
@@ -116,47 +132,53 @@ export function WeaponCard({ weapon }: Props) {
           </PsdOverlay>
         )}
 
-        {/* Tier + Range row inside the stats table */}
-        {statsTable && (
+        {/* Tier + Type + Range header — the only HTML text inside the stats
+            table; dividers and row labels come from the rasterized PSD layer. */}
+        <PsdOverlay
+          x={STATS_LAYOUT.tableX + 20}
+          y={STATS_LAYOUT.headerY}
+          width={STATS_LAYOUT.tableWidth - 40}
+          height={47}
+          className="weapon-card__row"
+        >
+          <span>
+            Tier {weapon.tier} {weapon.type}
+          </span>
+          <span className="weapon-card__row-range">
+            <span>Range:</span>
+            <span>{weapon.range}</span>
+          </span>
+        </PsdOverlay>
+
+        {/* Module + guild bonus + special — fill the lightweight cell, below
+            the rasterized "Lightweight" label. Height is bounded to stop just
+            above the bottom rectangle. If the content would overflow, the
+            font-size auto-shrinks (down to a legible floor) so all lines stay
+            visible without bleeding onto the rule. */}
+        {quoteRect && (
           <PsdOverlay
-            x={statsTable.x + 30}
-            y={statsTable.y + 12}
-            width={statsTable.width - 60}
-            className="weapon-card__row"
+            x={STATS_LAYOUT.contentLeftX}
+            y={STATS_LAYOUT.effectsY}
+            width={STATS_LAYOUT.tableX + STATS_LAYOUT.tableWidth - STATS_LAYOUT.contentLeftX - 20}
+            height={quoteRect.y - STATS_LAYOUT.effectsY - 8}
           >
-            <span>
-              Tier {weapon.tier} {weapon.type}
-            </span>
-            <span>Range: {weapon.range}</span>
+            <AutoFitEffects weapon={weapon} />
           </PsdOverlay>
         )}
 
-        {/* Damage row labels (Minor / Major / Grave) — sit at the row y-positions */}
-        <DamageLabel y={616} text="Minor" />
-        <DamageLabel y={702} text="Major" />
-        <DamageLabel y={789} text="Grave" />
-
-        {/* Module + guild bonus + special — placed below dice grid */}
-        {statsTable && (
+        {/* Red text effect — vertically centered between the bottom rectangle
+            and the bottom of the card. Same typography as the rasterized
+            "Quote/Flavour Text" placeholder (Bahnschrift Condensed, white,
+            upright — not italic). */}
+        {weapon.redText && quoteRect && (
           <PsdOverlay
-            x={statsTable.x + 24}
-            y={statsTable.y + statsTable.height - 80}
-            width={statsTable.width - 48}
-            className="weapon-card__effects"
-          >
-            <Effects weapon={weapon} />
-          </PsdOverlay>
-        )}
-
-        {/* Red text quote */}
-        {weapon.redText && quoteSlot && (
-          <PsdOverlay
-            x={60}
-            y={quoteSlot.y - 12}
-            width={PSD_CANVAS.width - 120}
+            x={quoteRect.x}
+            y={quoteRect.y + quoteRect.height}
+            width={quoteRect.width}
+            height={PSD_CANVAS.height - (quoteRect.y + quoteRect.height)}
             className="weapon-card__quote"
           >
-            <em>{weapon.redText.effect}</em>
+            {weapon.redText.effect}
           </PsdOverlay>
         )}
       </PsdComposite>
@@ -164,40 +186,47 @@ export function WeaponCard({ weapon }: Props) {
   );
 }
 
-function DamageLabel({ y, text }: { y: number; text: string }) {
+// Wraps <Effects> in a container whose font-size shrinks (via the
+// --effect-size CSS variable) until all lines fit within the bounded height.
+// Floor of 28 PSD-px keeps the text legible at the rendered scale.
+function AutoFitEffects({ weapon }: { weapon: Weapon }) {
+  const ref = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const MAX = 44;
+    const MIN = 28;
+    let size = MAX;
+    el.style.setProperty('--effect-size', `${size}px`);
+    while (size > MIN && el.scrollHeight > el.clientHeight) {
+      size -= 1;
+      el.style.setProperty('--effect-size', `${size}px`);
+    }
+  }, [weapon]);
   return (
-    <PsdOverlay x={70} y={y} width={120} className="weapon-card__damage-label">
-      {text}
-    </PsdOverlay>
+    <div ref={ref} className="weapon-card__effects">
+      <Effects weapon={weapon} />
+    </div>
   );
 }
 
 function Effects({ weapon }: { weapon: Weapon }) {
-  const lines: { key: string; text: string; cls?: string }[] = [];
-  if (weapon.special) {
-    lines.push({ key: 'special', text: firstClause(weapon.special) });
-  }
-  if (weapon.guildBonus && weapon.guildBonus !== 'X') {
-    lines.push({
-      key: 'guildBonus',
-      text: `${weapon.guildBonus} ${bonusLabel(weapon)}`,
-      cls: 'weapon-card__effect--bonus',
-    });
-  }
-  if (weapon.module) {
-    lines.push({
-      key: 'module',
-      text: `${weapon.module.name}: ${weapon.module.text}`,
-      cls: 'weapon-card__effect--module',
-    });
-  }
   return (
     <>
-      {lines.map((l) => (
-        <div key={l.key} className={`weapon-card__effect ${l.cls ?? ''}`}>
-          {l.text}
+      {weapon.special && (
+        <div className="weapon-card__effect">{firstClause(weapon.special)}</div>
+      )}
+      {weapon.guildBonus && weapon.guildBonus !== 'X' && (
+        <div className="weapon-card__effect">
+          {formatBonus(weapon.guildBonus)} {GUILDS[weapon.guild].bonusLabel}
         </div>
-      ))}
+      )}
+      {weapon.module && (
+        <div className="weapon-card__effect">
+          <span className="weapon-card__module-name">{weapon.module.name}:</span>{' '}
+          {weapon.module.text}
+        </div>
+      )}
     </>
   );
 }
@@ -207,9 +236,9 @@ function firstClause(s: string): string {
   return (i > 0 ? s.slice(0, i) : s).trim();
 }
 
-function bonusLabel(weapon: Weapon): string {
-  const m = weapon.guildPassive.match(
-    /\b(Volt|Fire|Cold|Acid|Dark|Entropy|Light|Plasma|Kinetic)\s+Damage/i,
-  );
-  return m ? `${m[1]} Damage` : `${weapon.guild} Bonus`;
+// Spec writes some guild bonuses with a leading "+" ("+1") and some without
+// ("1d6", "1"). Normalize so the card always shows a sign.
+function formatBonus(raw: string): string {
+  const t = raw.trim();
+  return t.startsWith('+') || t.startsWith('-') ? t : `+${t}`;
 }

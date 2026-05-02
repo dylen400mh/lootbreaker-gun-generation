@@ -123,7 +123,8 @@ async function emitRasterLayer(layer, newPath, used) {
   const id = uniqueId(newPath, used);
   const filename = `${id}.png`;
   const outPath = join(LAYERS_DIR, filename);
-  await fs.writeFile(outPath, layer.canvas.toBuffer('image/png'));
+  const canvas = postProcessRaster(layer, newPath);
+  await fs.writeFile(outPath, canvas.toBuffer('image/png'));
   return {
     id,
     name: layer.name ?? '<unnamed>',
@@ -199,6 +200,26 @@ async function emitVectorLayer(layer, newPath, used, rarityTextColors) {
     hidden: !!layer.hidden,
     opacity: layer.opacity ?? 1,
   };
+}
+
+// Per-layer raster touch-ups. The PSD's Statistics Table layer bakes in
+// placeholder copy that the rolled card replaces — "Tier 1 WEAPONTYPE" / "Range"
+// at the top, and the word "Effects" under "Lightweight". Strip those rows so
+// only the dividers + Minor/Major/Grave/Lightweight labels survive into the PNG;
+// live header text is rendered as an HTML overlay on top.
+function postProcessRaster(layer, newPath) {
+  const leaf = newPath[newPath.length - 1];
+  if (leaf !== 'Statistics Table') return layer.canvas;
+  const src = layer.canvas;
+  const out = createCanvas(src.width, src.height);
+  const ctx = out.getContext('2d');
+  ctx.drawImage(src, 0, 0);
+  // Header text (above the first divider at local y≈49). 0..46 covers the
+  // text without touching the rule.
+  ctx.clearRect(0, 0, src.width, 47);
+  // "Effects" line (below "Lightweight" which ends at local y≈366).
+  ctx.clearRect(0, 372, src.width, src.height - 372);
+  return out;
 }
 
 function computePathBounds(paths) {

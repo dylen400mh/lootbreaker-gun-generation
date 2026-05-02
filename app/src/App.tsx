@@ -30,7 +30,7 @@ export default function App() {
     <div className="app">
       <header className="app__header">
         <h1 className="app__title">Lootbreaker</h1>
-        <p className="app__subtitle">Procedural Gun Generator · v0.10</p>
+        <p className="app__subtitle">Procedural Gun Generator</p>
       </header>
 
       <main className="app__main">
@@ -41,18 +41,18 @@ export default function App() {
             <PsdComposite layers={backgroundLayers} />
           )}
         </div>
-      </main>
 
-      <div className="app__controls-wrap">
-        <Controls
-          tier={tier}
-          onTierChange={setTier}
-          redText={redText}
-          onRedTextChange={setRedText}
-          onRoll={handleRoll}
-          rolling={rolling}
-        />
-      </div>
+        <div className="app__controls-wrap">
+          <Controls
+            tier={tier}
+            onTierChange={setTier}
+            redText={redText}
+            onRedTextChange={setRedText}
+            onRoll={handleRoll}
+            rolling={rolling}
+          />
+        </div>
+      </main>
 
       {modal}
     </div>

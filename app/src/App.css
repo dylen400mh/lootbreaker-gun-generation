@@ -53,6 +53,7 @@
 .app__result {
   display: flex;
   justify-content: center;
+  min-width: 0;
 }
 
 .app__controls-wrap {
@@ -66,8 +67,9 @@
   padding-bottom: 16px;
 }
 
-@media (min-width: 768px) {
+@media (min-width: 900px) {
   .app {
+    max-width: 1280px;
     padding: 24px;
     gap: 20px;
   }
@@ -76,11 +78,41 @@
     font-size: 2rem;
   }
 
+  /* Side-by-side: card on the left, controls beside it. The composite has an
+     explicit viewport-based height; aspect-ratio (set inline by PsdComposite)
+     drives the width. No percentage-height chain needed. */
+  .app__main {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 32px;
+  }
+
+  .app__result {
+    flex: 1 1 0;
+    justify-content: center;
+    min-width: 0;
+  }
+
+  .app__result .psd-composite {
+    width: auto;
+    max-width: 100%;
+    height: calc(100dvh - 160px);
+  }
 
   .app__controls-wrap {
     position: static;
     background: none;
     margin: 0;
     padding: 0;
+    flex: 0 0 320px;
+  }
+
+  .app__controls-wrap .controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .app__controls-wrap .controls__roll {
+    margin-left: 0;
   }
 }

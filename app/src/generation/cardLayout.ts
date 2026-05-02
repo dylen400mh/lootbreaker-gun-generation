@@ -6,12 +6,13 @@ import { parseDamage } from './damage';
 const MAX_COLUMNS = 7;
 
 // Decide which dice/element layers to render for a single damage row.
-// Layout (left → right):
-//   col 1                : kinetic damage icon
-//   col 2..(1+kineticN)  : kinetic dice (one per kinetic die in the formula)
+// Layout (left → right): each damage block is dice followed by its type icon,
+// matching the example cards.
+//   cols 1..N    : kinetic dice (one per kinetic die in the formula)
+//   col  N+1     : kinetic damage icon
 //   then for each element:
-//     next col           : element damage icon
-//     following cols     : bonus dice (one per bonus die)
+//     next cols  : bonus dice (one per bonus die, may be zero)
+//     next col   : element damage icon
 //   columns are capped at MAX_COLUMNS.
 export function damageRowLayers(
   row: DamageRowName,
@@ -24,18 +25,17 @@ export function damageRowLayers(
     | { kind: 'die'; sides: number }
   > = [];
 
-  // Kinetic icon + kinetic dice.
-  slots.push({ kind: 'icon', element: 'Kinetic' });
+  // Kinetic dice → kinetic icon.
   const kineticTerms = parseDamage(kineticFormula);
   for (const term of kineticTerms) {
     for (let i = 0; i < term.count; i += 1) {
       slots.push({ kind: 'die', sides: term.sides });
     }
   }
+  slots.push({ kind: 'icon', element: 'Kinetic' });
 
-  // Each elemental bonus: icon + bonus dice.
+  // Each elemental bonus: bonus dice (if any) → element icon.
   for (const el of elements) {
-    slots.push({ kind: 'icon', element: el.element });
     if (el.bonusDice) {
       const bonusTerms = parseDamage(el.bonusDice);
       for (const term of bonusTerms) {
@@ -44,6 +44,7 @@ export function damageRowLayers(
         }
       }
     }
+    slots.push({ kind: 'icon', element: el.element });
   }
 
   for (let i = 0; i < slots.length && i < MAX_COLUMNS; i += 1) {
