@@ -12,11 +12,6 @@ dist
 dist-ssr
 *.local
 
-# Self-hosted Bahnschrift (Microsoft proprietary). Not redistributed via the repo —
-# drop the file in locally; commit only if you've confirmed the license allows it.
-public/fonts/*.ttf
-public/fonts/*.woff2
-
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
