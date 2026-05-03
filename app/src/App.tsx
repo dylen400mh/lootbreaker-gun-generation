@@ -51,16 +51,34 @@ export default function App() {
     if (!inner) return;
     setDownloading(true);
     try {
+      // Pre-warm every image so html-to-image's serialization step never sees
+      // a half-decoded raster. iOS Safari skips images that aren't fully
+      // ready, which left the background + stats raster blank in earlier
+      // exports while text rendered fine.
+      const imgs = Array.from(inner.querySelectorAll('img'));
+      await Promise.all(
+        imgs.map((img) =>
+          img.complete && img.naturalWidth > 0
+            ? img.decode().catch(() => undefined)
+            : new Promise<void>((resolve) => {
+                img.addEventListener('load', () => resolve(), { once: true });
+                img.addEventListener('error', () => resolve(), { once: true });
+              }),
+        ),
+      );
       const opts = {
         width: 1000,
         height: 1363,
         pixelRatio: 2,
-        cacheBust: true,
+        // cacheBust forces a refetch which on Safari can race past the warmed
+        // cache and re-introduce blank images. Leave it off — the live
+        // crossOrigin <img> tags are already canvas-readable.
+        cacheBust: false,
         style: { transform: 'scale(1)', transformOrigin: 'top left' },
       };
-      // Safari (mobile) sometimes returns a blank PNG on the first call before
-      // images finish loading into the off-screen canvas. Discarding the first
-      // pass and using the second is a documented workaround.
+      // Safari sometimes returns a blank PNG on the first toBlob call before
+      // images finish decoding into the off-screen canvas. Discarding the
+      // first pass and using the second is a documented workaround.
       await toBlob(inner, opts);
       const blob = await toBlob(inner, opts);
       if (!blob) return;
