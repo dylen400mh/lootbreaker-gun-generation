@@ -103,6 +103,7 @@ export function WeaponCard({ weapon }: Props) {
               alt={`${weapon.type}`}
               className="weapon-card__art"
               decoding="async"
+              crossOrigin="anonymous"
             />
           </PsdOverlay>
         )}

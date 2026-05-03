@@ -52,6 +52,9 @@ export function PsdComposite({ layers, children }: Props) {
             aria-hidden="true"
             decoding="async"
             loading="eager"
+            // crossOrigin marks these as CORS-clean so Safari (mobile) won't
+            // taint the canvas when html-to-image inlines them for PNG export.
+            crossOrigin="anonymous"
             data-kind={layer.semantic?.kind}
             style={{
               position: 'absolute',

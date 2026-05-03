@@ -51,13 +51,18 @@ export default function App() {
     if (!inner) return;
     setDownloading(true);
     try {
-      const blob = await toBlob(inner, {
+      const opts = {
         width: 1000,
         height: 1363,
         pixelRatio: 2,
         cacheBust: true,
         style: { transform: 'scale(1)', transformOrigin: 'top left' },
-      });
+      };
+      // Safari (mobile) sometimes returns a blank PNG on the first call before
+      // images finish loading into the off-screen canvas. Discarding the first
+      // pass and using the second is a documented workaround.
+      await toBlob(inner, opts);
+      const blob = await toBlob(inner, opts);
       if (!blob) return;
       const filename = `lootbreaker-${weapon.name.prefix}-${weapon.name.abbrev}-${weapon.name.number}.png`
         .toLowerCase()
