@@ -218,7 +218,7 @@ function AutoFitQuote({ weapon }: { weapon: Weapon }) {
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
-    const MAX = 36;
+    const MAX = 34;
     const MIN = 20;
     let size = MAX;
     el.style.setProperty('--quote-size', `${size}px`);
@@ -230,9 +230,8 @@ function AutoFitQuote({ weapon }: { weapon: Weapon }) {
   if (!redText) return null;
   return (
     <div ref={ref} className="weapon-card__quote">
-      <span className="weapon-card__quote-title">{redText.title}</span>
-      {' — '}
-      {redText.effect}
+      <span className="weapon-card__quote-title">{redText.title}</span>{' '}
+      <span className="weapon-card__quote-effect">{redText.effect}</span>
     </div>
   );
 }

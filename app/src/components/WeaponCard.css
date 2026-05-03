@@ -103,8 +103,8 @@
   color: #d34d52;
 }
 
-/* Red-text section under the bottom rectangle: bold title + effect, both red.
-   Sized via --quote-size by AutoFitQuote (max 36 PSD-px, min 20 PSD-px) so
+/* Red-text section under the bottom rectangle: bold red title + white effect,
+   sized via --quote-size by AutoFitQuote (max 34 PSD-px, min 20 PSD-px) so
    long effects shrink to fit instead of bleeding past the rule or off the
    card. overflow:hidden is the safety net if the floor still doesn't fit. */
 .weapon-card__quote {
@@ -115,9 +115,9 @@
   justify-content: center;
   font-family: 'Bahnschrift', 'Bahnschrift Condensed', system-ui, sans-serif;
   font-stretch: 75%;
-  font-size: var(--quote-size, 36px);
+  font-size: var(--quote-size, 34px);
   font-weight: 400;
-  color: #d34d52;
+  color: #ffffff;
   text-align: center;
   line-height: 1.15;
   padding: 0 24px;
@@ -125,5 +125,10 @@
 }
 
 .weapon-card__quote-title {
+  color: #d34d52;
   font-weight: 700;
+}
+
+.weapon-card__quote-effect {
+  color: #ffffff;
 }
