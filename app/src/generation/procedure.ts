@@ -15,7 +15,7 @@ import {
   WEAPON_BY_D8,
   WEAPON_TYPES,
 } from './tables/weaponTypes';
-import type { Element, ElementResult, Tier, Weapon, WeaponType } from './types';
+import type { Element, ElementResult, GuildName, Rarity, Tier, Weapon, WeaponType } from './types';
 
 export interface ChoicePrompt<T> {
   title: string;
@@ -27,6 +27,12 @@ export type AskChoice = <T>(prompt: ChoicePrompt<T>) => Promise<T>;
 export interface GenerateOptions {
   tier: Tier;
   redTextEnabled: boolean;
+  /** When set, skips the d8 weapon-type roll (and the player-choice path). */
+  weaponType?: WeaponType;
+  /** When set, skips the d12 guild roll. */
+  guild?: GuildName;
+  /** When set, skips the 2d6 rarity cross-table. */
+  rarity?: Rarity;
   /** Optional explicit seed; defaults to a fresh random seed. */
   seed?: number;
 }
@@ -41,37 +47,45 @@ export async function generateWeapon(
   const rng = mulberry32(seed);
 
   // STEP 1 — Weapon Type (1d8). Slot 5 re-rolls; slot 8 prompts player choice.
-  let type: WeaponType | null = null;
-  for (let i = 0; i < MAX_TYPE_REROLLS; i += 1) {
-    const roll = d(rng, 8);
-    const slot = WEAPON_BY_D8[roll - 1];
-    if (slot != null) {
-      type = slot;
-      break;
-    }
-    if (roll === 8) {
-      type = await askChoice({
-        title: 'Player Choice — Weapon Type',
-        description: 'You rolled an 8. Choose the weapon type.',
-        options: PLAYER_CHOICE_TYPES.map((t) => ({ label: t, value: t })),
-      });
-      break;
-    }
-    // roll === 5: slot is null and not Player Choice → re-roll silently.
-  }
+  // Skipped entirely when opts.weaponType pins the value.
+  let type: WeaponType | null = opts.weaponType ?? null;
   if (type == null) {
-    throw new Error('Failed to resolve weapon type after re-rolls.');
+    for (let i = 0; i < MAX_TYPE_REROLLS; i += 1) {
+      const roll = d(rng, 8);
+      const slot = WEAPON_BY_D8[roll - 1];
+      if (slot != null) {
+        type = slot;
+        break;
+      }
+      if (roll === 8) {
+        type = await askChoice({
+          title: 'Player Choice — Weapon Type',
+          description: 'You rolled an 8. Choose the weapon type.',
+          options: PLAYER_CHOICE_TYPES.map((t) => ({ label: t, value: t })),
+        });
+        break;
+      }
+      // roll === 5: slot is null and not Player Choice → re-roll silently.
+    }
+    if (type == null) {
+      throw new Error('Failed to resolve weapon type after re-rolls.');
+    }
   }
   const typeDef = WEAPON_TYPES[type];
 
-  // STEP 2 — Guild (1d12).
-  const guildName = GUILD_BY_D12[d(rng, 12) - 1];
+  // STEP 2 — Guild (1d12). Skipped when opts.guild pins the value.
+  const guildName: GuildName = opts.guild ?? GUILD_BY_D12[d(rng, 12) - 1];
   const guild = GUILDS[guildName];
 
-  // STEP 3 — Rarity (2d6 cross-table).
-  const row = d(rng, 6);
-  const col = d(rng, 6);
-  const rarity = RARITY_TABLE[row - 1][col - 1];
+  // STEP 3 — Rarity (2d6 cross-table). Skipped when opts.rarity pins the value.
+  let rarity: Rarity;
+  if (opts.rarity) {
+    rarity = opts.rarity;
+  } else {
+    const row = d(rng, 6);
+    const col = d(rng, 6);
+    rarity = RARITY_TABLE[row - 1][col - 1];
+  }
 
   // STEP 4 — Element (d100 indexed by rarity).
   const elementRoll = d(rng, 100);

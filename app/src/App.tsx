@@ -6,12 +6,15 @@ import { Controls } from './components/Controls';
 import { PsdComposite } from './components/PsdComposite';
 import { WeaponCard } from './components/WeaponCard';
 import { generateWeapon } from './generation/procedure';
-import type { Tier, Weapon } from './generation/types';
+import type { GuildName, Rarity, Tier, Weapon, WeaponType } from './generation/types';
 import './App.css';
 
 export default function App() {
   const [tier, setTier] = useState<Tier>(2);
   const [redText, setRedText] = useState(false);
+  const [weaponType, setWeaponType] = useState<WeaponType | ''>('');
+  const [guild, setGuild] = useState<GuildName | ''>('');
+  const [rarity, setRarity] = useState<Rarity | ''>('');
   const [weapon, setWeapon] = useState<Weapon | null>(null);
   const [rolling, setRolling] = useState(false);
   const [downloading, setDownloading] = useState(false);
@@ -22,12 +25,21 @@ export default function App() {
   const handleRoll = useCallback(async () => {
     setRolling(true);
     try {
-      const w = await generateWeapon({ tier, redTextEnabled: redText }, askChoice);
+      const w = await generateWeapon(
+        {
+          tier,
+          redTextEnabled: redText,
+          weaponType: weaponType || undefined,
+          guild: guild || undefined,
+          rarity: rarity || undefined,
+        },
+        askChoice,
+      );
       setWeapon(w);
     } finally {
       setRolling(false);
     }
-  }, [tier, redText, askChoice]);
+  }, [tier, redText, weaponType, guild, rarity, askChoice]);
 
   const handleDownload = useCallback(async () => {
     if (!weapon) return;
@@ -95,6 +107,12 @@ export default function App() {
             onTierChange={setTier}
             redText={redText}
             onRedTextChange={setRedText}
+            weaponType={weaponType}
+            onWeaponTypeChange={setWeaponType}
+            guild={guild}
+            onGuildChange={setGuild}
+            rarity={rarity}
+            onRarityChange={setRarity}
             onRoll={handleRoll}
             rolling={rolling}
             onDownload={handleDownload}
