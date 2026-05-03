@@ -295,7 +295,7 @@
         "kind": "damageIcon",
         "row": "grave",
         "column": 7,
-        "element": "Entropy"
+        "element": "Plasma"
       }
     },
     {
@@ -343,7 +343,7 @@
         "kind": "damageIcon",
         "row": "grave",
         "column": 7,
-        "element": "Dark"
+        "element": "Entropy"
       }
     },
     {
@@ -367,7 +367,7 @@
         "kind": "damageIcon",
         "row": "grave",
         "column": 7,
-        "element": "Plasma"
+        "element": "Dark"
       }
     },
     {
@@ -679,7 +679,7 @@
         "kind": "damageIcon",
         "row": "grave",
         "column": 6,
-        "element": "Entropy"
+        "element": "Plasma"
       }
     },
     {
@@ -727,7 +727,7 @@
         "kind": "damageIcon",
         "row": "grave",
         "column": 6,
-        "element": "Dark"
+        "element": "Entropy"
       }
     },
     {
@@ -751,7 +751,7 @@
         "kind": "damageIcon",
         "row": "grave",
         "column": 6,
-        "element": "Plasma"
+        "element": "Dark"
       }
     },
     {
@@ -1063,7 +1063,7 @@
         "kind": "damageIcon",
         "row": "grave",
         "column": 5,
-        "element": "Entropy"
+        "element": "Plasma"
       }
     },
     {
@@ -1111,7 +1111,7 @@
         "kind": "damageIcon",
         "row": "grave",
         "column": 5,
-        "element": "Dark"
+        "element": "Entropy"
       }
     },
     {
@@ -1135,7 +1135,7 @@
         "kind": "damageIcon",
         "row": "grave",
         "column": 5,
-        "element": "Plasma"
+        "element": "Dark"
       }
     },
     {
@@ -1447,7 +1447,7 @@
         "kind": "damageIcon",
         "row": "grave",
         "column": 4,
-        "element": "Entropy"
+        "element": "Plasma"
       }
     },
     {
@@ -1495,7 +1495,7 @@
         "kind": "damageIcon",
         "row": "grave",
         "column": 4,
-        "element": "Dark"
+        "element": "Entropy"
       }
     },
     {
@@ -1519,7 +1519,7 @@
         "kind": "damageIcon",
         "row": "grave",
         "column": 4,
-        "element": "Plasma"
+        "element": "Dark"
       }
     },
     {
@@ -1831,7 +1831,7 @@
         "kind": "damageIcon",
         "row": "grave",
         "column": 3,
-        "element": "Entropy"
+        "element": "Plasma"
       }
     },
     {
@@ -1879,7 +1879,7 @@
         "kind": "damageIcon",
         "row": "grave",
         "column": 3,
-        "element": "Dark"
+        "element": "Entropy"
       }
     },
     {
@@ -1903,7 +1903,7 @@
         "kind": "damageIcon",
         "row": "grave",
         "column": 3,
-        "element": "Plasma"
+        "element": "Dark"
       }
     },
     {
@@ -2215,7 +2215,7 @@
         "kind": "damageIcon",
         "row": "grave",
         "column": 2,
-        "element": "Entropy"
+        "element": "Plasma"
       }
     },
     {
@@ -2263,7 +2263,7 @@
         "kind": "damageIcon",
         "row": "grave",
         "column": 2,
-        "element": "Dark"
+        "element": "Entropy"
       }
     },
     {
@@ -2287,7 +2287,7 @@
         "kind": "damageIcon",
         "row": "grave",
         "column": 2,
-        "element": "Plasma"
+        "element": "Dark"
       }
     },
     {
@@ -2599,7 +2599,7 @@
         "kind": "damageIcon",
         "row": "grave",
         "column": 1,
-        "element": "Entropy"
+        "element": "Plasma"
       }
     },
     {
@@ -2647,7 +2647,7 @@
         "kind": "damageIcon",
         "row": "grave",
         "column": 1,
-        "element": "Dark"
+        "element": "Entropy"
       }
     },
     {
@@ -2671,7 +2671,7 @@
         "kind": "damageIcon",
         "row": "grave",
         "column": 1,
-        "element": "Plasma"
+        "element": "Dark"
       }
     },
     {
@@ -3003,7 +3003,7 @@
         "kind": "damageIcon",
         "row": "major",
         "column": 7,
-        "element": "Entropy"
+        "element": "Plasma"
       }
     },
     {
@@ -3051,7 +3051,7 @@
         "kind": "damageIcon",
         "row": "major",
         "column": 7,
-        "element": "Dark"
+        "element": "Entropy"
       }
     },
     {
@@ -3075,7 +3075,7 @@
         "kind": "damageIcon",
         "row": "major",
         "column": 7,
-        "element": "Plasma"
+        "element": "Dark"
       }
     },
     {
@@ -3387,7 +3387,7 @@
         "kind": "damageIcon",
         "row": "major",
         "column": 6,
-        "element": "Entropy"
+        "element": "Plasma"
       }
     },
     {
@@ -3435,7 +3435,7 @@
         "kind": "damageIcon",
         "row": "major",
         "column": 6,
-        "element": "Dark"
+        "element": "Entropy"
       }
     },
     {
@@ -3459,7 +3459,7 @@
         "kind": "damageIcon",
         "row": "major",
         "column": 6,
-        "element": "Plasma"
+        "element": "Dark"
       }
     },
     {
@@ -3771,7 +3771,7 @@
         "kind": "damageIcon",
         "row": "major",
         "column": 5,
-        "element": "Entropy"
+        "element": "Plasma"
       }
     },
     {
@@ -3819,7 +3819,7 @@
         "kind": "damageIcon",
         "row": "major",
         "column": 5,
-        "element": "Dark"
+        "element": "Entropy"
       }
     },
     {
@@ -3843,7 +3843,7 @@
         "kind": "damageIcon",
         "row": "major",
         "column": 5,
-        "element": "Plasma"
+        "element": "Dark"
       }
     },
     {
@@ -4155,7 +4155,7 @@
         "kind": "damageIcon",
         "row": "major",
         "column": 4,
-        "element": "Entropy"
+        "element": "Plasma"
       }
     },
     {
@@ -4203,7 +4203,7 @@
         "kind": "damageIcon",
         "row": "major",
         "column": 4,
-        "element": "Dark"
+        "element": "Entropy"
       }
     },
     {
@@ -4227,7 +4227,7 @@
         "kind": "damageIcon",
         "row": "major",
         "column": 4,
-        "element": "Plasma"
+        "element": "Dark"
       }
     },
     {
@@ -4539,7 +4539,7 @@
         "kind": "damageIcon",
         "row": "major",
         "column": 3,
-        "element": "Entropy"
+        "element": "Plasma"
       }
     },
     {
@@ -4587,7 +4587,7 @@
         "kind": "damageIcon",
         "row": "major",
         "column": 3,
-        "element": "Dark"
+        "element": "Entropy"
       }
     },
     {
@@ -4611,7 +4611,7 @@
         "kind": "damageIcon",
         "row": "major",
         "column": 3,
-        "element": "Plasma"
+        "element": "Dark"
       }
     },
     {
@@ -4923,7 +4923,7 @@
         "kind": "damageIcon",
         "row": "major",
         "column": 2,
-        "element": "Entropy"
+        "element": "Plasma"
       }
     },
     {
@@ -4971,7 +4971,7 @@
         "kind": "damageIcon",
         "row": "major",
         "column": 2,
-        "element": "Dark"
+        "element": "Entropy"
       }
     },
     {
@@ -4995,7 +4995,7 @@
         "kind": "damageIcon",
         "row": "major",
         "column": 2,
-        "element": "Plasma"
+        "element": "Dark"
       }
     },
     {
@@ -5307,7 +5307,7 @@
         "kind": "damageIcon",
         "row": "major",
         "column": 1,
-        "element": "Entropy"
+        "element": "Plasma"
       }
     },
     {
@@ -5355,7 +5355,7 @@
         "kind": "damageIcon",
         "row": "major",
         "column": 1,
-        "element": "Dark"
+        "element": "Entropy"
       }
     },
     {
@@ -5379,7 +5379,7 @@
         "kind": "damageIcon",
         "row": "major",
         "column": 1,
-        "element": "Plasma"
+        "element": "Dark"
       }
     },
     {
@@ -5711,7 +5711,7 @@
         "kind": "damageIcon",
         "row": "minor",
         "column": 7,
-        "element": "Entropy"
+        "element": "Plasma"
       }
     },
     {
@@ -5759,7 +5759,7 @@
         "kind": "damageIcon",
         "row": "minor",
         "column": 7,
-        "element": "Dark"
+        "element": "Entropy"
       }
     },
     {
@@ -5783,7 +5783,7 @@
         "kind": "damageIcon",
         "row": "minor",
         "column": 7,
-        "element": "Plasma"
+        "element": "Dark"
       }
     },
     {
@@ -6095,7 +6095,7 @@
         "kind": "damageIcon",
         "row": "minor",
         "column": 6,
-        "element": "Entropy"
+        "element": "Plasma"
       }
     },
     {
@@ -6143,7 +6143,7 @@
         "kind": "damageIcon",
         "row": "minor",
         "column": 6,
-        "element": "Dark"
+        "element": "Entropy"
       }
     },
     {
@@ -6167,7 +6167,7 @@
         "kind": "damageIcon",
         "row": "minor",
         "column": 6,
-        "element": "Plasma"
+        "element": "Dark"
       }
     },
     {
@@ -6479,7 +6479,7 @@
         "kind": "damageIcon",
         "row": "minor",
         "column": 5,
-        "element": "Entropy"
+        "element": "Plasma"
       }
     },
     {
@@ -6527,7 +6527,7 @@
         "kind": "damageIcon",
         "row": "minor",
         "column": 5,
-        "element": "Dark"
+        "element": "Entropy"
       }
     },
     {
@@ -6551,7 +6551,7 @@
         "kind": "damageIcon",
         "row": "minor",
         "column": 5,
-        "element": "Plasma"
+        "element": "Dark"
       }
     },
     {
@@ -6863,7 +6863,7 @@
         "kind": "damageIcon",
         "row": "minor",
         "column": 4,
-        "element": "Entropy"
+        "element": "Plasma"
       }
     },
     {
@@ -6911,7 +6911,7 @@
         "kind": "damageIcon",
         "row": "minor",
         "column": 4,
-        "element": "Dark"
+        "element": "Entropy"
       }
     },
     {
@@ -6935,7 +6935,7 @@
         "kind": "damageIcon",
         "row": "minor",
         "column": 4,
-        "element": "Plasma"
+        "element": "Dark"
       }
     },
     {
@@ -7247,7 +7247,7 @@
         "kind": "damageIcon",
         "row": "minor",
         "column": 3,
-        "element": "Entropy"
+        "element": "Plasma"
       }
     },
     {
@@ -7295,7 +7295,7 @@
         "kind": "damageIcon",
         "row": "minor",
         "column": 3,
-        "element": "Dark"
+        "element": "Entropy"
       }
     },
     {
@@ -7319,7 +7319,7 @@
         "kind": "damageIcon",
         "row": "minor",
         "column": 3,
-        "element": "Plasma"
+        "element": "Dark"
       }
     },
     {
@@ -7631,7 +7631,7 @@
         "kind": "damageIcon",
         "row": "minor",
         "column": 2,
-        "element": "Entropy"
+        "element": "Plasma"
       }
     },
     {
@@ -7679,7 +7679,7 @@
         "kind": "damageIcon",
         "row": "minor",
         "column": 2,
-        "element": "Dark"
+        "element": "Entropy"
       }
     },
     {
@@ -7703,7 +7703,7 @@
         "kind": "damageIcon",
         "row": "minor",
         "column": 2,
-        "element": "Plasma"
+        "element": "Dark"
       }
     },
     {
@@ -8015,7 +8015,7 @@
         "kind": "damageIcon",
         "row": "minor",
         "column": 1,
-        "element": "Entropy"
+        "element": "Plasma"
       }
     },
     {
@@ -8063,7 +8063,7 @@
         "kind": "damageIcon",
         "row": "minor",
         "column": 1,
-        "element": "Dark"
+        "element": "Entropy"
       }
     },
     {
@@ -8087,7 +8087,7 @@
         "kind": "damageIcon",
         "row": "minor",
         "column": 1,
-        "element": "Plasma"
+        "element": "Dark"
       }
     },
     {

@@ -60,7 +60,7 @@ describe('generateWeapon', () => {
   });
 
   it('every produced weapon has a defined type (no Scout Rifle / null leak)', async () => {
-    const allowed = ['Pistol', 'SMG', 'Shotgun', 'Combat Rifle', 'Sniper Rifle', 'Plasma Caster'];
+    const allowed = ['Pistol', 'SMG', 'Shotgun', 'Combat Rifle', 'Sniper Rifle', 'Launcher'];
     for (let seed = 1; seed <= 100; seed += 1) {
       const w = await generateWeapon(
         { tier: 2, redTextEnabled: false, seed },

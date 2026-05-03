@@ -26,9 +26,10 @@ const STATS_LAYOUT = {
   tableX: 60,
   tableWidth: 881,
   headerY: 563,
-  // Lightweight cell content begins just below the rasterized "Lightweight"
-  // label (which spans canvas y≈888-929) and aligns with its left edge.
-  effectsY: 935,
+  // Effects content fills the bottom band of the table (below the last
+  // divider at canvas y≈873). The "Lightweight" placeholder used to live
+  // here but is now masked out at extract time.
+  effectsY: 880,
   contentLeftX: 80,
 };
 
@@ -166,19 +167,17 @@ export function WeaponCard({ weapon }: Props) {
           </PsdOverlay>
         )}
 
-        {/* Red text effect — vertically centered between the bottom rectangle
-            and the bottom of the card. Same typography as the rasterized
-            "Quote/Flavour Text" placeholder (Bahnschrift Condensed, white,
-            upright — not italic). */}
+        {/* Red text — vertically centered between the bottom rectangle and
+            the bottom of the card. Title (bold) + effect, both red, font-size
+            auto-shrinks if the effect would overflow the band. */}
         {weapon.redText && quoteRect && (
           <PsdOverlay
             x={quoteRect.x}
             y={quoteRect.y + quoteRect.height}
             width={quoteRect.width}
             height={PSD_CANVAS.height - (quoteRect.y + quoteRect.height)}
-            className="weapon-card__quote"
           >
-            {weapon.redText.effect}
+            <AutoFitQuote weapon={weapon} />
           </PsdOverlay>
         )}
       </PsdComposite>
@@ -206,6 +205,33 @@ function AutoFitEffects({ weapon }: { weapon: Weapon }) {
   return (
     <div ref={ref} className="weapon-card__effects">
       <Effects weapon={weapon} />
+    </div>
+  );
+}
+
+// Same shrink-to-fit pattern as AutoFitEffects, applied to the flavor text
+// band (~137 PSD-px tall under the bottom rule). Floor at 20 PSD-px.
+function AutoFitQuote({ weapon }: { weapon: Weapon }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const redText = weapon.redText;
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const MAX = 36;
+    const MIN = 20;
+    let size = MAX;
+    el.style.setProperty('--quote-size', `${size}px`);
+    while (size > MIN && el.scrollHeight > el.clientHeight) {
+      size -= 1;
+      el.style.setProperty('--quote-size', `${size}px`);
+    }
+  }, [redText]);
+  if (!redText) return null;
+  return (
+    <div ref={ref} className="weapon-card__quote">
+      <span className="weapon-card__quote-title">{redText.title}</span>
+      {' — '}
+      {redText.effect}
     </div>
   );
 }

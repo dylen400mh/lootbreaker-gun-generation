@@ -103,18 +103,27 @@
   color: #d34d52;
 }
 
-/* Red-text effect under the bottom rectangle. Matches the rasterized
-   "Quote/Flavour Text" placeholder: upright Bahnschrift Condensed, white,
-   ~36 PSD-px to fit a 42-px tall layer. Long effects wrap naturally. */
+/* Red-text section under the bottom rectangle: bold title + effect, both red.
+   Sized via --quote-size by AutoFitQuote (max 36 PSD-px, min 20 PSD-px) so
+   long effects shrink to fit instead of bleeding past the rule or off the
+   card. overflow:hidden is the safety net if the floor still doesn't fit. */
 .weapon-card__quote {
+  width: 100%;
+  height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
   font-family: 'Bahnschrift', 'Bahnschrift Condensed', system-ui, sans-serif;
   font-stretch: 75%;
-  font-size: 36px;
+  font-size: var(--quote-size, 36px);
   font-weight: 400;
-  color: #ffffff;
+  color: #d34d52;
   text-align: center;
   line-height: 1.15;
+  padding: 0 24px;
+  overflow: hidden;
+}
+
+.weapon-card__quote-title {
+  font-weight: 700;
 }

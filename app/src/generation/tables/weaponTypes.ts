@@ -7,9 +7,8 @@ export interface WeaponTypeDef {
   damage: Record<Tier, DamageRow>;
 }
 
-// Source: spec Step 1. v1 changes:
+// Source: spec Step 1. v1 change:
 //   - Scout Rifle is dropped (slot 5 of the d8 silently re-rolls in procedure.ts).
-//   - Launcher renamed to "Plasma Caster" (same stats and table).
 
 export const WEAPON_TYPES: Record<WeaponType, WeaponTypeDef> = {
   Pistol: {
@@ -60,10 +59,10 @@ export const WEAPON_TYPES: Record<WeaponType, WeaponTypeDef> = {
       3: { minor: '1d8', major: '1d10', grave: '2d10' },
     },
   },
-  'Plasma Caster': {
-    type: 'Plasma Caster',
+  Launcher: {
+    type: 'Launcher',
     range: 4,
-    special: 'Splash (Deal 1/2 Damage to Adjacent Targets)',
+    special: 'Splash 1 (Deal 1/2 Damage to Adjacent Targets)',
     damage: {
       1: { minor: '1d8', major: '1d10', grave: '2d10' },
       2: { minor: '1d10', major: '1d12', grave: '2d12' },
@@ -81,7 +80,7 @@ export const WEAPON_BY_D8: ReadonlyArray<WeaponType | null> = [
   'Combat Rifle', // 4
   null, // 5 — Scout Rifle (dropped in v1; re-roll)
   'Sniper Rifle', // 6
-  'Plasma Caster', // 7
+  'Launcher', // 7
   null, // 8 — Player Choice
 ];
 
@@ -91,5 +90,5 @@ export const PLAYER_CHOICE_TYPES: ReadonlyArray<WeaponType> = [
   'Shotgun',
   'Combat Rifle',
   'Sniper Rifle',
-  'Plasma Caster',
+  'Launcher',
 ];

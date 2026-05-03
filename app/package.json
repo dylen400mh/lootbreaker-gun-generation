@@ -15,6 +15,7 @@
     "extract-psd": "node scripts/extract-psd.mjs"
   },
   "dependencies": {
+    "html-to-image": "^1.11.13",
     "react": "^19.2.5",
     "react-dom": "^19.2.5"
   },

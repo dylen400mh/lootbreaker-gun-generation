@@ -6,7 +6,6 @@ export interface Abbrev {
 }
 
 // Source: spec Step 7a. 1d6 per weapon type.
-// "Launcher" in the spec is "Plasma Caster" in v1 — same table.
 export const ABBREVIATIONS: Record<WeaponType, ReadonlyArray<Abbrev>> = {
   Pistol: [
     { short: 'RV', long: 'Revolver' },
@@ -48,7 +47,7 @@ export const ABBREVIATIONS: Record<WeaponType, ReadonlyArray<Abbrev>> = {
     { short: 'GSR', long: 'Ghost Sight Rifle' },
     { short: 'LDL', long: 'Long Distance Laser' },
   ],
-  'Plasma Caster': [
+  Launcher: [
     { short: 'GL', long: 'Grenade Launcher' },
     { short: 'HRX', long: 'Heavy Rocket Exchange' },
     { short: 'CAT', long: 'Catapult' },

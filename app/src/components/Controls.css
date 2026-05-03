@@ -93,6 +93,27 @@
   transform: translateY(1px);
 }
 
+.controls__download {
+  min-height: 44px;
+  padding: 0 18px;
+  background: var(--bg-elev-2);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  letter-spacing: 0.02em;
+  transition: filter 120ms, transform 80ms;
+}
+
+.controls__download:hover:not(:disabled) {
+  filter: brightness(1.15);
+}
+
+.controls__download:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
 @media (max-width: 640px) {
   .controls {
     position: sticky;

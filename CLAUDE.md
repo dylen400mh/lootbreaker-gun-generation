@@ -56,7 +56,7 @@ Maps a small set of source filenames to clean slugs and emits responsive WebP va
 These are intentional and live in code/tables, not in the spec — keep them in sync if you touch the relevant tables:
 
 - **Scout Rifle is dropped.** d8 slot 5 silently re-rolls (`procedure.ts` loop).
-- **Launcher → Plasma Caster.** Same stats and tables; only label and asset slug differ.
+- **Launcher's asset slug is `plasma-caster`** because the source PNG depicts a plasma-style gun. The user-facing label and `WeaponType` are still `Launcher`; only the on-disk slug differs.
 - **Noctra modules trimmed from 7 to 6** (the unreachable "Deadly Rounds" was removed).
 - The `Element` type only includes the 8 elements the gun procedure actually rolls; `Gold`, `Slashing`, `Luminite`, `Kinetic` icons exist as art but are not part of generation.
 

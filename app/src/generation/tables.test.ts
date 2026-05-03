@@ -95,7 +95,7 @@ describe('red text', () => {
 
 describe('naming', () => {
   it('every weapon type has 6 abbreviations', () => {
-    const types: WeaponType[] = ['Pistol', 'SMG', 'Shotgun', 'Combat Rifle', 'Sniper Rifle', 'Plasma Caster'];
+    const types: WeaponType[] = ['Pistol', 'SMG', 'Shotgun', 'Combat Rifle', 'Sniper Rifle', 'Launcher'];
     for (const t of types) {
       expect(ABBREVIATIONS[t]).toHaveLength(6);
     }

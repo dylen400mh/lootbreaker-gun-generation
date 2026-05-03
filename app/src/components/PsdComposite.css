@@ -20,6 +20,15 @@
   max-height: none;
 }
 
+/* Dice line-art rasters are muted gray-white in the source PSD. brightness(0)
+   knocks every visible pixel to black (preserving alpha for anti-aliased
+   edges); invert(1) then flips black to pure white. Result: solid white line
+   art with the original transparent background. Doesn't touch the element /
+   kinetic icons (those keep their saturated colors). */
+.psd-composite__inner > img[data-kind="die"] {
+  filter: brightness(0) invert(1);
+}
+
 .psd-overlay {
   pointer-events: auto;
 }

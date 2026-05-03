@@ -6,7 +6,7 @@ export type WeaponType =
   | 'Shotgun'
   | 'Combat Rifle'
   | 'Sniper Rifle'
-  | 'Plasma Caster';
+  | 'Launcher';
 
 export type Rarity = 'Common' | 'Uncommon' | 'Rare' | 'Epic' | 'Legendary';
 

@@ -51,7 +51,7 @@ src/
 ## v1 deviations from the spec
 
 - **Scout Rifle is dropped.** d8 slot 5 silently re-rolls.
-- **Launcher → Plasma Caster.** Same stats and tables; the label and asset slug differ.
+- **Launcher's asset slug is `plasma-caster`** because the source PNG depicts a plasma-style gun; only the on-disk slug differs from the user-facing label.
 - **Noctra modules** trimmed from 7 to 6 (the unreachable "Deadly Rounds" was removed).
 
 ## Adding a player-choice step

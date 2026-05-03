@@ -8,6 +8,9 @@ interface Props {
   onRedTextChange: (v: boolean) => void;
   onRoll: () => void;
   rolling: boolean;
+  onDownload: () => void;
+  canDownload: boolean;
+  downloading: boolean;
 }
 
 const TIERS: Tier[] = [1, 2, 3];
@@ -19,6 +22,9 @@ export function Controls({
   onRedTextChange,
   onRoll,
   rolling,
+  onDownload,
+  canDownload,
+  downloading,
 }: Props) {
   return (
     <div className="controls">
@@ -56,6 +62,15 @@ export function Controls({
         disabled={rolling}
       >
         {rolling ? 'Rolling…' : 'Roll Weapon'}
+      </button>
+
+      <button
+        type="button"
+        className="controls__download"
+        onClick={onDownload}
+        disabled={!canDownload || downloading}
+      >
+        {downloading ? 'Saving…' : 'Download PNG'}
       </button>
     </div>
   );

@@ -39,12 +39,16 @@ const SKIP_NAMES = new Set([
 // Inside each `Dice_Column1` group, layers appear in this order (top of stack first).
 const DICE_BY_ORDER = [4, 6, 8, 10, 12, 20];
 
-// Inside each `DamageIcons_Column1` group, the 10 layers map to these damage types.
+// Inside each `DamageIcons_Column1` group, the 10 layers map to these damage
+// types in PSD top→bottom stack order. Verified by visually comparing each
+// layer's PNG to Lootbreaker_AppResources/Icons/IC_*.png — earlier ordering
+// had Plasma↔Entropy and Dark↔Entropy swapped, so e.g. picking Dark rendered
+// the skull (Entropy) icon.
 const ELEMENT_BY_ORDER = [
-  'Entropy',
-  'Light',
-  'Dark',
   'Plasma',
+  'Light',
+  'Entropy',
+  'Dark',
   'Volt',
   'Fire',
   'Cold',
@@ -204,9 +208,10 @@ async function emitVectorLayer(layer, newPath, used, rarityTextColors) {
 
 // Per-layer raster touch-ups. The PSD's Statistics Table layer bakes in
 // placeholder copy that the rolled card replaces — "Tier 1 WEAPONTYPE" / "Range"
-// at the top, and the word "Effects" under "Lightweight". Strip those rows so
-// only the dividers + Minor/Major/Grave/Lightweight labels survive into the PNG;
-// live header text is rendered as an HTML overlay on top.
+// at the top, and the words "Lightweight Effects" at the bottom (the latter
+// was an example showing where Pistol's "Light Frame" passive would render).
+// Strip those rows so only the four dividers + Minor/Major/Grave row labels
+// survive; live header text and effects are rendered as HTML overlays.
 function postProcessRaster(layer, newPath) {
   const leaf = newPath[newPath.length - 1];
   if (leaf !== 'Statistics Table') return layer.canvas;
@@ -217,8 +222,9 @@ function postProcessRaster(layer, newPath) {
   // Header text (above the first divider at local y≈49). 0..46 covers the
   // text without touching the rule.
   ctx.clearRect(0, 0, src.width, 47);
-  // "Effects" line (below "Lightweight" which ends at local y≈366).
-  ctx.clearRect(0, 372, src.width, src.height - 372);
+  // "Lightweight" + "Effects" placeholder. The last divider sits at local
+  // y≈309-311, so 320 starts a clean row below it.
+  ctx.clearRect(0, 320, src.width, src.height - 320);
   return out;
 }
 

@@ -9,7 +9,9 @@ const weaponSlugs: Record<WeaponType, string> = {
   Shotgun: 'shotgun',
   'Combat Rifle': 'combat-rifle',
   'Sniper Rifle': 'sniper-rifle',
-  'Plasma Caster': 'plasma-caster',
+  // Asset slug stays as 'plasma-caster' (the source plasma-gun PNG); only the
+  // user-facing label is "Launcher".
+  Launcher: 'plasma-caster',
 };
 
 export function weaponArtUrl(type: WeaponType, width: WeaponWidth = 1024): string {

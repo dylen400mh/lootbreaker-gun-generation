@@ -1,4 +1,5 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useMemo, useRef, useState } from 'react';
+import { toBlob } from 'html-to-image';
 import { getBackgroundLayers } from './assets/psdManifest';
 import { useChoiceModal } from './components/ChoiceModal';
 import { Controls } from './components/Controls';
@@ -13,8 +14,10 @@ export default function App() {
   const [redText, setRedText] = useState(false);
   const [weapon, setWeapon] = useState<Weapon | null>(null);
   const [rolling, setRolling] = useState(false);
+  const [downloading, setDownloading] = useState(false);
   const { askChoice, modal } = useChoiceModal();
   const backgroundLayers = useMemo(() => getBackgroundLayers(), []);
+  const cardRef = useRef<HTMLDivElement>(null);
 
   const handleRoll = useCallback(async () => {
     setRolling(true);
@@ -26,6 +29,50 @@ export default function App() {
     }
   }, [tier, redText, askChoice]);
 
+  const handleDownload = useCallback(async () => {
+    if (!weapon) return;
+    // Capture the inner PSD canvas at its natural 1000×1363 size with the
+    // viewport-scaling transform reset. Capturing the outer (scaled) wrapper
+    // confuses html-to-image's bounding-box math and can clip absolute
+    // children near the edges (e.g. the flavor text at y≈1226).
+    const inner = cardRef.current?.querySelector('.psd-composite__inner') as HTMLElement | null;
+    if (!inner) return;
+    setDownloading(true);
+    try {
+      const blob = await toBlob(inner, {
+        width: 1000,
+        height: 1363,
+        pixelRatio: 2,
+        cacheBust: true,
+        style: { transform: 'scale(1)', transformOrigin: 'top left' },
+      });
+      if (!blob) return;
+      const filename = `lootbreaker-${weapon.name.prefix}-${weapon.name.abbrev}-${weapon.name.number}.png`
+        .toLowerCase()
+        .replace(/\s+/g, '-');
+      const file = new File([blob], filename, { type: 'image/png' });
+      // Mobile: prefer Web Share with files when available so users can drop
+      // the card straight into a chat / save it via the system share sheet.
+      const nav = navigator as Navigator & { canShare?: (data: ShareData) => boolean };
+      if (nav.canShare?.({ files: [file] }) && nav.share) {
+        try {
+          await nav.share({ files: [file], title: filename });
+          return;
+        } catch {
+          // user dismissed share sheet — fall through to download
+        }
+      }
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      a.click();
+      URL.revokeObjectURL(url);
+    } finally {
+      setDownloading(false);
+    }
+  }, [weapon]);
+
   return (
     <div className="app">
       <header className="app__header">
@@ -34,7 +81,7 @@ export default function App() {
       </header>
 
       <main className="app__main">
-        <div className="app__result">
+        <div className="app__result" ref={cardRef}>
           {weapon ? (
             <WeaponCard weapon={weapon} />
           ) : (
@@ -50,6 +97,9 @@ export default function App() {
             onRedTextChange={setRedText}
             onRoll={handleRoll}
             rolling={rolling}
+            onDownload={handleDownload}
+            canDownload={!!weapon}
+            downloading={downloading}
           />
         </div>
       </main>

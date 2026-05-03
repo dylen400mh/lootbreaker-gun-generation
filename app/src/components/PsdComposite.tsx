@@ -52,6 +52,7 @@ export function PsdComposite({ layers, children }: Props) {
             aria-hidden="true"
             decoding="async"
             loading="eager"
+            data-kind={layer.semantic?.kind}
             style={{
               position: 'absolute',
               left: `${layer.x}px`,
