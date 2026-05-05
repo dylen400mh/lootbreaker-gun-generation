@@ -174,7 +174,7 @@ export const GUILDS: Record<GuildName, GuildDef> = {
     name: 'Banshee',
     passive:
       'Curse of the Banshee (Major Hits apply Dark Affliction 1, Grave hits apply Dark Affliction 3. Additionally, Banshee weapons grant bonus Damage to Targets that suffer from Afflictions [Any Affliction])',
-    bonusLabel: 'Damage to Afflicted',
+    bonusLabel: 'Damage to Afflicted Targets',
     bonusByRarity: {
       Common: 'X',
       Uncommon: '+1',
