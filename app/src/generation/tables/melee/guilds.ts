@@ -1,7 +1,7 @@
-import type { GuildName, Rarity } from '../../types';
+import type { DamageGuildName, Rarity } from '../../types';
 
 export interface GuildDef {
-  name: GuildName;
+  name: DamageGuildName;
   passive: string;
   // Short label used to caption the per-rarity bonus on the card.
   bonusLabel: string;
@@ -13,7 +13,7 @@ export interface GuildDef {
 // descriptions and several bonus values differ; both transcribed verbatim
 // from the melee PDF (do not copy from the gun tables).
 
-export const GUILD_BY_D12: ReadonlyArray<GuildName> = [
+export const GUILD_BY_D12: ReadonlyArray<DamageGuildName> = [
   'Vandal',
   'Stormforged',
   'Noctra',
@@ -28,7 +28,7 @@ export const GUILD_BY_D12: ReadonlyArray<GuildName> = [
   'Banshee',
 ];
 
-export const GUILDS: Record<GuildName, GuildDef> = {
+export const GUILDS: Record<DamageGuildName, GuildDef> = {
   Vandal: {
     name: 'Vandal',
     passive:

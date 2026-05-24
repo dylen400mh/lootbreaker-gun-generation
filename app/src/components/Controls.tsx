@@ -1,6 +1,7 @@
 import { GUILD_BY_D12 } from '../generation/tables/gun/guilds';
 import { GUN_PLAYER_CHOICE_TYPES } from '../generation/tables/gun/weaponTypes';
 import { MELEE_PLAYER_CHOICE_TYPES } from '../generation/tables/melee/weaponTypes';
+import { SHIELD_PLAYER_CHOICE_GUILDS } from '../generation/tables/shield/guilds';
 import { RARITIES } from '../generation/types';
 import type {
   GuildName,
@@ -18,6 +19,8 @@ interface Props {
   onTierChange: (t: Tier) => void;
   redText: boolean;
   onRedTextChange: (v: boolean) => void;
+  shieldDigits: boolean;
+  onShieldDigitsChange: (v: boolean) => void;
   weaponType: GunType | MeleeType | '';
   onWeaponTypeChange: (t: GunType | MeleeType | '') => void;
   guild: GuildName | '';
@@ -39,6 +42,8 @@ export function Controls({
   onTierChange,
   redText,
   onRedTextChange,
+  shieldDigits,
+  onShieldDigitsChange,
   weaponType,
   onWeaponTypeChange,
   guild,
@@ -51,8 +56,13 @@ export function Controls({
   canDownload,
   downloading,
 }: Props) {
+  const isShield = category === 'shield';
   const typeOptions: ReadonlyArray<GunType | MeleeType> =
     category === 'gun' ? GUN_PLAYER_CHOICE_TYPES : MELEE_PLAYER_CHOICE_TYPES;
+  // Shields roll on a 2d8 → 14-guild table; guns/melee on a d12 → 12-guild table.
+  const guildOptions: ReadonlyArray<GuildName> = isShield
+    ? SHIELD_PLAYER_CHOICE_GUILDS
+    : GUILD_BY_D12;
 
   return (
     <div className="controls">
@@ -74,21 +84,24 @@ export function Controls({
         </div>
       </fieldset>
 
-      <fieldset className="controls__group">
-        <legend>Weapon</legend>
-        <select
-          className="controls__select"
-          value={weaponType}
-          onChange={(e) => onWeaponTypeChange(e.target.value as GunType | MeleeType | '')}
-        >
-          <option value="">Random</option>
-          {typeOptions.map((t) => (
-            <option key={t} value={t}>
-              {t}
-            </option>
-          ))}
-        </select>
-      </fieldset>
+      {/* Shields have no per-type roll — guild is the first dice step. */}
+      {!isShield && (
+        <fieldset className="controls__group">
+          <legend>Weapon</legend>
+          <select
+            className="controls__select"
+            value={weaponType}
+            onChange={(e) => onWeaponTypeChange(e.target.value as GunType | MeleeType | '')}
+          >
+            <option value="">Random</option>
+            {typeOptions.map((t) => (
+              <option key={t} value={t}>
+                {t}
+              </option>
+            ))}
+          </select>
+        </fieldset>
+      )}
 
       <fieldset className="controls__group">
         <legend>Guild</legend>
@@ -98,7 +111,7 @@ export function Controls({
           onChange={(e) => onGuildChange(e.target.value as GuildName | '')}
         >
           <option value="">Random</option>
-          {GUILD_BY_D12.map((g) => (
+          {guildOptions.map((g) => (
             <option key={g} value={g}>
               {g}
             </option>
@@ -122,14 +135,30 @@ export function Controls({
         </select>
       </fieldset>
 
-      <label className="controls__toggle">
-        <input
-          type="checkbox"
-          checked={redText}
-          onChange={(e) => onRedTextChange(e.target.checked)}
-        />
-        <span>Red Text</span>
-      </label>
+      {/* Red text is a gun/melee mechanic only. Shields don't have a red-text step. */}
+      {!isShield && (
+        <label className="controls__toggle">
+          <input
+            type="checkbox"
+            checked={redText}
+            onChange={(e) => onRedTextChange(e.target.checked)}
+          />
+          <span>Red Text</span>
+        </label>
+      )}
+
+      {/* Shield-only flavor toggle: append a 1–3 digit numeric tag to the
+          name (e.g. "Steel Aegis 137"). Spec calls this optional GM flavor. */}
+      {isShield && (
+        <label className="controls__toggle">
+          <input
+            type="checkbox"
+            checked={shieldDigits}
+            onChange={(e) => onShieldDigitsChange(e.target.checked)}
+          />
+          <span>Numeric suffix</span>
+        </label>
+      )}
 
       <button
         type="button"

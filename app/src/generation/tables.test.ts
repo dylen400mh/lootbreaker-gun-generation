@@ -20,7 +20,7 @@ import {
   MELEE_PLAYER_CHOICE_TYPES,
   MELEE_TYPES,
 } from './tables/melee/weaponTypes';
-import type { GuildName, GunType, MeleeType, Rarity, Tier } from './types';
+import type { DamageGuildName, GunType, MeleeType, Rarity, Tier } from './types';
 
 describe('weapon types', () => {
   it('has 6 defined weapon types', () => {
@@ -93,7 +93,7 @@ describe('module chance', () => {
 
 describe('guild modules', () => {
   it('every guild has exactly 6 modules', () => {
-    const guildNames: GuildName[] = [...GUILD_BY_D12];
+    const guildNames: DamageGuildName[] = [...GUILD_BY_D12];
     for (const g of guildNames) {
       expect(GUILD_MODULES[g]).toHaveLength(6);
     }

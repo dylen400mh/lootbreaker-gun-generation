@@ -21,12 +21,14 @@ import './App.css';
 const CATEGORIES: ReadonlyArray<{ value: WeaponCategory; label: string }> = [
   { value: 'gun', label: 'Guns' },
   { value: 'melee', label: 'Melee' },
+  { value: 'shield', label: 'Shields' },
 ];
 
 export default function App() {
   const [category, setCategory] = useState<WeaponCategory>('gun');
   const [tier, setTier] = useState<Tier>(2);
   const [redText, setRedText] = useState(false);
+  const [shieldDigits, setShieldDigits] = useState(false);
   const [weaponType, setWeaponType] = useState<GunType | MeleeType | ''>('');
   const [guild, setGuild] = useState<GuildName | ''>('');
   const [rarity, setRarity] = useState<Rarity | ''>('');
@@ -40,10 +42,12 @@ export default function App() {
   const cardRef = useRef<HTMLDivElement>(null);
 
   // Switching category resets the pinned weapon-type selection (the option
-  // list changes) and clears the rolled card so the user sees the new frame.
+  // list changes), clears the rolled card, and resets the guild pin since
+  // shields use a different guild table than guns/melee.
   const handleCategoryChange = useCallback((next: WeaponCategory) => {
     setCategory(next);
     setWeaponType('');
+    setGuild('');
     setWeapon(null);
   }, []);
 
@@ -58,6 +62,7 @@ export default function App() {
           weaponType: weaponType || undefined,
           guild: guild || undefined,
           rarity: rarity || undefined,
+          shieldDigits,
         },
         askChoice,
       );
@@ -65,7 +70,7 @@ export default function App() {
     } finally {
       setRolling(false);
     }
-  }, [category, tier, redText, weaponType, guild, rarity, askChoice]);
+  }, [category, tier, redText, weaponType, guild, rarity, shieldDigits, askChoice]);
 
   const handleDownload = useCallback(async () => {
     if (!weapon) return;
@@ -170,6 +175,8 @@ export default function App() {
             onTierChange={setTier}
             redText={redText}
             onRedTextChange={setRedText}
+            shieldDigits={shieldDigits}
+            onShieldDigitsChange={setShieldDigits}
             weaponType={weaponType}
             onWeaponTypeChange={setWeaponType}
             guild={guild}

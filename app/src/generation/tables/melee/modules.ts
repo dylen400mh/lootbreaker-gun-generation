@@ -1,4 +1,4 @@
-import type { GuildName } from '../../types';
+import type { DamageGuildName } from '../../types';
 
 export interface ModuleEntry {
   name: string;
@@ -8,7 +8,7 @@ export interface ModuleEntry {
 // Source: Lootbreaker_MeleeWeaponGeneration_Version0dot10.pdf — Step Five.
 // Each guild has 6 modules, rolled 1d6. Names and effect text transcribed
 // verbatim from the PDF.
-export const GUILD_MODULES: Record<GuildName, ReadonlyArray<ModuleEntry>> = {
+export const GUILD_MODULES: Record<DamageGuildName, ReadonlyArray<ModuleEntry>> = {
   Vandal: [
     {
       name: 'Sheol Flames',

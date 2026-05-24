@@ -1,5 +1,6 @@
 import gunManifestJson from '../generated/gunPsdManifest.json';
 import meleeManifestJson from '../generated/meleePsdManifest.json';
+import shieldManifestJson from '../generated/shieldPsdManifest.json';
 import type { Element, Rarity, WeaponCategory } from '../generation/types';
 
 type DamageRowName = 'minor' | 'major' | 'grave';
@@ -22,7 +23,14 @@ type SemanticDescriptor =
   | { kind: 'additionalEffectTextbox'; row: DamageRowName }
   | { kind: 'nameTextbox' }
   | { kind: 'guildTextbox' }
-  | { kind: 'quoteTextbox' };
+  | { kind: 'quoteTextbox' }
+  // Shield-only stat tables, effects-box header, panel backings, and decor.
+  | { kind: 'thresholdTable' }
+  | { kind: 'regenTable' }
+  | { kind: 'capacityTable' }
+  | { kind: 'effectsBox' }
+  | { kind: 'effectsPanel'; slot: 'threshold' | 'capacity' | 'regen' }
+  | { kind: 'decorAccent'; side: 'left' | 'right' };
 
 export interface PsdLayer {
   id: string;
@@ -46,6 +54,7 @@ export interface PsdManifest {
 const MANIFESTS: Record<WeaponCategory, PsdManifest> = {
   gun: gunManifestJson as PsdManifest,
   melee: meleeManifestJson as PsdManifest,
+  shield: shieldManifestJson as PsdManifest,
 };
 
 // Both PSDs use the same 1000×1363 canvas. The composite scaler treats the
@@ -147,7 +156,11 @@ export function getStatisticsLayers(category: WeaponCategory): PsdLayer[] {
   return out;
 }
 
-// The 8-layer card background, in PSD bottom-up stacking order.
+// The card background, in PSD bottom-up stacking order. Gun/melee have a
+// `paintstroke` layer that shield's PSD doesn't; shield contributes
+// effectsPanel dark backings (under the stat tables) and two decorAccent
+// slashes (flanking the title — must paint in front of the panels). Missing
+// kinds are silently skipped.
 export function getBackgroundLayers(category: WeaponCategory): PsdLayer[] {
   const layers: PsdLayer[] = [];
   const push = (l?: PsdLayer) => l && layers.push(l);
@@ -157,7 +170,24 @@ export function getBackgroundLayers(category: WeaponCategory): PsdLayer[] {
   push(findByKind(category, 'topBacking'));
   allByKind(category, 'statsBacking').forEach(push);
   allByKind(category, 'grunge').forEach(push);
+  allByKind(category, 'effectsPanel').forEach(push);
+  allByKind(category, 'decorAccent').forEach(push);
   return layers;
+}
+
+// Shield "stats card" foreground layers — the threshold/capacity/regen
+// labels, the effects-box header frame, and the quote rule. Panels are part
+// of the background (see getBackgroundLayers) so the decor accents paint in
+// front of them.
+export function getShieldTableLayers(): PsdLayer[] {
+  const out: PsdLayer[] = [];
+  const push = (l?: PsdLayer) => l && out.push(l);
+  push(findByKind('shield', 'thresholdTable'));
+  push(findByKind('shield', 'capacityTable'));
+  push(findByKind('shield', 'regenTable'));
+  push(findByKind('shield', 'effectsBox'));
+  push(findByKind('shield', 'quoteBottomRect'));
+  return out;
 }
 
 export function findDamageIcon(

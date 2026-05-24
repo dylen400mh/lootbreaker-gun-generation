@@ -1,4 +1,4 @@
-import type { GuildName } from '../../types';
+import type { DamageGuildName } from '../../types';
 
 export interface ModuleEntry {
   name: string;
@@ -7,7 +7,7 @@ export interface ModuleEntry {
 
 // Source: spec Step 5. Each guild has 6 modules, rolled 1d6.
 // v1 change: Noctra's 7th entry "Deadly Rounds" is dropped.
-export const GUILD_MODULES: Record<GuildName, ReadonlyArray<ModuleEntry>> = {
+export const GUILD_MODULES: Record<DamageGuildName, ReadonlyArray<ModuleEntry>> = {
   Vandal: [
     { name: 'Heat Sink', text: '+4 Fire Damage Resistance' },
     {

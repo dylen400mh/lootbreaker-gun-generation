@@ -132,3 +132,25 @@
 .weapon-card__quote-effect {
   color: #ffffff;
 }
+
+/* Shield card — only the stat-cell value styling is shield-specific. The
+   effects-box header reuses weapon-card__row and the guild passive +
+   threshold-modifier lines reuse weapon-card__effects / weapon-card__effect
+   / weapon-card__module-name. */
+.shield-card__stat-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.shield-card__stat-value {
+  font-family: 'Bahnschrift', 'Bahnschrift Condensed', system-ui, sans-serif;
+  font-stretch: 75%;
+  font-weight: 400;
+  font-size: 60px;
+  color: #ffffff;
+  letter-spacing: 0.02em;
+  line-height: 1;
+  white-space: nowrap;
+}

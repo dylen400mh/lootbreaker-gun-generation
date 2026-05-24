@@ -31,15 +31,32 @@ import {
   MELEE_TYPES,
 } from './tables/melee/weaponTypes';
 import { MELEE_BASE_NAMES } from './tables/melee/naming';
+import {
+  SHIELD_GUILD_BY_2D8,
+  SHIELD_GUILDS,
+  SHIELD_PLAYER_CHOICE_GUILDS,
+} from './tables/shield/guilds';
+import { SHIELD_BASE_NAMES } from './tables/shield/naming';
+import { CAPACITY_BY_TIER_RARITY } from './tables/shield/capacity';
+import { REGEN_BASE_BY_RARITY } from './tables/shield/regeneration';
+import { BASE_THRESHOLDS_BY_TIER } from './tables/shield/thresholds';
+import {
+  MOD_CHANCE_BY_RARITY,
+  THRESHOLD_MODIFIER_TABLE,
+} from './tables/shield/thresholdModifier';
 import type {
   BaseDamage,
+  DamageGuildName,
   DamageRow,
   Element,
   ElementResult,
+  GunWeapon,
   GuildName,
   GunType,
   MeleeType,
+  MeleeWeapon,
   Rarity,
+  ShieldWeapon,
   Tier,
   Weapon,
   WeaponCategory,
@@ -59,12 +76,14 @@ export interface GenerateOptions {
   redTextEnabled: boolean;
   /** When set, skips the weapon-type roll. Must match the chosen category. */
   weaponType?: GunType | MeleeType;
-  /** When set, skips the d12 guild roll. */
+  /** When set, skips the d12 (gun/melee) or 2d8 (shield) guild roll. */
   guild?: GuildName;
   /** When set, skips the 2d6 rarity cross-table. */
   rarity?: Rarity;
   /** Optional explicit seed; defaults to a fresh random seed. */
   seed?: number;
+  /** Shields only: when true, append a 1–3 digit numeric tag to the name. */
+  shieldDigits?: boolean;
 }
 
 interface CategoryTables {
@@ -74,7 +93,7 @@ interface CategoryTables {
   redText: typeof GUN_RED_TEXT;
 }
 
-const TABLES_BY_CATEGORY: Record<WeaponCategory, CategoryTables> = {
+const TABLES_BY_DAMAGE_CATEGORY: Record<'gun' | 'melee', CategoryTables> = {
   gun: {
     guilds: GUN_GUILDS,
     guildByD12: GUN_GUILD_BY_D12,
@@ -97,16 +116,25 @@ export async function generateWeapon(
 ): Promise<Weapon> {
   const seed = opts.seed ?? (Math.floor(Math.random() * 2 ** 32) >>> 0);
   const rng = mulberry32(seed);
-  const tables = TABLES_BY_CATEGORY[opts.category];
+
+  if (opts.category === 'shield') {
+    return generateShield(opts, seed, rng, askChoice);
+  }
+
+  const category: 'gun' | 'melee' = opts.category;
+  const tables = TABLES_BY_DAMAGE_CATEGORY[category];
 
   // STEP 1 — Weapon Type (category-specific roll).
   const { type, baseDamage, range, special, damageMatrix } =
-    opts.category === 'gun'
+    category === 'gun'
       ? await rollGunType(opts, rng, askChoice)
       : await rollMeleeType(opts, rng, askChoice);
 
-  // STEP 2 — Guild (1d12). Skipped when opts.guild pins the value.
-  const guildName: GuildName = opts.guild ?? tables.guildByD12[d(rng, 12) - 1];
+  // STEP 2 — Guild (1d12). Skipped when opts.guild pins the value. The UI
+  // gates Fortis/Ressurecta to the shield tab, so a non-DamageGuildName
+  // override here would be a programmer error rather than reachable input.
+  const guildName: DamageGuildName =
+    (opts.guild as DamageGuildName | undefined) ?? tables.guildByD12[d(rng, 12) - 1];
   const guild = tables.guilds[guildName];
 
   // STEP 3 — Rarity (2d6 cross-table). Skipped when opts.rarity pins the value.
@@ -126,7 +154,7 @@ export async function generateWeapon(
 
   // STEP 5 — Module: chance roll, then guild module 1d6.
   const modulePct = MODULE_CHANCE[rarity][opts.tier];
-  let moduleEntry: Weapon['module'] = null;
+  let moduleEntry: GunWeapon['module'] = null;
   if (modulePct > 0 && d(rng, 100) <= modulePct) {
     const moduleRoll = d(rng, 6);
     const m = tables.modules[guildName][moduleRoll - 1];
@@ -139,7 +167,7 @@ export async function generateWeapon(
   }
 
   // STEP 6 — Red Text (toggle).
-  let redText: Weapon['redText'] = null;
+  let redText: GunWeapon['redText'] = null;
   if (opts.redTextEnabled) {
     const rtRoll = d(rng, 100);
     const rt = tables.redText[rtRoll - 1];
@@ -148,15 +176,13 @@ export async function generateWeapon(
 
   // STEP 7 — Name (category-specific format).
   const name: WeaponName =
-    opts.category === 'gun'
+    category === 'gun'
       ? rollGunName(type as GunType, rng)
       : rollMeleeName(type as MeleeType, rng);
 
-  return {
+  const common = {
     seed,
-    category: opts.category,
     tier: opts.tier,
-    type,
     baseDamage,
     guild: guildName,
     guildPassive: guild.passive,
@@ -169,7 +195,114 @@ export async function generateWeapon(
     elements,
     module: moduleEntry,
     redText,
-    name,
+  };
+
+  if (category === 'gun') {
+    return {
+      ...common,
+      category: 'gun',
+      type: type as GunType,
+      name: name as Extract<WeaponName, { kind: 'gun' }>,
+    } satisfies GunWeapon;
+  }
+  return {
+    ...common,
+    category: 'melee',
+    type: type as MeleeType,
+    name: name as Extract<WeaponName, { kind: 'melee' }>,
+  } satisfies MeleeWeapon;
+}
+
+async function generateShield(
+  opts: GenerateOptions,
+  seed: number,
+  rng: () => number,
+  askChoice: AskChoice,
+): Promise<ShieldWeapon> {
+  // STEP 1 — Guild (2d8: sums 2..16). Sum 16 = Player Choice.
+  let guildName: GuildName;
+  if (opts.guild) {
+    guildName = opts.guild;
+  } else {
+    const sum = d(rng, 8) + d(rng, 8);
+    const slot = SHIELD_GUILD_BY_2D8[sum - 2];
+    if (slot === 'PlayerChoice') {
+      guildName = await askChoice<GuildName>({
+        title: 'Player Choice — Shield Guild',
+        description: 'You rolled a 16. Choose the shield guild.',
+        options: SHIELD_PLAYER_CHOICE_GUILDS.map((g) => ({ label: g, value: g })),
+      });
+    } else {
+      guildName = slot;
+    }
+  }
+  const guild = SHIELD_GUILDS[guildName];
+
+  // STEP 2 — Rarity (shared 2d6 cross-table).
+  let rarity: Rarity;
+  if (opts.rarity) {
+    rarity = opts.rarity;
+  } else {
+    const row = d(rng, 6);
+    const col = d(rng, 6);
+    rarity = RARITY_TABLE[row - 1][col - 1];
+  }
+
+  // STEP 3 — Capacity (tier × rarity).
+  const capacity = CAPACITY_BY_TIER_RARITY[opts.tier][rarity];
+
+  // STEP 4 — Regeneration base (rarity → integer; "+ MND" rendered literally).
+  const regenerationBase = REGEN_BASE_BY_RARITY[rarity];
+
+  // STEP 5 — Guild passive value scaled by rarity.
+  const guildPassive = {
+    name: guild.passiveName,
+    description: guild.description,
+    value: guild.valueByRarity[rarity],
+  };
+
+  // STEP 6 — Base thresholds (player-tier only) + optional rarity-gated modifier.
+  const thresholds = BASE_THRESHOLDS_BY_TIER[opts.tier];
+  let thresholdModifier: ShieldWeapon['thresholdModifier'] = null;
+  if (d(rng, 100) <= MOD_CHANCE_BY_RARITY[rarity]) {
+    const modRoll = d(rng, 12);
+    thresholdModifier = THRESHOLD_MODIFIER_TABLE[modRoll - 1];
+  }
+
+  // STEP 7 — Name (1d100 split: 1–50 prefix, 51–100 suffix) + 1d10 base name.
+  const placementRoll = d(rng, 100);
+  const usePrefix = placementRoll <= 50;
+  const modifier = usePrefix
+    ? PREFIXES[d(rng, 100) - 1]
+    : SUFFIXES[d(rng, 100) - 1];
+  const baseName = SHIELD_BASE_NAMES[d(rng, 10) - 1];
+  // Optional digits — controlled by the UI checkbox. When on, roll the length
+  // (1..3) then a uniform integer with that many digits.
+  let digits: string | undefined;
+  if (opts.shieldDigits) {
+    const len = d(rng, 3);
+    const upper = 10 ** len;
+    digits = String(d(rng, upper)).padStart(len, '0');
+  }
+
+  return {
+    category: 'shield',
+    seed,
+    tier: opts.tier,
+    guild: guildName,
+    rarity,
+    capacity,
+    regenerationBase,
+    thresholds: { ...thresholds },
+    thresholdModifier,
+    guildPassive,
+    name: {
+      kind: 'shield',
+      placement: usePrefix ? 'prefix' : 'suffix',
+      modifier,
+      baseName,
+      digits,
+    },
   };
 }
 

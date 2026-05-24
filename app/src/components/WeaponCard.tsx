@@ -4,12 +4,19 @@ import {
   getBackgroundLayers,
   getGuildLayers,
   getRarityLayers,
+  getShieldTableLayers,
   getStatisticsLayers,
   PSD_CANVAS,
 } from '../assets/psdManifest';
 import { weaponArtUrl, pickWeaponWidth } from '../assets/manifest';
 import { damageRowLayers } from '../generation/cardLayout';
-import { weaponDisplayName, type Weapon } from '../generation/types';
+import {
+  weaponDisplayName,
+  type GunWeapon,
+  type MeleeWeapon,
+  type ShieldWeapon,
+  type Weapon,
+} from '../generation/types';
 import { PsdComposite, PsdOverlay } from './PsdComposite';
 import './WeaponCard.css';
 
@@ -33,6 +40,13 @@ const STATS_LAYOUT = {
 };
 
 export function WeaponCard({ weapon }: Props) {
+  if (weapon.category === 'shield') {
+    return <ShieldCard weapon={weapon} />;
+  }
+  return <DamageWeaponCard weapon={weapon} />;
+}
+
+function DamageWeaponCard({ weapon }: { weapon: GunWeapon | MeleeWeapon }) {
   const fullName = weaponDisplayName(weapon);
 
   const baseLayers = useMemo(() => getBackgroundLayers(weapon.category), [weapon.category]);
@@ -194,7 +208,7 @@ export function WeaponCard({ weapon }: Props) {
 // Wraps <Effects> in a container whose font-size shrinks (via the
 // --effect-size CSS variable) until all lines fit within the bounded height.
 // Floor of 28 PSD-px keeps the text legible at the rendered scale.
-function AutoFitEffects({ weapon }: { weapon: Weapon }) {
+function AutoFitEffects({ weapon }: { weapon: GunWeapon | MeleeWeapon }) {
   const ref = useRef<HTMLDivElement>(null);
   useEffect(() => {
     const el = ref.current;
@@ -217,7 +231,7 @@ function AutoFitEffects({ weapon }: { weapon: Weapon }) {
 
 // Same shrink-to-fit pattern as AutoFitEffects, applied to the flavor text
 // band (~137 PSD-px tall under the bottom rule). Floor at 20 PSD-px.
-function AutoFitQuote({ weapon }: { weapon: Weapon }) {
+function AutoFitQuote({ weapon }: { weapon: GunWeapon | MeleeWeapon }) {
   const ref = useRef<HTMLDivElement>(null);
   const redText = weapon.redText;
   useEffect(() => {
@@ -241,7 +255,7 @@ function AutoFitQuote({ weapon }: { weapon: Weapon }) {
   );
 }
 
-function Effects({ weapon }: { weapon: Weapon }) {
+function Effects({ weapon }: { weapon: GunWeapon | MeleeWeapon }) {
   return (
     <>
       {weapon.special && (
@@ -272,4 +286,180 @@ function firstClause(s: string): string {
 function formatBonus(raw: string): string {
   const t = raw.trim();
   return t.startsWith('+') || t.startsWith('-') ? t : `+${t}`;
+}
+
+// ---- Shield card -----------------------------------------------------------
+
+// PSD coordinates for the three shield stat tables and the spaces around them.
+// Column centers below were measured by sampling each table raster's text
+// pixels — labels aren't always evenly distributed, so geometric thirds give
+// misaligned values.
+const SHIELD_LAYOUT = {
+  // Threshold Table bounds: x=163,y=322,w=676,h=124. 3 columns Minor/Major/Grave.
+  // Label x-centers in the raster: 45 / 338 / 630. Add layer.x = 163.
+  threshold: {
+    valuesY: 378,
+    valuesHeight: 60,
+    columnCenters: [208, 501, 793] as [number, number, number],
+    columnWidth: 220,
+  },
+  // Capacity Table bounds: x=207,y=547,w=140,h=125. Label fills width.
+  capacity: { centerX: 277, valueY: 610, height: 60 },
+  // Regen Table bounds: x=617,y=547,w=216,h=125. Label fills width.
+  regen: { centerX: 725, valueY: 610, height: 60 },
+  // Effects-box header (Spell_DefaultBox > Table): x=61,y=731,w=877,h=108.
+  // Top half is the "Tier X Shield | Guild" header; the divider rule sits
+  // around local y≈50; the bottom half used to be the "Effects" label and is
+  // now empty — the effects content overlay anchors right below the divider.
+  effectsHeader: { x: 81, y: 731, width: 837, height: 50 },
+  effects: { x: 81, y: 790, width: 837 },
+};
+
+function ShieldCard({ weapon }: { weapon: ShieldWeapon }) {
+  const fullName = weaponDisplayName(weapon);
+
+  const baseLayers = useMemo(() => getBackgroundLayers('shield'), []);
+  const rarityLayers = useMemo(() => getRarityLayers('shield', weapon.rarity), [weapon.rarity]);
+  const tableLayers = useMemo(() => getShieldTableLayers(), []);
+  const nameSlot = useMemo(() => findByKind('shield', 'nameTextbox'), []);
+  const quoteRect = useMemo(() => findByKind('shield', 'quoteBottomRect'), []);
+
+  const allLayers = useMemo(
+    () => [...baseLayers, ...rarityLayers, ...tableLayers],
+    [baseLayers, rarityLayers, tableLayers],
+  );
+
+  const mod = weapon.thresholdModifier;
+  const minor = weapon.thresholds.minor + (mod?.minor ?? 0);
+  const major = weapon.thresholds.major + (mod?.major ?? 0);
+  const grave = weapon.thresholds.grave + (mod?.grave ?? 0);
+
+  return (
+    <div className={`weapon-card weapon-card--${weapon.rarity.toLowerCase()}`}>
+      <PsdComposite layers={allLayers}>
+        {/* Name across the top */}
+        {nameSlot && (
+          <PsdOverlay
+            x={0}
+            y={nameSlot.y - 20}
+            width={PSD_CANVAS.width}
+            height={nameSlot.height + 40}
+            className="weapon-card__name-wrap"
+          >
+            <div className="weapon-card__name">{fullName}</div>
+          </PsdOverlay>
+        )}
+
+        {/* Threshold values — Minor / Major / Grave, aligned under the actual
+            raster label positions (not geometric thirds). */}
+        {SHIELD_LAYOUT.threshold.columnCenters.map((cx, i) => {
+          const value = [minor, major, grave][i];
+          return (
+            <PsdOverlay
+              key={i}
+              x={cx - SHIELD_LAYOUT.threshold.columnWidth / 2}
+              y={SHIELD_LAYOUT.threshold.valuesY}
+              width={SHIELD_LAYOUT.threshold.columnWidth}
+              height={SHIELD_LAYOUT.threshold.valuesHeight}
+              className="shield-card__stat-cell"
+            >
+              <div className="shield-card__stat-value">{value}</div>
+            </PsdOverlay>
+          );
+        })}
+
+        {/* Capacity value — single number, centered. */}
+        <PsdOverlay
+          x={SHIELD_LAYOUT.capacity.centerX - 70}
+          y={SHIELD_LAYOUT.capacity.valueY}
+          width={140}
+          height={SHIELD_LAYOUT.capacity.height}
+          className="shield-card__stat-cell"
+        >
+          <div className="shield-card__stat-value">{weapon.capacity}</div>
+        </PsdOverlay>
+
+        {/* Regen formula — "<base> + MND". */}
+        <PsdOverlay
+          x={SHIELD_LAYOUT.regen.centerX - 108}
+          y={SHIELD_LAYOUT.regen.valueY}
+          width={216}
+          height={SHIELD_LAYOUT.regen.height}
+          className="shield-card__stat-cell"
+        >
+          <div className="shield-card__stat-value">{weapon.regenerationBase} + MND</div>
+        </PsdOverlay>
+
+        {/* Effects-box header overlay: Tier + "Shield" on the left, guild on
+            the right — same idea as the gun stats-table "Tier X TYPE | Range"
+            header that gets masked from the raster and replaced live. */}
+        <PsdOverlay
+          x={SHIELD_LAYOUT.effectsHeader.x}
+          y={SHIELD_LAYOUT.effectsHeader.y}
+          width={SHIELD_LAYOUT.effectsHeader.width}
+          height={SHIELD_LAYOUT.effectsHeader.height}
+          className="weapon-card__row"
+        >
+          <span>Tier {weapon.tier} Shield</span>
+          <span>{weapon.guild}</span>
+        </PsdOverlay>
+
+        {/* Effects content — guild passive, in the same shrink-to-fit style
+            as gun/melee. Bounded between the effects-box bottom (y≈839) and
+            the quote bottom rectangle (y≈1168). */}
+        {quoteRect && (
+          <PsdOverlay
+            x={SHIELD_LAYOUT.effects.x}
+            y={SHIELD_LAYOUT.effects.y}
+            width={SHIELD_LAYOUT.effects.width}
+            height={quoteRect.y - SHIELD_LAYOUT.effects.y - 8}
+          >
+            <AutoFitShieldEffects weapon={weapon} />
+          </PsdOverlay>
+        )}
+      </PsdComposite>
+    </div>
+  );
+}
+
+// Mirrors AutoFitEffects: render the guild passive (and the optional
+// threshold modifier) as effect lines and shrink the font until everything
+// fits the bounded effects band.
+function AutoFitShieldEffects({ weapon }: { weapon: ShieldWeapon }) {
+  const ref = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const MAX = 44;
+    const MIN = 28;
+    let size = MAX;
+    el.style.setProperty('--effect-size', `${size}px`);
+    while (size > MIN && el.scrollHeight > el.clientHeight) {
+      size -= 1;
+      el.style.setProperty('--effect-size', `${size}px`);
+    }
+  }, [weapon]);
+  const value = weapon.guildPassive.value === 'X' ? null : weapon.guildPassive.value;
+  const mod = weapon.thresholdModifier;
+  return (
+    <div ref={ref} className="weapon-card__effects">
+      {value && <div className="weapon-card__effect">{formatBonus(value)}</div>}
+      <div className="weapon-card__effect">
+        <span className="weapon-card__module-name">{weapon.guildPassive.name}:</span>{' '}
+        {weapon.guildPassive.description}
+      </div>
+      {mod && (
+        <div className="weapon-card__effect">
+          <span className="weapon-card__module-name">Threshold Modifier:</span>{' '}
+          {mod.name} (Minor {signed(mod.minor)}, Major {signed(mod.major)}, Grave{' '}
+          {signed(mod.grave)})
+        </div>
+      )}
+    </div>
+  );
+}
+
+function signed(n: number): string {
+  if (n === 0) return '0';
+  return n > 0 ? `+${n}` : String(n);
 }
