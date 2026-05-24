@@ -6,27 +6,53 @@ import { Controls } from './components/Controls';
 import { PsdComposite } from './components/PsdComposite';
 import { WeaponCard } from './components/WeaponCard';
 import { generateWeapon } from './generation/procedure';
-import type { GuildName, Rarity, Tier, Weapon, WeaponType } from './generation/types';
+import { weaponFilenameStem } from './generation/types';
+import type {
+  GuildName,
+  GunType,
+  MeleeType,
+  Rarity,
+  Tier,
+  Weapon,
+  WeaponCategory,
+} from './generation/types';
 import './App.css';
 
+const CATEGORIES: ReadonlyArray<{ value: WeaponCategory; label: string }> = [
+  { value: 'gun', label: 'Guns' },
+  { value: 'melee', label: 'Melee' },
+];
+
 export default function App() {
+  const [category, setCategory] = useState<WeaponCategory>('gun');
   const [tier, setTier] = useState<Tier>(2);
   const [redText, setRedText] = useState(false);
-  const [weaponType, setWeaponType] = useState<WeaponType | ''>('');
+  const [weaponType, setWeaponType] = useState<GunType | MeleeType | ''>('');
   const [guild, setGuild] = useState<GuildName | ''>('');
   const [rarity, setRarity] = useState<Rarity | ''>('');
   const [weapon, setWeapon] = useState<Weapon | null>(null);
   const [rolling, setRolling] = useState(false);
   const [downloading, setDownloading] = useState(false);
   const { askChoice, modal } = useChoiceModal();
-  const backgroundLayers = useMemo(() => getBackgroundLayers(), []);
+  // Empty-state background follows the active category so switching tabs
+  // before rolling shows the right card frame.
+  const backgroundLayers = useMemo(() => getBackgroundLayers(category), [category]);
   const cardRef = useRef<HTMLDivElement>(null);
+
+  // Switching category resets the pinned weapon-type selection (the option
+  // list changes) and clears the rolled card so the user sees the new frame.
+  const handleCategoryChange = useCallback((next: WeaponCategory) => {
+    setCategory(next);
+    setWeaponType('');
+    setWeapon(null);
+  }, []);
 
   const handleRoll = useCallback(async () => {
     setRolling(true);
     try {
       const w = await generateWeapon(
         {
+          category,
           tier,
           redTextEnabled: redText,
           weaponType: weaponType || undefined,
@@ -39,7 +65,7 @@ export default function App() {
     } finally {
       setRolling(false);
     }
-  }, [tier, redText, weaponType, guild, rarity, askChoice]);
+  }, [category, tier, redText, weaponType, guild, rarity, askChoice]);
 
   const handleDownload = useCallback(async () => {
     if (!weapon) return;
@@ -82,9 +108,7 @@ export default function App() {
       await toBlob(inner, opts);
       const blob = await toBlob(inner, opts);
       if (!blob) return;
-      const filename = `lootbreaker-${weapon.name.prefix}-${weapon.name.abbrev}-${weapon.name.number}.png`
-        .toLowerCase()
-        .replace(/\s+/g, '-');
+      const filename = `${weaponFilenameStem(weapon)}.png`;
       const file = new File([blob], filename, { type: 'image/png' });
       // Mobile: prefer Web Share with files when available so users can drop
       // the card straight into a chat / save it via the system share sheet.
@@ -112,8 +136,23 @@ export default function App() {
     <div className="app">
       <header className="app__header">
         <h1 className="app__title">Lootbreaker</h1>
-        <p className="app__subtitle">Procedural Gun Generator</p>
+        <p className="app__subtitle">Procedural Weapon Generator</p>
       </header>
+
+      <div className="app__tabs" role="tablist" aria-label="Weapon category">
+        {CATEGORIES.map((c) => (
+          <button
+            key={c.value}
+            type="button"
+            role="tab"
+            aria-selected={category === c.value}
+            className={`app__tab ${category === c.value ? 'is-active' : ''}`}
+            onClick={() => handleCategoryChange(c.value)}
+          >
+            {c.label}
+          </button>
+        ))}
+      </div>
 
       <main className="app__main">
         <div className="app__result" ref={cardRef}>
@@ -126,6 +165,7 @@ export default function App() {
 
         <div className="app__controls-wrap">
           <Controls
+            category={category}
             tier={tier}
             onTierChange={setTier}
             redText={redText}

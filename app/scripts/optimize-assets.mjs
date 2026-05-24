@@ -12,7 +12,8 @@ import sharp from 'sharp';
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, '..');
 const ASSETS = resolve(ROOT, '..', 'Lootbreaker_AppResources');
-const WEAPON_SRC = join(ASSETS, 'Weapon Art');
+const GUN_SRC = join(ASSETS, 'Weapon Art');
+const MELEE_SRC = join(ASSETS, 'Melee Weapon Assets');
 const ICON_SRC = join(ASSETS, 'Icons');
 const DICE_SRC = join(ASSETS, 'Dice');
 const WEAPON_OUT = join(ROOT, 'public', 'weapons');
@@ -24,13 +25,22 @@ const ICON_WIDTH = 256;
 const DICE_WIDTH = 128;
 const WEBP_QUALITY = 85;
 
-const weaponMap = {
+const gunMap = {
   'eightgramsoffat01FinalOneHandgunNoBackground.png': 'handgun',
   'eightgramsoffat01FinalOneSubmachingunNoBackground.png': 'smg',
   'eightgramsoffat01FinalOneShtogunNoBackground.png': 'shotgun',
   'eightgramsoffat01FinalOneCombatRifleNoBackground.png': 'combat-rifle',
   'eightgramsoffat01FinalOneSniperRifleNoBackground.png': 'sniper-rifle',
   'eightgramsoffat01FinalOnePlasmaGunNoBackground.png': 'plasma-caster',
+};
+
+const meleeMap = {
+  'Axe.png': 'axe',
+  'Sword.png': 'sword',
+  'Lance.png': 'lance',
+  'Kunai.png': 'dagger',
+  'Gauntlet.png': 'gauntlet',
+  'Warhammer.png': 'warhammer',
 };
 
 const iconMap = {
@@ -58,8 +68,8 @@ async function ensureDir(dir) {
   await fs.mkdir(dir, { recursive: true });
 }
 
-async function processWeapon(srcName, slug) {
-  const srcPath = join(WEAPON_SRC, srcName);
+async function processWeapon(srcDir, srcName, slug) {
+  const srcPath = join(srcDir, srcName);
   for (const width of WEAPON_WIDTHS) {
     const outPath = join(WEAPON_OUT, `${slug}-${width}.webp`);
     await sharp(srcPath)
@@ -97,9 +107,14 @@ async function processDice(srcName, slug) {
 async function main() {
   await Promise.all([ensureDir(WEAPON_OUT), ensureDir(ICON_OUT), ensureDir(DICE_OUT)]);
 
-  console.log('Processing weapons:');
-  for (const [src, slug] of Object.entries(weaponMap)) {
-    await processWeapon(src, slug);
+  console.log('Processing guns:');
+  for (const [src, slug] of Object.entries(gunMap)) {
+    await processWeapon(GUN_SRC, src, slug);
+  }
+
+  console.log('Processing melee weapons:');
+  for (const [src, slug] of Object.entries(meleeMap)) {
+    await processWeapon(MELEE_SRC, src, slug);
   }
 
   console.log('Processing icons:');

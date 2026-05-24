@@ -9,8 +9,7 @@ import {
 } from '../assets/psdManifest';
 import { weaponArtUrl, pickWeaponWidth } from '../assets/manifest';
 import { damageRowLayers } from '../generation/cardLayout';
-import { GUILDS } from '../generation/tables/guilds';
-import type { Weapon } from '../generation/types';
+import { weaponDisplayName, type Weapon } from '../generation/types';
 import { PsdComposite, PsdOverlay } from './PsdComposite';
 import './WeaponCard.css';
 
@@ -34,20 +33,23 @@ const STATS_LAYOUT = {
 };
 
 export function WeaponCard({ weapon }: Props) {
-  const fullName = `${weapon.name.prefix} ${weapon.name.abbrev}-${weapon.name.number} ${weapon.name.suffix}`;
+  const fullName = weaponDisplayName(weapon);
 
-  const baseLayers = useMemo(() => getBackgroundLayers(), []);
-  const rarityLayers = useMemo(() => getRarityLayers(weapon.rarity), [weapon.rarity]);
-  const guildLayers = useMemo(() => getGuildLayers(), []);
-  const statsLayers = useMemo(() => getStatisticsLayers(), []);
+  const baseLayers = useMemo(() => getBackgroundLayers(weapon.category), [weapon.category]);
+  const rarityLayers = useMemo(
+    () => getRarityLayers(weapon.category, weapon.rarity),
+    [weapon.category, weapon.rarity],
+  );
+  const guildLayers = useMemo(() => getGuildLayers(weapon.category), [weapon.category]);
+  const statsLayers = useMemo(() => getStatisticsLayers(weapon.category), [weapon.category]);
 
   const damageLayers = useMemo(
     () => [
-      ...damageRowLayers('minor', weapon.damage.minor, weapon.elements),
-      ...damageRowLayers('major', weapon.damage.major, weapon.elements),
-      ...damageRowLayers('grave', weapon.damage.grave, weapon.elements),
+      ...damageRowLayers(weapon.category, 'minor', weapon.damage.minor, weapon.baseDamage, weapon.elements),
+      ...damageRowLayers(weapon.category, 'major', weapon.damage.major, weapon.baseDamage, weapon.elements),
+      ...damageRowLayers(weapon.category, 'grave', weapon.damage.grave, weapon.baseDamage, weapon.elements),
     ],
-    [weapon.damage, weapon.elements],
+    [weapon.category, weapon.damage, weapon.baseDamage, weapon.elements],
   );
 
   const allLayers = useMemo(
@@ -56,10 +58,13 @@ export function WeaponCard({ weapon }: Props) {
   );
 
   // Slot anchors for HTML overlays.
-  const weaponSlot = useMemo(() => findByKind('weaponArtSlot'), []);
-  const nameSlot = useMemo(() => findByKind('nameTextbox'), []);
-  const guildSlot = useMemo(() => findByKind('guildTextbox'), []);
-  const quoteRect = useMemo(() => findByKind('quoteBottomRect'), []);
+  const weaponSlot = useMemo(() => findByKind(weapon.category, 'weaponArtSlot'), [weapon.category]);
+  const nameSlot = useMemo(() => findByKind(weapon.category, 'nameTextbox'), [weapon.category]);
+  const guildSlot = useMemo(() => findByKind(weapon.category, 'guildTextbox'), [weapon.category]);
+  const quoteRect = useMemo(
+    () => findByKind(weapon.category, 'quoteBottomRect'),
+    [weapon.category],
+  );
 
   // The PSD's weaponArtSlot bounds (610×387, aspect 1.576) extend up into the
   // rarity strip and down into the guild strip. Our source weapon PNGs are
@@ -244,7 +249,7 @@ function Effects({ weapon }: { weapon: Weapon }) {
       )}
       {weapon.guildBonus && weapon.guildBonus !== 'X' && (
         <div className="weapon-card__effect">
-          {formatBonus(weapon.guildBonus)} {GUILDS[weapon.guild].bonusLabel}
+          {formatBonus(weapon.guildBonus)} {weapon.guildBonusLabel}
         </div>
       )}
       {weapon.module && (

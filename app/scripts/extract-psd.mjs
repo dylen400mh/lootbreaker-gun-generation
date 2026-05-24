@@ -1,11 +1,16 @@
-// Extracts every renderable leaf layer from Weapon_PSD.psd as a transparent PNG.
-// Emits public/psd/layers/<id>.png + public/psd/manifest.json.
+// Extracts every renderable leaf layer from a Weapon PSD as a transparent PNG.
+// Emits <out-public>/<category>/layers/<id>.png + <out-public>/<category>/manifest.json,
+// plus a parallel manifest into src/generated/ that Vite can bundle.
 //
-// The React side reads manifest.json to know each layer's PSD-recorded position,
-// dimensions, parent path, and visibility state. The card composes by toggling
-// which layers to render based on the rolled weapon.
+// CLI:
+//   node scripts/extract-psd.mjs --category gun
+//   node scripts/extract-psd.mjs --category melee
+//   node scripts/extract-psd.mjs --psd <abs-or-rel-path> --category <name>
 //
-// Run with: npm run extract-psd
+// `--category` is required; it determines the output subdirectory and the
+// generated manifest filename (e.g. `gun` → `src/generated/gunPsdManifest.json`).
+//
+// Run with: npm run extract-psd:gun  /  npm run extract-psd:melee  /  npm run extract-psd
 
 import { initializeCanvas, readPsd } from 'ag-psd';
 import { createCanvas, createImageData } from 'canvas';
@@ -17,22 +22,36 @@ initializeCanvas(createCanvas, createImageData);
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, '..');
-const PSD_PATH = resolve(
-  __dirname,
-  '..',
-  '..',
-  'Lootbreaker_AppResources',
-  'Weapon_PSD.psd',
-);
-const OUT_DIR = join(ROOT, 'public', 'psd');
+const ASSETS_ROOT = resolve(__dirname, '..', '..', 'Lootbreaker_AppResources');
+
+const DEFAULT_PSD_BY_CATEGORY = {
+  gun: join(ASSETS_ROOT, 'Weapon_PSD.psd'),
+  melee: join(ASSETS_ROOT, 'Melee Weapon Assets', 'Melee_Weapon_Card_Root.psd'),
+};
+
+const { category, psdPath } = parseArgs(process.argv.slice(2));
+if (!category) {
+  console.error('Missing required --category <gun|melee>');
+  process.exit(1);
+}
+const PSD_PATH = psdPath ?? DEFAULT_PSD_BY_CATEGORY[category];
+if (!PSD_PATH) {
+  console.error(`Unknown category "${category}" and no --psd path given`);
+  process.exit(1);
+}
+
+const OUT_DIR = join(ROOT, 'public', 'psd', category);
 const LAYERS_DIR = join(OUT_DIR, 'layers');
 const PUBLIC_MANIFEST_PATH = join(OUT_DIR, 'manifest.json');
 // Also write into src/ so Vite bundles it (Vite skips JSON in /public).
-const SRC_MANIFEST_PATH = join(ROOT, 'src', 'generated', 'psdManifest.json');
+const SRC_MANIFEST_PATH = join(ROOT, 'src', 'generated', `${category}PsdManifest.json`);
 
 // Layers we don't want exported (designer notes, redundant duplicates).
+// `Mythic Rarity Setting` exists in the melee PSD but the spec never rolls
+// Mythic — skip the whole group so we don't ship layer PNGs that are never used.
 const SKIP_NAMES = new Set([
   'Size and Location rectangle',
+  'Mythic Rarity Setting',
 ]);
 
 // Semantic mappings discovered by visual inspection of extracted layers.
@@ -133,7 +152,7 @@ async function emitRasterLayer(layer, newPath, used) {
     id,
     name: layer.name ?? '<unnamed>',
     path: newPath,
-    file: `psd/layers/${filename}`,
+    file: `psd/${category}/layers/${filename}`,
     x: layer.left ?? 0,
     y: layer.top ?? 0,
     width: (layer.right ?? 0) - (layer.left ?? 0),
@@ -196,7 +215,7 @@ async function emitVectorLayer(layer, newPath, used, rarityTextColors) {
     id,
     name: layer.name ?? '<unnamed>',
     path: newPath,
-    file: `psd/layers/${filename}`,
+    file: `psd/${category}/layers/${filename}`,
     x: ox,
     y: oy,
     width: cw,
@@ -446,6 +465,26 @@ function slug(name) {
     .replace(/^-+|-+$/g, '')
     .replace(/-+/g, '-')
     || 'unnamed';
+}
+
+function parseArgs(argv) {
+  let category = null;
+  let psdPath = null;
+  for (let i = 0; i < argv.length; i += 1) {
+    const a = argv[i];
+    if (a === '--category') {
+      category = argv[i + 1];
+      i += 1;
+    } else if (a === '--psd') {
+      psdPath = resolve(argv[i + 1]);
+      i += 1;
+    } else if (a.startsWith('--category=')) {
+      category = a.slice('--category='.length);
+    } else if (a.startsWith('--psd=')) {
+      psdPath = resolve(a.slice('--psd='.length));
+    }
+  }
+  return { category, psdPath };
 }
 
 main().catch((e) => {

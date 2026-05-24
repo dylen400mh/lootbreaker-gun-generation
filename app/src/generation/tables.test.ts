@@ -1,26 +1,39 @@
 import { describe, expect, it } from 'vitest';
-import { ELEMENT_TABLE } from './tables/elements';
-import { GUILDS, GUILD_BY_D12 } from './tables/guilds';
-import { MODULE_CHANCE } from './tables/moduleChance';
-import { GUILD_MODULES } from './tables/modules';
-import { ABBREVIATIONS, PREFIXES, SUFFIXES } from './tables/naming';
-import { RARITY_TABLE } from './tables/rarity';
-import { RED_TEXT } from './tables/redText';
-import { WEAPON_BY_D8, WEAPON_TYPES } from './tables/weaponTypes';
-import type { GuildName, Tier, Rarity, WeaponType } from './types';
+import { ELEMENT_TABLE } from './tables/shared/elements';
+import { MODULE_CHANCE } from './tables/shared/moduleChance';
+import { PREFIXES, SUFFIXES } from './tables/shared/naming';
+import { RARITY_TABLE } from './tables/shared/rarity';
+import { GUILDS, GUILD_BY_D12 } from './tables/gun/guilds';
+import { GUILD_MODULES } from './tables/gun/modules';
+import { ABBREVIATIONS } from './tables/gun/naming';
+import { RED_TEXT } from './tables/gun/redText';
+import { GUN_BY_D8, GUN_TYPES } from './tables/gun/weaponTypes';
+import {
+  GUILDS as MELEE_GUILDS,
+  GUILD_BY_D12 as MELEE_GUILD_BY_D12,
+} from './tables/melee/guilds';
+import { GUILD_MODULES as MELEE_GUILD_MODULES } from './tables/melee/modules';
+import { RED_TEXT as MELEE_RED_TEXT } from './tables/melee/redText';
+import { MELEE_BASE_NAMES } from './tables/melee/naming';
+import {
+  MELEE_BY_2D4,
+  MELEE_PLAYER_CHOICE_TYPES,
+  MELEE_TYPES,
+} from './tables/melee/weaponTypes';
+import type { GuildName, GunType, MeleeType, Rarity, Tier } from './types';
 
 describe('weapon types', () => {
   it('has 6 defined weapon types', () => {
-    expect(Object.keys(WEAPON_TYPES)).toHaveLength(6);
+    expect(Object.keys(GUN_TYPES)).toHaveLength(6);
   });
 
   it('d8 lookup has 8 slots, with 2 nulls (Scout Rifle and Player Choice)', () => {
-    expect(WEAPON_BY_D8).toHaveLength(8);
-    expect(WEAPON_BY_D8.filter((x) => x === null)).toHaveLength(2);
+    expect(GUN_BY_D8).toHaveLength(8);
+    expect(GUN_BY_D8.filter((x) => x === null)).toHaveLength(2);
   });
 
   it('every defined weapon type has tier 1/2/3 damage rows', () => {
-    for (const def of Object.values(WEAPON_TYPES)) {
+    for (const def of Object.values(GUN_TYPES)) {
       ([1, 2, 3] as Tier[]).forEach((t) => {
         expect(def.damage[t].minor).toBeTruthy();
         expect(def.damage[t].major).toBeTruthy();
@@ -94,8 +107,8 @@ describe('red text', () => {
 });
 
 describe('naming', () => {
-  it('every weapon type has 6 abbreviations', () => {
-    const types: WeaponType[] = ['Pistol', 'SMG', 'Shotgun', 'Combat Rifle', 'Sniper Rifle', 'Launcher'];
+  it('every gun type has 6 abbreviations', () => {
+    const types: GunType[] = ['Pistol', 'SMG', 'Shotgun', 'Combat Rifle', 'Sniper Rifle', 'Launcher'];
     for (const t of types) {
       expect(ABBREVIATIONS[t]).toHaveLength(6);
     }
@@ -104,5 +117,55 @@ describe('naming', () => {
   it('has 100 prefixes and 100 suffixes', () => {
     expect(PREFIXES).toHaveLength(100);
     expect(SUFFIXES).toHaveLength(100);
+  });
+});
+
+describe('melee tables', () => {
+  it('has 6 defined melee weapon types', () => {
+    expect(Object.keys(MELEE_TYPES)).toHaveLength(6);
+    expect(MELEE_PLAYER_CHOICE_TYPES).toHaveLength(6);
+  });
+
+  it('2d4 lookup covers sums 2-7 plus null for 8 (Player Choice)', () => {
+    for (let sum = 2; sum <= 7; sum += 1) {
+      expect(MELEE_BY_2D4[sum]).toBeTruthy();
+    }
+    expect(MELEE_BY_2D4[8]).toBeNull();
+  });
+
+  it('every melee type has tier 1/2/3 damage rows', () => {
+    for (const def of Object.values(MELEE_TYPES)) {
+      ([1, 2, 3] as Tier[]).forEach((t) => {
+        expect(def.damage[t].minor).toBeTruthy();
+        expect(def.damage[t].major).toBeTruthy();
+        expect(def.damage[t].grave).toBeTruthy();
+      });
+    }
+  });
+
+  it('has 12 melee guilds with passive + 5 rarity bonuses', () => {
+    expect(MELEE_GUILD_BY_D12).toHaveLength(12);
+    for (const name of MELEE_GUILD_BY_D12) {
+      const g = MELEE_GUILDS[name];
+      expect(g.passive).toBeTruthy();
+      expect(Object.keys(g.bonusByRarity)).toHaveLength(5);
+    }
+  });
+
+  it('every melee guild has exactly 6 modules', () => {
+    for (const g of MELEE_GUILD_BY_D12) {
+      expect(MELEE_GUILD_MODULES[g]).toHaveLength(6);
+    }
+  });
+
+  it('melee red text has 100 entries', () => {
+    expect(MELEE_RED_TEXT).toHaveLength(100);
+  });
+
+  it('every melee type has 6 base names', () => {
+    const types: MeleeType[] = ['Warhammer', 'Axe', 'Lance', 'Dagger', 'Sword', 'Gauntlet'];
+    for (const t of types) {
+      expect(MELEE_BASE_NAMES[t]).toHaveLength(6);
+    }
   });
 });

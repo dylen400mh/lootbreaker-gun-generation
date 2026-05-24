@@ -12,7 +12,9 @@
     "test:watch": "vitest",
     "prepare-assets": "node scripts/optimize-assets.mjs",
     "inspect-psd": "node scripts/inspect-psd.mjs",
-    "extract-psd": "node scripts/extract-psd.mjs"
+    "extract-psd": "npm run extract-psd:gun && npm run extract-psd:melee",
+    "extract-psd:gun": "node scripts/extract-psd.mjs --category gun",
+    "extract-psd:melee": "node scripts/extract-psd.mjs --category melee"
   },
   "dependencies": {
     "html-to-image": "^1.11.13",

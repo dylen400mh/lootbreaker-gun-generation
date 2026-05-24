@@ -1,0 +1,48 @@
+// Source: spec Step 7c (Gun) / "Suffixes and Prefixes" (Melee). 1d100 each.
+// The two specs publish identical lists, so guns and melee share these tables.
+
+export const PREFIXES: ReadonlyArray<string> = [
+  'Adamant', 'Aetherbound', 'Ashwrought', 'Astral', 'Barbed',
+  'Behemoth', 'Binary', 'Blackened', 'Bleak', 'Blooded',
+  'Boundless', 'Bronze', 'Cataclysmic', 'Celestial', 'Chrono-Locked',
+  'Cobalt', 'Coiled', 'Cold-Wrought', 'Covenant', 'Crimson',
+  'Cryptic', 'Cyclonic', 'Darklight', 'Dawnforged', 'Deepcore',
+  'Dire', 'Draconic', 'Dream-Carved', 'Dreadful', 'Embered',
+  'Entropic', 'Etheric', 'Eviscerating', 'Fallen', 'Fanged',
+  'Fell', 'Forsaken', 'Frostbitten', 'Fulgurite', 'Gilded',
+  'Glacial', 'Gravital', 'Grim', 'Haloed', 'Hellborn',
+  'Hollowed', 'Hyper', 'Ignited', 'Infinite', 'Ironclad',
+  'Jagged', 'Leviathan', 'Luminous', 'Midnight', 'Molten',
+  'Monolith', 'Necrotic', 'Nullified', 'Obsidian', 'Omega',
+  'Ornery', 'Parallax', 'Phased', 'Plastic', 'Prism',
+  'Quake-Born', 'Quantum', 'Radiant', "Reckoner's", 'Rift-Borne',
+  'Runic', 'Ruinous', 'Sabled', 'Seraphic', 'Shattered',
+  'Silent', 'Silvered', 'Singularity', 'Siphoning', 'Solaris',
+  'Spectral', 'Spellwrought', 'Starkiller', 'Stormbound', 'Sunken',
+  'Tempestuous', 'Thorned', 'Titanic', 'Twilight', 'Umbral',
+  'Vanguard', 'Voidglass', 'Voltaic', 'Warborn', 'Whispering',
+  'Wild', 'Windcarved', 'Witch-Marked', 'Wrym-Bound', 'Zenith',
+];
+
+export const SUFFIXES: ReadonlyArray<string> = [
+  'Apex', 'Ascendant', 'Bastion', 'Blackout', 'Blackstar',
+  'Bloom', 'Brimstone', 'Catalyst', 'Cinder', 'Cipher',
+  'Collapse', 'Crest', 'Dawn', 'Depths', 'Discord',
+  'Drift', 'Echo', 'Edge', 'Ember', 'Eclipse',
+  'Fang', 'Flux', 'Frost', 'Fury', 'Ghast',
+  'Ghost', 'Gloom', 'Gravemind', 'Gravity', 'Gravestone',
+  'Halo', 'Horizon', 'Hunger', 'Inferno', 'Ironheart',
+  'Lament', 'Legacy', 'Longshadow', 'Maw', 'Mirage',
+  'Monolith', 'Nemesis', 'Nexus', 'Nightfall', 'Null',
+  'Oblivion', 'Omen', 'Oracle', 'Paradox', 'Phantom',
+  'Pulse', 'Quake', 'Radiant', 'Rapture', 'Reaper',
+  'Requiem', 'Rift', 'Ritual', 'Ruin', 'Runefall',
+  'Scorn', 'Sever', 'Shade', 'Shatter', 'Shiver',
+  'Silence', 'Signal', 'Siphon', 'Solstice', 'Sovereign',
+  'Spectre', 'Spiral', 'Spite', 'Starfall', 'Storm',
+  'Sundown', 'Surge', 'Talon', 'Tempest', 'Terminus',
+  'Thunder', 'Thorn', 'Torrent', 'Twilight', 'Umbrashard',
+  'Vanguard', 'Vengeance', 'Verdict', 'Vesper', 'Void',
+  'Vortex', 'Wardbreaker', 'Warden', 'Wayfarer', 'Whisper',
+  'Wildfire', 'Wind', 'Wraith', 'Wyrd', 'Zephyr',
+];

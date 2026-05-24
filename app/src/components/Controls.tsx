@@ -1,16 +1,25 @@
-import { GUILD_BY_D12 } from '../generation/tables/guilds';
-import { PLAYER_CHOICE_TYPES } from '../generation/tables/weaponTypes';
+import { GUILD_BY_D12 } from '../generation/tables/gun/guilds';
+import { GUN_PLAYER_CHOICE_TYPES } from '../generation/tables/gun/weaponTypes';
+import { MELEE_PLAYER_CHOICE_TYPES } from '../generation/tables/melee/weaponTypes';
 import { RARITIES } from '../generation/types';
-import type { GuildName, Rarity, Tier, WeaponType } from '../generation/types';
+import type {
+  GuildName,
+  GunType,
+  MeleeType,
+  Rarity,
+  Tier,
+  WeaponCategory,
+} from '../generation/types';
 import './Controls.css';
 
 interface Props {
+  category: WeaponCategory;
   tier: Tier;
   onTierChange: (t: Tier) => void;
   redText: boolean;
   onRedTextChange: (v: boolean) => void;
-  weaponType: WeaponType | '';
-  onWeaponTypeChange: (t: WeaponType | '') => void;
+  weaponType: GunType | MeleeType | '';
+  onWeaponTypeChange: (t: GunType | MeleeType | '') => void;
   guild: GuildName | '';
   onGuildChange: (g: GuildName | '') => void;
   rarity: Rarity | '';
@@ -25,6 +34,7 @@ interface Props {
 const TIERS: Tier[] = [1, 2, 3];
 
 export function Controls({
+  category,
   tier,
   onTierChange,
   redText,
@@ -41,6 +51,9 @@ export function Controls({
   canDownload,
   downloading,
 }: Props) {
+  const typeOptions: ReadonlyArray<GunType | MeleeType> =
+    category === 'gun' ? GUN_PLAYER_CHOICE_TYPES : MELEE_PLAYER_CHOICE_TYPES;
+
   return (
     <div className="controls">
       <fieldset className="controls__group">
@@ -66,10 +79,10 @@ export function Controls({
         <select
           className="controls__select"
           value={weaponType}
-          onChange={(e) => onWeaponTypeChange(e.target.value as WeaponType | '')}
+          onChange={(e) => onWeaponTypeChange(e.target.value as GunType | MeleeType | '')}
         >
           <option value="">Random</option>
-          {PLAYER_CHOICE_TYPES.map((t) => (
+          {typeOptions.map((t) => (
             <option key={t} value={t}>
               {t}
             </option>
