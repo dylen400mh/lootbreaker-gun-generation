@@ -137,6 +137,7 @@
 .weapon-card__quote-title {
   color: #d34d52;
   font-weight: 700;
+  margin-right: 0.5em;
 }
 
 .weapon-card__quote-effect {
