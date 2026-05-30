@@ -1,0 +1,3368 @@
+{
+  "canvas": {
+    "width": 1000,
+    "height": 1363
+  },
+  "layers": [
+    {
+      "id": "background",
+      "name": "Background",
+      "path": [
+        "Background"
+      ],
+      "file": "psd/spell/aoe/layers/background.png",
+      "x": 0,
+      "y": 0,
+      "width": 1000,
+      "height": 1363,
+      "hidden": false,
+      "opacity": 1,
+      "semantic": {
+        "kind": "background"
+      }
+    },
+    {
+      "id": "spell--gradient-bg",
+      "name": "Gradient BG",
+      "path": [
+        "Spell",
+        "Gradient BG"
+      ],
+      "file": "psd/spell/aoe/layers/spell--gradient-bg.png",
+      "x": -47,
+      "y": -40,
+      "width": 1095,
+      "height": 1451,
+      "hidden": false,
+      "opacity": 1,
+      "semantic": {
+        "kind": "gradientBg"
+      }
+    },
+    {
+      "id": "spell--paintstroke",
+      "name": "Paintstroke",
+      "path": [
+        "Spell",
+        "Paintstroke"
+      ],
+      "file": "psd/spell/aoe/layers/spell--paintstroke.png",
+      "x": 31,
+      "y": -96,
+      "width": 939,
+      "height": 939,
+      "hidden": false,
+      "opacity": 0.20392156862745098,
+      "semantic": {
+        "kind": "paintstroke"
+      }
+    },
+    {
+      "id": "spell--backing-layers--top-backing",
+      "name": "Top Backing",
+      "path": [
+        "Spell",
+        "Backing Layers",
+        "Top Backing"
+      ],
+      "file": "psd/spell/aoe/layers/spell--backing-layers--top-backing.png",
+      "x": -47,
+      "y": -241,
+      "width": 1094,
+      "height": 408,
+      "hidden": false,
+      "opacity": 1,
+      "semantic": {
+        "kind": "topBacking"
+      }
+    },
+    {
+      "id": "spell--backing-layers--stats-backing--stats-and-quotes-backing",
+      "name": "Stats and Quotes Backing",
+      "path": [
+        "Spell",
+        "Backing Layers",
+        "Stats Backing",
+        "Stats and Quotes Backing"
+      ],
+      "file": "psd/spell/aoe/layers/spell--backing-layers--stats-backing--stats-and-quotes-backing.png",
+      "x": -48,
+      "y": 812,
+      "width": 1095,
+      "height": 599,
+      "hidden": false,
+      "opacity": 1,
+      "semantic": {
+        "kind": "statsBacking"
+      }
+    },
+    {
+      "id": "spell--backing-layers--stats-backing--stats-and-quotes-backing-2",
+      "name": "Stats and Quotes Backing",
+      "path": [
+        "Spell",
+        "Backing Layers",
+        "Stats Backing",
+        "Stats and Quotes Backing"
+      ],
+      "file": "psd/spell/aoe/layers/spell--backing-layers--stats-backing--stats-and-quotes-backing-2.png",
+      "x": -48,
+      "y": 548,
+      "width": 1095,
+      "height": 863,
+      "hidden": false,
+      "opacity": 1,
+      "semantic": {
+        "kind": "statsBacking"
+      }
+    },
+    {
+      "id": "spell--backing-layers--grunge--grunge-1",
+      "name": "Grunge 1",
+      "path": [
+        "Spell",
+        "Backing Layers",
+        "Grunge",
+        "Grunge 1"
+      ],
+      "file": "psd/spell/aoe/layers/spell--backing-layers--grunge--grunge-1.png",
+      "x": -47,
+      "y": -40,
+      "width": 1095,
+      "height": 1451,
+      "hidden": false,
+      "opacity": 1,
+      "semantic": {
+        "kind": "grunge"
+      }
+    },
+    {
+      "id": "spell--backing-layers--grunge--grunge-2",
+      "name": "Grunge 2",
+      "path": [
+        "Spell",
+        "Backing Layers",
+        "Grunge",
+        "Grunge 2"
+      ],
+      "file": "psd/spell/aoe/layers/spell--backing-layers--grunge--grunge-2.png",
+      "x": -47,
+      "y": -40,
+      "width": 1095,
+      "height": 1451,
+      "hidden": false,
+      "opacity": 0.4470588235294118,
+      "semantic": {
+        "kind": "grunge"
+      }
+    },
+    {
+      "id": "spell--statistics--quote-spot--quote-text-box",
+      "name": "Quote Text Box",
+      "path": [
+        "Spell",
+        "Statistics",
+        "Quote Spot",
+        "Quote Text Box"
+      ],
+      "file": "psd/spell/aoe/layers/spell--statistics--quote-spot--quote-text-box.png",
+      "x": 366,
+      "y": 1275,
+      "width": 270,
+      "height": 42,
+      "hidden": false,
+      "opacity": 1,
+      "semantic": {
+        "kind": "quoteTextbox"
+      }
+    },
+    {
+      "id": "spell--statistics--quote-spot--bottom-rectangle",
+      "name": "Bottom Rectangle",
+      "path": [
+        "Spell",
+        "Statistics",
+        "Quote Spot",
+        "Bottom Rectangle"
+      ],
+      "file": "psd/spell/aoe/layers/spell--statistics--quote-spot--bottom-rectangle.png",
+      "x": 61,
+      "y": 1222,
+      "width": 878,
+      "height": 4,
+      "hidden": false,
+      "opacity": 1,
+      "semantic": {
+        "kind": "quoteBottomRect"
+      }
+    },
+    {
+      "id": "spell--statistics--statistics-table",
+      "name": "Statistics Table",
+      "path": [
+        "Spell",
+        "Statistics",
+        "Statistics Table"
+      ],
+      "file": "psd/spell/aoe/layers/spell--statistics--statistics-table.png",
+      "x": 60,
+      "y": 563,
+      "width": 881,
+      "height": 312,
+      "hidden": false,
+      "opacity": 1,
+      "semantic": {
+        "kind": "statisticsTable"
+      }
+    },
+    {
+      "id": "spell--guild-info--box-right",
+      "name": "Box Right",
+      "path": [
+        "Spell",
+        "Guild Info",
+        "Box Right"
+      ],
+      "file": "psd/spell/aoe/layers/spell--guild-info--box-right.png",
+      "x": 708,
+      "y": 514,
+      "width": 235,
+      "height": 5,
+      "hidden": false,
+      "opacity": 1,
+      "semantic": {
+        "kind": "guildBox",
+        "side": "right"
+      }
+    },
+    {
+      "id": "spell--guild-info--guild-text-box",
+      "name": "Guild Text Box",
+      "path": [
+        "Spell",
+        "Guild Info",
+        "Guild Text Box"
+      ],
+      "file": "psd/spell/aoe/layers/spell--guild-info--guild-text-box.png",
+      "x": 460,
+      "y": 498,
+      "width": 80,
+      "height": 38,
+      "hidden": false,
+      "opacity": 1,
+      "semantic": {
+        "kind": "guildTextbox"
+      }
+    },
+    {
+      "id": "spell--guild-info--box-left",
+      "name": "Box Left",
+      "path": [
+        "Spell",
+        "Guild Info",
+        "Box Left"
+      ],
+      "file": "psd/spell/aoe/layers/spell--guild-info--box-left.png",
+      "x": 57,
+      "y": 514,
+      "width": 238,
+      "height": 5,
+      "hidden": false,
+      "opacity": 1,
+      "semantic": {
+        "kind": "guildBox",
+        "side": "left"
+      }
+    },
+    {
+      "id": "spell--damage-section-minor--dice-column-7--damageicons-column1--layer-32",
+      "name": "Layer 32",
+      "path": [
+        "Spell",
+        "Damage Section MINOR",
+        "Dice Column 7",
+        "DamageIcons_Column1",
+        "Layer 32"
+      ],
+      "file": "psd/spell/aoe/layers/spell--damage-section-minor--dice-column-7--damageicons-column1--layer-32.png",
+      "x": 812,
+      "y": 681,
+      "width": 79,
+      "height": 83,
+      "hidden": true,
+      "opacity": 1,
+      "semantic": {
+        "kind": "damageIcon",
+        "row": "minor",
+        "column": 7,
+        "element": "Plasma"
+      }
+    },
+    {
+      "id": "spell--damage-section-minor--dice-column-7--damageicons-column1--layer-33",
+      "name": "Layer 33",
+      "path": [
+        "Spell",
+        "Damage Section MINOR",
+        "Dice Column 7",
+        "DamageIcons_Column1",
+        "Layer 33"
+      ],
+      "file": "psd/spell/aoe/layers/spell--damage-section-minor--dice-column-7--damageicons-column1--layer-33.png",
+      "x": 807,
+      "y": 678,
+      "width": 87,
+      "height": 92,
+      "hidden": true,
+      "opacity": 1,
+      "semantic": {
+        "kind": "damageIcon",
+        "row": "minor",
+        "column": 7,
+        "element": "Light"
+      }
+    },
+    {
+      "id": "spell--damage-section-minor--dice-column-7--damageicons-column1--layer-34",
+      "name": "Layer 34",
+      "path": [
+        "Spell",
+        "Damage Section MINOR",
+        "Dice Column 7",
+        "DamageIcons_Column1",
+        "Layer 34"
+      ],
+      "file": "psd/spell/aoe/layers/spell--damage-section-minor--dice-column-7--damageicons-column1--layer-34.png",
+      "x": 810,
+      "y": 678,
+      "width": 84,
+      "height": 89,
+      "hidden": true,
+      "opacity": 1,
+      "semantic": {
+        "kind": "damageIcon",
+        "row": "minor",
+        "column": 7,
+        "element": "Entropy"
+      }
+    },
+    {
+      "id": "spell--damage-section-minor--dice-column-7--damageicons-column1--layer-35",
+      "name": "Layer 35",
+      "path": [
+        "Spell",
+        "Damage Section MINOR",
+        "Dice Column 7",
+        "DamageIcons_Column1",
+        "Layer 35"
+      ],
+      "file": "psd/spell/aoe/layers/spell--damage-section-minor--dice-column-7--damageicons-column1--layer-35.png",
+      "x": 811,
+      "y": 679,
+      "width": 85,
+      "height": 90,
+      "hidden": true,
+      "opacity": 1,
+      "semantic": {
+        "kind": "damageIcon",
+        "row": "minor",
+        "column": 7,
+        "element": "Dark"
+      }
+    },
+    {
+      "id": "spell--damage-section-minor--dice-column-7--damageicons-column1--layer-36",
+      "name": "Layer 36",
+      "path": [
+        "Spell",
+        "Damage Section MINOR",
+        "Dice Column 7",
+        "DamageIcons_Column1",
+        "Layer 36"
+      ],
+      "file": "psd/spell/aoe/layers/spell--damage-section-minor--dice-column-7--damageicons-column1--layer-36.png",
+      "x": 804,
+      "y": 672,
+      "width": 95,
+      "height": 101,
+      "hidden": true,
+      "opacity": 1,
+      "semantic": {
+        "kind": "damageIcon",
+        "row": "minor",
+        "column": 7,
+        "element": "Volt"
+      }
+    },
+    {
+      "id": "spell--damage-section-minor--dice-column-7--damageicons-column1--layer-37",
+      "name": "Layer 37",
+      "path": [
+        "Spell",
+        "Damage Section MINOR",
+        "Dice Column 7",
+        "DamageIcons_Column1",
+        "Layer 37"
+      ],
+      "file": "psd/spell/aoe/layers/spell--damage-section-minor--dice-column-7--damageicons-column1--layer-37.png",
+      "x": 812,
+      "y": 681,
+      "width": 79,
+      "height": 83,
+      "hidden": true,
+      "opacity": 1,
+      "semantic": {
+        "kind": "damageIcon",
+        "row": "minor",
+        "column": 7,
+        "element": "Fire"
+      }
+    },
+    {
+      "id": "spell--damage-section-minor--dice-column-7--damageicons-column1--layer-38",
+      "name": "Layer 38",
+      "path": [
+        "Spell",
+        "Damage Section MINOR",
+        "Dice Column 7",
+        "DamageIcons_Column1",
+        "Layer 38"
+      ],
+      "file": "psd/spell/aoe/layers/spell--damage-section-minor--dice-column-7--damageicons-column1--layer-38.png",
+      "x": 806,
+      "y": 676,
+      "width": 91,
+      "height": 97,
+      "hidden": true,
+      "opacity": 1,
+      "semantic": {
+        "kind": "damageIcon",
+        "row": "minor",
+        "column": 7,
+        "element": "Cold"
+      }
+    },
+    {
+      "id": "spell--damage-section-minor--dice-column-7--damageicons-column1--layer-39",
+      "name": "Layer 39",
+      "path": [
+        "Spell",
+        "Damage Section MINOR",
+        "Dice Column 7",
+        "DamageIcons_Column1",
+        "Layer 39"
+      ],
+      "file": "psd/spell/aoe/layers/spell--damage-section-minor--dice-column-7--damageicons-column1--layer-39.png",
+      "x": 811,
+      "y": 678,
+      "width": 84,
+      "height": 89,
+      "hidden": true,
+      "opacity": 1,
+      "semantic": {
+        "kind": "damageIcon",
+        "row": "minor",
+        "column": 7,
+        "element": "Acid"
+      }
+    },
+    {
+      "id": "spell--damage-section-minor--dice-column-7--damageicons-column1--layer-40",
+      "name": "Layer 40",
+      "path": [
+        "Spell",
+        "Damage Section MINOR",
+        "Dice Column 7",
+        "DamageIcons_Column1",
+        "Layer 40"
+      ],
+      "file": "psd/spell/aoe/layers/spell--damage-section-minor--dice-column-7--damageicons-column1--layer-40.png",
+      "x": 812,
+      "y": 681,
+      "width": 79,
+      "height": 83,
+      "hidden": true,
+      "opacity": 1,
+      "semantic": {
+        "kind": "damageIcon",
+        "row": "minor",
+        "column": 7,
+        "element": "Slashing"
+      }
+    },
+    {
+      "id": "spell--damage-section-minor--dice-column-7--damageicons-column1--layer-41",
+      "name": "Layer 41",
+      "path": [
+        "Spell",
+        "Damage Section MINOR",
+        "Dice Column 7",
+        "DamageIcons_Column1",
+        "Layer 41"
+      ],
+      "file": "psd/spell/aoe/layers/spell--damage-section-minor--dice-column-7--damageicons-column1--layer-41.png",
+      "x": 806,
+      "y": 675,
+      "width": 92,
+      "height": 97,
+      "hidden": true,
+      "opacity": 1,
+      "semantic": {
+        "kind": "damageIcon",
+        "row": "minor",
+        "column": 7,
+        "element": "Kinetic"
+      }
+    },
+    {
+      "id": "spell--damage-section-minor--dice-column-7--dice-column1--layer-44",
+      "name": "Layer 44",
+      "path": [
+        "Spell",
+        "Damage Section MINOR",
+        "Dice Column 7",
+        "Dice_Column1",
+        "Layer 44"
+      ],
+      "file": "psd/spell/aoe/layers/spell--damage-section-minor--dice-column-7--dice-column1--layer-44.png",
+      "x": 807,
+      "y": 669,
+      "width": 87,
+      "height": 107,
+      "hidden": true,
+      "opacity": 1,
+      "semantic": {
+        "kind": "die",
+        "row": "minor",
+        "column": 7,
+        "sides": 4
+      }
+    },
+    {
+      "id": "spell--damage-section-minor--dice-column-7--dice-column1--layer-45",
+      "name": "Layer 45",
+      "path": [
+        "Spell",
+        "Damage Section MINOR",
+        "Dice Column 7",
+        "Dice_Column1",
+        "Layer 45"
+      ],
+      "file": "psd/spell/aoe/layers/spell--damage-section-minor--dice-column-7--dice-column1--layer-45.png",
+      "x": 814,
+      "y": 679,
+      "width": 75,
+      "height": 89,
+      "hidden": true,
+      "opacity": 1,
+      "semantic": {
+        "kind": "die",
+        "row": "minor",
+        "column": 7,
+        "sides": 6
+      }
+    },
+    {
+      "id": "spell--damage-section-minor--dice-column-7--dice-column1--layer-46",
+      "name": "Layer 46",
+      "path": [
+        "Spell",
+        "Damage Section MINOR",
+        "Dice Column 7",
+        "Dice_Column1",
+        "Layer 46"
+      ],
+      "file": "psd/spell/aoe/layers/spell--damage-section-minor--dice-column-7--dice-column1--layer-46.png",
+      "x": 816,
+      "y": 678,
+      "width": 71,
+      "height": 91,
+      "hidden": true,
+      "opacity": 1,
+      "semantic": {
+        "kind": "die",
+        "row": "minor",
+        "column": 7,
+        "sides": 8
+      }
+    },
+    {
+      "id": "spell--damage-section-minor--dice-column-7--dice-column1--layer-47",
+      "name": "Layer 47",
+      "path": [
+        "Spell",
+        "Damage Section MINOR",
+        "Dice Column 7",
+        "Dice_Column1",
+        "Layer 47"
+      ],
+      "file": "psd/spell/aoe/layers/spell--damage-section-minor--dice-column-7--dice-column1--layer-47.png",
+      "x": 813,
+      "y": 682,
+      "width": 78,
+      "height": 83,
+      "hidden": true,
+      "opacity": 1,
+      "semantic": {
+        "kind": "die",
+        "row": "minor",
+        "column": 7,
+        "sides": 10
+      }
+    },
+    {
+      "id": "spell--damage-section-minor--dice-column-7--dice-column1--layer-48",
+      "name": "Layer 48",
+      "path": [
+        "Spell",
+        "Damage Section MINOR",
+        "Dice Column 7",
+        "Dice_Column1",
+        "Layer 48"
+      ],
+      "file": "psd/spell/aoe/layers/spell--damage-section-minor--dice-column-7--dice-column1--layer-48.png",
+      "x": 814,
+      "y": 680,
+      "width": 79,
+      "height": 88,
+      "hidden": true,
+      "opacity": 1,
+      "semantic": {
+        "kind": "die",
+        "row": "minor",
+        "column": 7,
+        "sides": 12
+      }
+    },
+    {
+      "id": "spell--damage-section-minor--dice-column-7--dice-column1--layer-49",
+      "name": "Layer 49",
+      "path": [
+        "Spell",
+        "Damage Section MINOR",
+        "Dice Column 7",
+        "Dice_Column1",
+        "Layer 49"
+      ],
+      "file": "psd/spell/aoe/layers/spell--damage-section-minor--dice-column-7--dice-column1--layer-49.png",
+      "x": 813,
+      "y": 682,
+      "width": 80,
+      "height": 81,
+      "hidden": true,
+      "opacity": 1,
+      "semantic": {
+        "kind": "die",
+        "row": "minor",
+        "column": 7,
+        "sides": 20
+      }
+    },
+    {
+      "id": "spell--damage-section-minor--dice-column-6--damageicons-column1--layer-55",
+      "name": "Layer 55",
+      "path": [
+        "Spell",
+        "Damage Section MINOR",
+        "Dice Column 6",
+        "DamageIcons_Column1",
+        "Layer 55"
+      ],
+      "file": "psd/spell/aoe/layers/spell--damage-section-minor--dice-column-6--damageicons-column1--layer-55.png",
+      "x": 711,
+      "y": 681,
+      "width": 79,
+      "height": 83,
+      "hidden": true,
+      "opacity": 1,
+      "semantic": {
+        "kind": "damageIcon",
+        "row": "minor",
+        "column": 6,
+        "element": "Plasma"
+      }
+    },
+    {
+      "id": "spell--damage-section-minor--dice-column-6--damageicons-column1--layer-56",
+      "name": "Layer 56",
+      "path": [
+        "Spell",
+        "Damage Section MINOR",
+        "Dice Column 6",
+        "DamageIcons_Column1",
+        "Layer 56"
+      ],
+      "file": "psd/spell/aoe/layers/spell--damage-section-minor--dice-column-6--damageicons-column1--layer-56.png",
+      "x": 706,
+      "y": 678,
+      "width": 87,
+      "height": 92,
+      "hidden": true,
+      "opacity": 1,
+      "semantic": {
+        "kind": "damageIcon",
+        "row": "minor",
+        "column": 6,
+        "element": "Light"
+      }
+    },
+    {
+      "id": "spell--damage-section-minor--dice-column-6--damageicons-column1--layer-57",
+      "name": "Layer 57",
+      "path": [
+        "Spell",
+        "Damage Section MINOR",
+        "Dice Column 6",
+        "DamageIcons_Column1",
+        "Layer 57"
+      ],
+      "file": "psd/spell/aoe/layers/spell--damage-section-minor--dice-column-6--damageicons-column1--layer-57.png",
+      "x": 709,
+      "y": 678,
+      "width": 83,
+      "height": 89,
+      "hidden": true,
+      "opacity": 1,
+      "semantic": {
+        "kind": "damageIcon",
+        "row": "minor",
+        "column": 6,
+        "element": "Entropy"
+      }
+    },
+    {
+      "id": "spell--damage-section-minor--dice-column-6--damageicons-column1--layer-58",
+      "name": "Layer 58",
+      "path": [
+        "Spell",
+        "Damage Section MINOR",
+        "Dice Column 6",
+        "DamageIcons_Column1",
+        "Layer 58"
+      ],
+      "file": "psd/spell/aoe/layers/spell--damage-section-minor--dice-column-6--damageicons-column1--layer-58.png",
+      "x": 709,
+      "y": 679,
+      "width": 86,
+      "height": 90,
+      "hidden": true,
+      "opacity": 1,
+      "semantic": {
+        "kind": "damageIcon",
+        "row": "minor",
+        "column": 6,
+        "element": "Dark"
+      }
+    },
+    {
+      "id": "spell--damage-section-minor--dice-column-6--damageicons-column1--layer-59",
+      "name": "Layer 59",
+      "path": [
+        "Spell",
+        "Damage Section MINOR",
+        "Dice Column 6",
+        "DamageIcons_Column1",
+        "Layer 59"
+      ],
+      "file": "psd/spell/aoe/layers/spell--damage-section-minor--dice-column-6--damageicons-column1--layer-59.png",
+      "x": 703,
+      "y": 672,
+      "width": 95,
+      "height": 101,
+      "hidden": true,
+      "opacity": 1,
+      "semantic": {
+        "kind": "damageIcon",
+        "row": "minor",
+        "column": 6,
+        "element": "Volt"
+      }
+    },
+    {
+      "id": "spell--damage-section-minor--dice-column-6--damageicons-column1--layer-60",
+      "name": "Layer 60",
+      "path": [
+        "Spell",
+        "Damage Section MINOR",
+        "Dice Column 6",
+        "DamageIcons_Column1",
+        "Layer 60"
+      ],
+      "file": "psd/spell/aoe/layers/spell--damage-section-minor--dice-column-6--damageicons-column1--layer-60.png",
+      "x": 711,
+      "y": 681,
+      "width": 79,
+      "height": 83,
+      "hidden": true,
+      "opacity": 1,
+      "semantic": {
+        "kind": "damageIcon",
+        "row": "minor",
+        "column": 6,
+        "element": "Fire"
+      }
+    },
+    {
+      "id": "spell--damage-section-minor--dice-column-6--damageicons-column1--layer-61",
+      "name": "Layer 61",
+      "path": [
+        "Spell",
+        "Damage Section MINOR",
+        "Dice Column 6",
+        "DamageIcons_Column1",
+        "Layer 61"
+      ],
+      "file": "psd/spell/aoe/layers/spell--damage-section-minor--dice-column-6--damageicons-column1--layer-61.png",
+      "x": 704,
+      "y": 676,
+      "width": 92,
+      "height": 97,
+      "hidden": true,
+      "opacity": 1,
+      "semantic": {
+        "kind": "damageIcon",
+        "row": "minor",
+        "column": 6,
+        "element": "Cold"
+      }
+    },
+    {
+      "id": "spell--damage-section-minor--dice-column-6--damageicons-column1--layer-62",
+      "name": "Layer 62",
+      "path": [
+        "Spell",
+        "Damage Section MINOR",
+        "Dice Column 6",
+        "DamageIcons_Column1",
+        "Layer 62"
+      ],
+      "file": "psd/spell/aoe/layers/spell--damage-section-minor--dice-column-6--damageicons-column1--layer-62.png",
+      "x": 710,
+      "y": 678,
+      "width": 84,
+      "height": 89,
+      "hidden": true,
+      "opacity": 1,
+      "semantic": {
+        "kind": "damageIcon",
+        "row": "minor",
+        "column": 6,
+        "element": "Acid"
+      }
+    },
+    {
+      "id": "spell--damage-section-minor--dice-column-6--damageicons-column1--layer-63",
+      "name": "Layer 63",
+      "path": [
+        "Spell",
+        "Damage Section MINOR",
+        "Dice Column 6",
+        "DamageIcons_Column1",
+        "Layer 63"
+      ],
+      "file": "psd/spell/aoe/layers/spell--damage-section-minor--dice-column-6--damageicons-column1--layer-63.png",
+      "x": 711,
+      "y": 681,
+      "width": 79,
+      "height": 83,
+      "hidden": true,
+      "opacity": 1,
+      "semantic": {
+        "kind": "damageIcon",
+        "row": "minor",
+        "column": 6,
+        "element": "Slashing"
+      }
+    },
+    {
+      "id": "spell--damage-section-minor--dice-column-6--damageicons-column1--layer-64",
+      "name": "Layer 64",
+      "path": [
+        "Spell",
+        "Damage Section MINOR",
+        "Dice Column 6",
+        "DamageIcons_Column1",
+        "Layer 64"
+      ],
+      "file": "psd/spell/aoe/layers/spell--damage-section-minor--dice-column-6--damageicons-column1--layer-64.png",
+      "x": 704,
+      "y": 675,
+      "width": 92,
+      "height": 97,
+      "hidden": true,
+      "opacity": 1,
+      "semantic": {
+        "kind": "damageIcon",
+        "row": "minor",
+        "column": 6,
+        "element": "Kinetic"
+      }
+    },
+    {
+      "id": "spell--damage-section-minor--dice-column-6--dice-column1--layer-67",
+      "name": "Layer 67",
+      "path": [
+        "Spell",
+        "Damage Section MINOR",
+        "Dice Column 6",
+        "Dice_Column1",
+        "Layer 67"
+      ],
+      "file": "psd/spell/aoe/layers/spell--damage-section-minor--dice-column-6--dice-column1--layer-67.png",
+      "x": 706,
+      "y": 669,
+      "width": 87,
+      "height": 107,
+      "hidden": true,
+      "opacity": 1,
+      "semantic": {
+        "kind": "die",
+        "row": "minor",
+        "column": 6,
+        "sides": 4
+      }
+    },
+    {
+      "id": "spell--damage-section-minor--dice-column-6--dice-column1--layer-68",
+      "name": "Layer 68",
+      "path": [
+        "Spell",
+        "Damage Section MINOR",
+        "Dice Column 6",
+        "Dice_Column1",
+        "Layer 68"
+      ],
+      "file": "psd/spell/aoe/layers/spell--damage-section-minor--dice-column-6--dice-column1--layer-68.png",
+      "x": 713,
+      "y": 679,
+      "width": 75,
+      "height": 89,
+      "hidden": true,
+      "opacity": 1,
+      "semantic": {
+        "kind": "die",
+        "row": "minor",
+        "column": 6,
+        "sides": 6
+      }
+    },
+    {
+      "id": "spell--damage-section-minor--dice-column-6--dice-column1--layer-69",
+      "name": "Layer 69",
+      "path": [
+        "Spell",
+        "Damage Section MINOR",
+        "Dice Column 6",
+        "Dice_Column1",
+        "Layer 69"
+      ],
+      "file": "psd/spell/aoe/layers/spell--damage-section-minor--dice-column-6--dice-column1--layer-69.png",
+      "x": 715,
+      "y": 678,
+      "width": 71,
+      "height": 91,
+      "hidden": true,
+      "opacity": 1,
+      "semantic": {
+        "kind": "die",
+        "row": "minor",
+        "column": 6,
+        "sides": 8
+      }
+    },
+    {
+      "id": "spell--damage-section-minor--dice-column-6--dice-column1--layer-70",
+      "name": "Layer 70",
+      "path": [
+        "Spell",
+        "Damage Section MINOR",
+        "Dice Column 6",
+        "Dice_Column1",
+        "Layer 70"
+      ],
+      "file": "psd/spell/aoe/layers/spell--damage-section-minor--dice-column-6--dice-column1--layer-70.png",
+      "x": 712,
+      "y": 682,
+      "width": 78,
+      "height": 83,
+      "hidden": true,
+      "opacity": 1,
+      "semantic": {
+        "kind": "die",
+        "row": "minor",
+        "column": 6,
+        "sides": 10
+      }
+    },
+    {
+      "id": "spell--damage-section-minor--dice-column-6--dice-column1--layer-71",
+      "name": "Layer 71",
+      "path": [
+        "Spell",
+        "Damage Section MINOR",
+        "Dice Column 6",
+        "Dice_Column1",
+        "Layer 71"
+      ],
+      "file": "psd/spell/aoe/layers/spell--damage-section-minor--dice-column-6--dice-column1--layer-71.png",
+      "x": 712,
+      "y": 680,
+      "width": 80,
+      "height": 88,
+      "hidden": true,
+      "opacity": 1,
+      "semantic": {
+        "kind": "die",
+        "row": "minor",
+        "column": 6,
+        "sides": 12
+      }
+    },
+    {
+      "id": "spell--damage-section-minor--dice-column-6--dice-column1--layer-72",
+      "name": "Layer 72",
+      "path": [
+        "Spell",
+        "Damage Section MINOR",
+        "Dice Column 6",
+        "Dice_Column1",
+        "Layer 72"
+      ],
+      "file": "psd/spell/aoe/layers/spell--damage-section-minor--dice-column-6--dice-column1--layer-72.png",
+      "x": 712,
+      "y": 682,
+      "width": 80,
+      "height": 81,
+      "hidden": true,
+      "opacity": 1,
+      "semantic": {
+        "kind": "die",
+        "row": "minor",
+        "column": 6,
+        "sides": 20
+      }
+    },
+    {
+      "id": "spell--damage-section-minor--dice-column-5--damageicons-column1--layer-78",
+      "name": "Layer 78",
+      "path": [
+        "Spell",
+        "Damage Section MINOR",
+        "Dice Column 5",
+        "DamageIcons_Column1",
+        "Layer 78"
+      ],
+      "file": "psd/spell/aoe/layers/spell--damage-section-minor--dice-column-5--damageicons-column1--layer-78.png",
+      "x": 610,
+      "y": 681,
+      "width": 78,
+      "height": 83,
+      "hidden": true,
+      "opacity": 1,
+      "semantic": {
+        "kind": "damageIcon",
+        "row": "minor",
+        "column": 5,
+        "element": "Plasma"
+      }
+    },
+    {
+      "id": "spell--damage-section-minor--dice-column-5--damageicons-column1--layer-79",
+      "name": "Layer 79",
+      "path": [
+        "Spell",
+        "Damage Section MINOR",
+        "Dice Column 5",
+        "DamageIcons_Column1",
+        "Layer 79"
+      ],
+      "file": "psd/spell/aoe/layers/spell--damage-section-minor--dice-column-5--damageicons-column1--layer-79.png",
+      "x": 604,
+      "y": 678,
+      "width": 87,
+      "height": 92,
+      "hidden": true,
+      "opacity": 1,
+      "semantic": {
+        "kind": "damageIcon",
+        "row": "minor",
+        "column": 5,
+        "element": "Light"
+      }
+    },
+    {
+      "id": "spell--damage-section-minor--dice-column-5--damageicons-column1--layer-80",
+      "name": "Layer 80",
+      "path": [
+        "Spell",
+        "Damage Section MINOR",
+        "Dice Column 5",
+        "DamageIcons_Column1",
+        "Layer 80"
+      ],
+      "file": "psd/spell/aoe/layers/spell--damage-section-minor--dice-column-5--damageicons-column1--layer-80.png",
+      "x": 607,
+      "y": 678,
+      "width": 84,
+      "height": 89,
+      "hidden": true,
+      "opacity": 1,
+      "semantic": {
+        "kind": "damageIcon",
+        "row": "minor",
+        "column": 5,
+        "element": "Entropy"
+      }
+    },
+    {
+      "id": "spell--damage-section-minor--dice-column-5--damageicons-column1--layer-81",
+      "name": "Layer 81",
+      "path": [
+        "Spell",
+        "Damage Section MINOR",
+        "Dice Column 5",
+        "DamageIcons_Column1",
+        "Layer 81"
+      ],
+      "file": "psd/spell/aoe/layers/spell--damage-section-minor--dice-column-5--damageicons-column1--layer-81.png",
+      "x": 608,
+      "y": 679,
+      "width": 85,
+      "height": 90,
+      "hidden": true,
+      "opacity": 1,
+      "semantic": {
+        "kind": "damageIcon",
+        "row": "minor",
+        "column": 5,
+        "element": "Dark"
+      }
+    },
+    {
+      "id": "spell--damage-section-minor--dice-column-5--damageicons-column1--layer-82",
+      "name": "Layer 82",
+      "path": [
+        "Spell",
+        "Damage Section MINOR",
+        "Dice Column 5",
+        "DamageIcons_Column1",
+        "Layer 82"
+      ],
+      "file": "psd/spell/aoe/layers/spell--damage-section-minor--dice-column-5--damageicons-column1--layer-82.png",
+      "x": 601,
+      "y": 672,
+      "width": 96,
+      "height": 101,
+      "hidden": true,
+      "opacity": 1,
+      "semantic": {
+        "kind": "damageIcon",
+        "row": "minor",
+        "column": 5,
+        "element": "Volt"
+      }
+    },
+    {
+      "id": "spell--damage-section-minor--dice-column-5--damageicons-column1--layer-83",
+      "name": "Layer 83",
+      "path": [
+        "Spell",
+        "Damage Section MINOR",
+        "Dice Column 5",
+        "DamageIcons_Column1",
+        "Layer 83"
+      ],
+      "file": "psd/spell/aoe/layers/spell--damage-section-minor--dice-column-5--damageicons-column1--layer-83.png",
+      "x": 610,
+      "y": 681,
+      "width": 78,
+      "height": 83,
+      "hidden": true,
+      "opacity": 1,
+      "semantic": {
+        "kind": "damageIcon",
+        "row": "minor",
+        "column": 5,
+        "element": "Fire"
+      }
+    },
+    {
+      "id": "spell--damage-section-minor--dice-column-5--damageicons-column1--layer-84",
+      "name": "Layer 84",
+      "path": [
+        "Spell",
+        "Damage Section MINOR",
+        "Dice Column 5",
+        "DamageIcons_Column1",
+        "Layer 84"
+      ],
+      "file": "psd/spell/aoe/layers/spell--damage-section-minor--dice-column-5--damageicons-column1--layer-84.png",
+      "x": 603,
+      "y": 676,
+      "width": 91,
+      "height": 97,
+      "hidden": true,
+      "opacity": 1,
+      "semantic": {
+        "kind": "damageIcon",
+        "row": "minor",
+        "column": 5,
+        "element": "Cold"
+      }
+    },
+    {
+      "id": "spell--damage-section-minor--dice-column-5--damageicons-column1--layer-85",
+      "name": "Layer 85",
+      "path": [
+        "Spell",
+        "Damage Section MINOR",
+        "Dice Column 5",
+        "DamageIcons_Column1",
+        "Layer 85"
+      ],
+      "file": "psd/spell/aoe/layers/spell--damage-section-minor--dice-column-5--damageicons-column1--layer-85.png",
+      "x": 608,
+      "y": 678,
+      "width": 84,
+      "height": 89,
+      "hidden": true,
+      "opacity": 1,
+      "semantic": {
+        "kind": "damageIcon",
+        "row": "minor",
+        "column": 5,
+        "element": "Acid"
+      }
+    },
+    {
+      "id": "spell--damage-section-minor--dice-column-5--damageicons-column1--layer-86",
+      "name": "Layer 86",
+      "path": [
+        "Spell",
+        "Damage Section MINOR",
+        "Dice Column 5",
+        "DamageIcons_Column1",
+        "Layer 86"
+      ],
+      "file": "psd/spell/aoe/layers/spell--damage-section-minor--dice-column-5--damageicons-column1--layer-86.png",
+      "x": 610,
+      "y": 681,
+      "width": 78,
+      "height": 83,
+      "hidden": true,
+      "opacity": 1,
+      "semantic": {
+        "kind": "damageIcon",
+        "row": "minor",
+        "column": 5,
+        "element": "Slashing"
+      }
+    },
+    {
+      "id": "spell--damage-section-minor--dice-column-5--damageicons-column1--layer-87",
+      "name": "Layer 87",
+      "path": [
+        "Spell",
+        "Damage Section MINOR",
+        "Dice Column 5",
+        "DamageIcons_Column1",
+        "Layer 87"
+      ],
+      "file": "psd/spell/aoe/layers/spell--damage-section-minor--dice-column-5--damageicons-column1--layer-87.png",
+      "x": 603,
+      "y": 675,
+      "width": 92,
+      "height": 97,
+      "hidden": true,
+      "opacity": 1,
+      "semantic": {
+        "kind": "damageIcon",
+        "row": "minor",
+        "column": 5,
+        "element": "Kinetic"
+      }
+    },
+    {
+      "id": "spell--damage-section-minor--dice-column-5--dice-column1--layer-90",
+      "name": "Layer 90",
+      "path": [
+        "Spell",
+        "Damage Section MINOR",
+        "Dice Column 5",
+        "Dice_Column1",
+        "Layer 90"
+      ],
+      "file": "psd/spell/aoe/layers/spell--damage-section-minor--dice-column-5--dice-column1--layer-90.png",
+      "x": 605,
+      "y": 669,
+      "width": 87,
+      "height": 107,
+      "hidden": true,
+      "opacity": 1,
+      "semantic": {
+        "kind": "die",
+        "row": "minor",
+        "column": 5,
+        "sides": 4
+      }
+    },
+    {
+      "id": "spell--damage-section-minor--dice-column-5--dice-column1--layer-91",
+      "name": "Layer 91",
+      "path": [
+        "Spell",
+        "Damage Section MINOR",
+        "Dice Column 5",
+        "Dice_Column1",
+        "Layer 91"
+      ],
+      "file": "psd/spell/aoe/layers/spell--damage-section-minor--dice-column-5--dice-column1--layer-91.png",
+      "x": 612,
+      "y": 679,
+      "width": 74,
+      "height": 89,
+      "hidden": true,
+      "opacity": 1,
+      "semantic": {
+        "kind": "die",
+        "row": "minor",
+        "column": 5,
+        "sides": 6
+      }
+    },
+    {
+      "id": "spell--damage-section-minor--dice-column-5--dice-column1--layer-92",
+      "name": "Layer 92",
+      "path": [
+        "Spell",
+        "Damage Section MINOR",
+        "Dice Column 5",
+        "Dice_Column1",
+        "Layer 92"
+      ],
+      "file": "psd/spell/aoe/layers/spell--damage-section-minor--dice-column-5--dice-column1--layer-92.png",
+      "x": 613,
+      "y": 678,
+      "width": 72,
+      "height": 91,
+      "hidden": true,
+      "opacity": 1,
+      "semantic": {
+        "kind": "die",
+        "row": "minor",
+        "column": 5,
+        "sides": 8
+      }
+    },
+    {
+      "id": "spell--damage-section-minor--dice-column-5--dice-column1--layer-93",
+      "name": "Layer 93",
+      "path": [
+        "Spell",
+        "Damage Section MINOR",
+        "Dice Column 5",
+        "Dice_Column1",
+        "Layer 93"
+      ],
+      "file": "psd/spell/aoe/layers/spell--damage-section-minor--dice-column-5--dice-column1--layer-93.png",
+      "x": 610,
+      "y": 682,
+      "width": 79,
+      "height": 83,
+      "hidden": true,
+      "opacity": 1,
+      "semantic": {
+        "kind": "die",
+        "row": "minor",
+        "column": 5,
+        "sides": 10
+      }
+    },
+    {
+      "id": "spell--damage-section-minor--dice-column-5--dice-column1--layer-94",
+      "name": "Layer 94",
+      "path": [
+        "Spell",
+        "Damage Section MINOR",
+        "Dice Column 5",
+        "Dice_Column1",
+        "Layer 94"
+      ],
+      "file": "psd/spell/aoe/layers/spell--damage-section-minor--dice-column-5--dice-column1--layer-94.png",
+      "x": 611,
+      "y": 680,
+      "width": 79,
+      "height": 88,
+      "hidden": true,
+      "opacity": 1,
+      "semantic": {
+        "kind": "die",
+        "row": "minor",
+        "column": 5,
+        "sides": 12
+      }
+    },
+    {
+      "id": "spell--damage-section-minor--dice-column-5--dice-column1--layer-95",
+      "name": "Layer 95",
+      "path": [
+        "Spell",
+        "Damage Section MINOR",
+        "Dice Column 5",
+        "Dice_Column1",
+        "Layer 95"
+      ],
+      "file": "psd/spell/aoe/layers/spell--damage-section-minor--dice-column-5--dice-column1--layer-95.png",
+      "x": 610,
+      "y": 682,
+      "width": 80,
+      "height": 81,
+      "hidden": true,
+      "opacity": 1,
+      "semantic": {
+        "kind": "die",
+        "row": "minor",
+        "column": 5,
+        "sides": 20
+      }
+    },
+    {
+      "id": "spell--damage-section-minor--dice-column-4--damageicons-column1--layer-101",
+      "name": "Layer 101",
+      "path": [
+        "Spell",
+        "Damage Section MINOR",
+        "Dice Column 4",
+        "DamageIcons_Column1",
+        "Layer 101"
+      ],
+      "file": "psd/spell/aoe/layers/spell--damage-section-minor--dice-column-4--damageicons-column1--layer-101.png",
+      "x": 508,
+      "y": 681,
+      "width": 79,
+      "height": 83,
+      "hidden": true,
+      "opacity": 1,
+      "semantic": {
+        "kind": "damageIcon",
+        "row": "minor",
+        "column": 4,
+        "element": "Plasma"
+      }
+    },
+    {
+      "id": "spell--damage-section-minor--dice-column-4--damageicons-column1--layer-102",
+      "name": "Layer 102",
+      "path": [
+        "Spell",
+        "Damage Section MINOR",
+        "Dice Column 4",
+        "DamageIcons_Column1",
+        "Layer 102"
+      ],
+      "file": "psd/spell/aoe/layers/spell--damage-section-minor--dice-column-4--damageicons-column1--layer-102.png",
+      "x": 503,
+      "y": 678,
+      "width": 87,
+      "height": 92,
+      "hidden": true,
+      "opacity": 1,
+      "semantic": {
+        "kind": "damageIcon",
+        "row": "minor",
+        "column": 4,
+        "element": "Light"
+      }
+    },
+    {
+      "id": "spell--damage-section-minor--dice-column-4--damageicons-column1--layer-103",
+      "name": "Layer 103",
+      "path": [
+        "Spell",
+        "Damage Section MINOR",
+        "Dice Column 4",
+        "DamageIcons_Column1",
+        "Layer 103"
+      ],
+      "file": "psd/spell/aoe/layers/spell--damage-section-minor--dice-column-4--damageicons-column1--layer-103.png",
+      "x": 506,
+      "y": 678,
+      "width": 83,
+      "height": 89,
+      "hidden": true,
+      "opacity": 1,
+      "semantic": {
+        "kind": "damageIcon",
+        "row": "minor",
+        "column": 4,
+        "element": "Entropy"
+      }
+    },
+    {
+      "id": "spell--damage-section-minor--dice-column-4--damageicons-column1--layer-104",
+      "name": "Layer 104",
+      "path": [
+        "Spell",
+        "Damage Section MINOR",
+        "Dice Column 4",
+        "DamageIcons_Column1",
+        "Layer 104"
+      ],
+      "file": "psd/spell/aoe/layers/spell--damage-section-minor--dice-column-4--damageicons-column1--layer-104.png",
+      "x": 507,
+      "y": 679,
+      "width": 85,
+      "height": 90,
+      "hidden": true,
+      "opacity": 1,
+      "semantic": {
+        "kind": "damageIcon",
+        "row": "minor",
+        "column": 4,
+        "element": "Dark"
+      }
+    },
+    {
+      "id": "spell--damage-section-minor--dice-column-4--damageicons-column1--layer-105",
+      "name": "Layer 105",
+      "path": [
+        "Spell",
+        "Damage Section MINOR",
+        "Dice Column 4",
+        "DamageIcons_Column1",
+        "Layer 105"
+      ],
+      "file": "psd/spell/aoe/layers/spell--damage-section-minor--dice-column-4--damageicons-column1--layer-105.png",
+      "x": 500,
+      "y": 672,
+      "width": 95,
+      "height": 101,
+      "hidden": true,
+      "opacity": 1,
+      "semantic": {
+        "kind": "damageIcon",
+        "row": "minor",
+        "column": 4,
+        "element": "Volt"
+      }
+    },
+    {
+      "id": "spell--damage-section-minor--dice-column-4--damageicons-column1--layer-106",
+      "name": "Layer 106",
+      "path": [
+        "Spell",
+        "Damage Section MINOR",
+        "Dice Column 4",
+        "DamageIcons_Column1",
+        "Layer 106"
+      ],
+      "file": "psd/spell/aoe/layers/spell--damage-section-minor--dice-column-4--damageicons-column1--layer-106.png",
+      "x": 508,
+      "y": 681,
+      "width": 79,
+      "height": 83,
+      "hidden": true,
+      "opacity": 1,
+      "semantic": {
+        "kind": "damageIcon",
+        "row": "minor",
+        "column": 4,
+        "element": "Fire"
+      }
+    },
+    {
+      "id": "spell--damage-section-minor--dice-column-4--damageicons-column1--layer-107",
+      "name": "Layer 107",
+      "path": [
+        "Spell",
+        "Damage Section MINOR",
+        "Dice Column 4",
+        "DamageIcons_Column1",
+        "Layer 107"
+      ],
+      "file": "psd/spell/aoe/layers/spell--damage-section-minor--dice-column-4--damageicons-column1--layer-107.png",
+      "x": 502,
+      "y": 676,
+      "width": 91,
+      "height": 97,
+      "hidden": true,
+      "opacity": 1,
+      "semantic": {
+        "kind": "damageIcon",
+        "row": "minor",
+        "column": 4,
+        "element": "Cold"
+      }
+    },
+    {
+      "id": "spell--damage-section-minor--dice-column-4--damageicons-column1--layer-108",
+      "name": "Layer 108",
+      "path": [
+        "Spell",
+        "Damage Section MINOR",
+        "Dice Column 4",
+        "DamageIcons_Column1",
+        "Layer 108"
+      ],
+      "file": "psd/spell/aoe/layers/spell--damage-section-minor--dice-column-4--damageicons-column1--layer-108.png",
+      "x": 507,
+      "y": 678,
+      "width": 84,
+      "height": 89,
+      "hidden": true,
+      "opacity": 1,
+      "semantic": {
+        "kind": "damageIcon",
+        "row": "minor",
+        "column": 4,
+        "element": "Acid"
+      }
+    },
+    {
+      "id": "spell--damage-section-minor--dice-column-4--damageicons-column1--layer-109",
+      "name": "Layer 109",
+      "path": [
+        "Spell",
+        "Damage Section MINOR",
+        "Dice Column 4",
+        "DamageIcons_Column1",
+        "Layer 109"
+      ],
+      "file": "psd/spell/aoe/layers/spell--damage-section-minor--dice-column-4--damageicons-column1--layer-109.png",
+      "x": 508,
+      "y": 681,
+      "width": 79,
+      "height": 83,
+      "hidden": true,
+      "opacity": 1,
+      "semantic": {
+        "kind": "damageIcon",
+        "row": "minor",
+        "column": 4,
+        "element": "Slashing"
+      }
+    },
+    {
+      "id": "spell--damage-section-minor--dice-column-4--damageicons-column1--layer-110",
+      "name": "Layer 110",
+      "path": [
+        "Spell",
+        "Damage Section MINOR",
+        "Dice Column 4",
+        "DamageIcons_Column1",
+        "Layer 110"
+      ],
+      "file": "psd/spell/aoe/layers/spell--damage-section-minor--dice-column-4--damageicons-column1--layer-110.png",
+      "x": 502,
+      "y": 675,
+      "width": 92,
+      "height": 97,
+      "hidden": true,
+      "opacity": 1,
+      "semantic": {
+        "kind": "damageIcon",
+        "row": "minor",
+        "column": 4,
+        "element": "Kinetic"
+      }
+    },
+    {
+      "id": "spell--damage-section-minor--dice-column-4--dice-column1--layer-113",
+      "name": "Layer 113",
+      "path": [
+        "Spell",
+        "Damage Section MINOR",
+        "Dice Column 4",
+        "Dice_Column1",
+        "Layer 113"
+      ],
+      "file": "psd/spell/aoe/layers/spell--damage-section-minor--dice-column-4--dice-column1--layer-113.png",
+      "x": 503,
+      "y": 669,
+      "width": 87,
+      "height": 107,
+      "hidden": true,
+      "opacity": 1,
+      "semantic": {
+        "kind": "die",
+        "row": "minor",
+        "column": 4,
+        "sides": 4
+      }
+    },
+    {
+      "id": "spell--damage-section-minor--dice-column-4--dice-column1--layer-114",
+      "name": "Layer 114",
+      "path": [
+        "Spell",
+        "Damage Section MINOR",
+        "Dice Column 4",
+        "Dice_Column1",
+        "Layer 114"
+      ],
+      "file": "psd/spell/aoe/layers/spell--damage-section-minor--dice-column-4--dice-column1--layer-114.png",
+      "x": 510,
+      "y": 679,
+      "width": 75,
+      "height": 89,
+      "hidden": true,
+      "opacity": 1,
+      "semantic": {
+        "kind": "die",
+        "row": "minor",
+        "column": 4,
+        "sides": 6
+      }
+    },
+    {
+      "id": "spell--damage-section-minor--dice-column-4--dice-column1--layer-115",
+      "name": "Layer 115",
+      "path": [
+        "Spell",
+        "Damage Section MINOR",
+        "Dice Column 4",
+        "Dice_Column1",
+        "Layer 115"
+      ],
+      "file": "psd/spell/aoe/layers/spell--damage-section-minor--dice-column-4--dice-column1--layer-115.png",
+      "x": 512,
+      "y": 678,
+      "width": 71,
+      "height": 91,
+      "hidden": true,
+      "opacity": 1,
+      "semantic": {
+        "kind": "die",
+        "row": "minor",
+        "column": 4,
+        "sides": 8
+      }
+    },
+    {
+      "id": "spell--damage-section-minor--dice-column-4--dice-column1--layer-116",
+      "name": "Layer 116",
+      "path": [
+        "Spell",
+        "Damage Section MINOR",
+        "Dice Column 4",
+        "Dice_Column1",
+        "Layer 116"
+      ],
+      "file": "psd/spell/aoe/layers/spell--damage-section-minor--dice-column-4--dice-column1--layer-116.png",
+      "x": 509,
+      "y": 682,
+      "width": 78,
+      "height": 83,
+      "hidden": true,
+      "opacity": 1,
+      "semantic": {
+        "kind": "die",
+        "row": "minor",
+        "column": 4,
+        "sides": 10
+      }
+    },
+    {
+      "id": "spell--damage-section-minor--dice-column-4--dice-column1--layer-117",
+      "name": "Layer 117",
+      "path": [
+        "Spell",
+        "Damage Section MINOR",
+        "Dice Column 4",
+        "Dice_Column1",
+        "Layer 117"
+      ],
+      "file": "psd/spell/aoe/layers/spell--damage-section-minor--dice-column-4--dice-column1--layer-117.png",
+      "x": 510,
+      "y": 680,
+      "width": 79,
+      "height": 88,
+      "hidden": true,
+      "opacity": 1,
+      "semantic": {
+        "kind": "die",
+        "row": "minor",
+        "column": 4,
+        "sides": 12
+      }
+    },
+    {
+      "id": "spell--damage-section-minor--dice-column-4--dice-column1--layer-118",
+      "name": "Layer 118",
+      "path": [
+        "Spell",
+        "Damage Section MINOR",
+        "Dice Column 4",
+        "Dice_Column1",
+        "Layer 118"
+      ],
+      "file": "psd/spell/aoe/layers/spell--damage-section-minor--dice-column-4--dice-column1--layer-118.png",
+      "x": 509,
+      "y": 682,
+      "width": 80,
+      "height": 81,
+      "hidden": true,
+      "opacity": 1,
+      "semantic": {
+        "kind": "die",
+        "row": "minor",
+        "column": 4,
+        "sides": 20
+      }
+    },
+    {
+      "id": "spell--damage-section-minor--dice-column-3--damageicons-column1--layer-124",
+      "name": "Layer 124",
+      "path": [
+        "Spell",
+        "Damage Section MINOR",
+        "Dice Column 3",
+        "DamageIcons_Column1",
+        "Layer 124"
+      ],
+      "file": "psd/spell/aoe/layers/spell--damage-section-minor--dice-column-3--damageicons-column1--layer-124.png",
+      "x": 407,
+      "y": 681,
+      "width": 79,
+      "height": 83,
+      "hidden": true,
+      "opacity": 1,
+      "semantic": {
+        "kind": "damageIcon",
+        "row": "minor",
+        "column": 3,
+        "element": "Plasma"
+      }
+    },
+    {
+      "id": "spell--damage-section-minor--dice-column-3--damageicons-column1--layer-125",
+      "name": "Layer 125",
+      "path": [
+        "Spell",
+        "Damage Section MINOR",
+        "Dice Column 3",
+        "DamageIcons_Column1",
+        "Layer 125"
+      ],
+      "file": "psd/spell/aoe/layers/spell--damage-section-minor--dice-column-3--damageicons-column1--layer-125.png",
+      "x": 402,
+      "y": 678,
+      "width": 87,
+      "height": 92,
+      "hidden": true,
+      "opacity": 1,
+      "semantic": {
+        "kind": "damageIcon",
+        "row": "minor",
+        "column": 3,
+        "element": "Light"
+      }
+    },
+    {
+      "id": "spell--damage-section-minor--dice-column-3--damageicons-column1--layer-126",
+      "name": "Layer 126",
+      "path": [
+        "Spell",
+        "Damage Section MINOR",
+        "Dice Column 3",
+        "DamageIcons_Column1",
+        "Layer 126"
+      ],
+      "file": "psd/spell/aoe/layers/spell--damage-section-minor--dice-column-3--damageicons-column1--layer-126.png",
+      "x": 404,
+      "y": 678,
+      "width": 84,
+      "height": 89,
+      "hidden": true,
+      "opacity": 1,
+      "semantic": {
+        "kind": "damageIcon",
+        "row": "minor",
+        "column": 3,
+        "element": "Entropy"
+      }
+    },
+    {
+      "id": "spell--damage-section-minor--dice-column-3--damageicons-column1--layer-127",
+      "name": "Layer 127",
+      "path": [
+        "Spell",
+        "Damage Section MINOR",
+        "Dice Column 3",
+        "DamageIcons_Column1",
+        "Layer 127"
+      ],
+      "file": "psd/spell/aoe/layers/spell--damage-section-minor--dice-column-3--damageicons-column1--layer-127.png",
+      "x": 405,
+      "y": 679,
+      "width": 86,
+      "height": 90,
+      "hidden": true,
+      "opacity": 1,
+      "semantic": {
+        "kind": "damageIcon",
+        "row": "minor",
+        "column": 3,
+        "element": "Dark"
+      }
+    },
+    {
+      "id": "spell--damage-section-minor--dice-column-3--damageicons-column1--layer-128",
+      "name": "Layer 128",
+      "path": [
+        "Spell",
+        "Damage Section MINOR",
+        "Dice Column 3",
+        "DamageIcons_Column1",
+        "Layer 128"
+      ],
+      "file": "psd/spell/aoe/layers/spell--damage-section-minor--dice-column-3--damageicons-column1--layer-128.png",
+      "x": 399,
+      "y": 672,
+      "width": 95,
+      "height": 101,
+      "hidden": true,
+      "opacity": 1,
+      "semantic": {
+        "kind": "damageIcon",
+        "row": "minor",
+        "column": 3,
+        "element": "Volt"
+      }
+    },
+    {
+      "id": "spell--damage-section-minor--dice-column-3--damageicons-column1--layer-129",
+      "name": "Layer 129",
+      "path": [
+        "Spell",
+        "Damage Section MINOR",
+        "Dice Column 3",
+        "DamageIcons_Column1",
+        "Layer 129"
+      ],
+      "file": "psd/spell/aoe/layers/spell--damage-section-minor--dice-column-3--damageicons-column1--layer-129.png",
+      "x": 407,
+      "y": 681,
+      "width": 79,
+      "height": 83,
+      "hidden": true,
+      "opacity": 1,
+      "semantic": {
+        "kind": "damageIcon",
+        "row": "minor",
+        "column": 3,
+        "element": "Fire"
+      }
+    },
+    {
+      "id": "spell--damage-section-minor--dice-column-3--damageicons-column1--layer-130",
+      "name": "Layer 130",
+      "path": [
+        "Spell",
+        "Damage Section MINOR",
+        "Dice Column 3",
+        "DamageIcons_Column1",
+        "Layer 130"
+      ],
+      "file": "psd/spell/aoe/layers/spell--damage-section-minor--dice-column-3--damageicons-column1--layer-130.png",
+      "x": 400,
+      "y": 676,
+      "width": 92,
+      "height": 97,
+      "hidden": true,
+      "opacity": 1,
+      "semantic": {
+        "kind": "damageIcon",
+        "row": "minor",
+        "column": 3,
+        "element": "Cold"
+      }
+    },
+    {
+      "id": "spell--damage-section-minor--dice-column-3--damageicons-column1--layer-131",
+      "name": "Layer 131",
+      "path": [
+        "Spell",
+        "Damage Section MINOR",
+        "Dice Column 3",
+        "DamageIcons_Column1",
+        "Layer 131"
+      ],
+      "file": "psd/spell/aoe/layers/spell--damage-section-minor--dice-column-3--damageicons-column1--layer-131.png",
+      "x": 406,
+      "y": 678,
+      "width": 83,
+      "height": 89,
+      "hidden": true,
+      "opacity": 1,
+      "semantic": {
+        "kind": "damageIcon",
+        "row": "minor",
+        "column": 3,
+        "element": "Acid"
+      }
+    },
+    {
+      "id": "spell--damage-section-minor--dice-column-3--damageicons-column1--layer-132",
+      "name": "Layer 132",
+      "path": [
+        "Spell",
+        "Damage Section MINOR",
+        "Dice Column 3",
+        "DamageIcons_Column1",
+        "Layer 132"
+      ],
+      "file": "psd/spell/aoe/layers/spell--damage-section-minor--dice-column-3--damageicons-column1--layer-132.png",
+      "x": 407,
+      "y": 681,
+      "width": 79,
+      "height": 83,
+      "hidden": true,
+      "opacity": 1,
+      "semantic": {
+        "kind": "damageIcon",
+        "row": "minor",
+        "column": 3,
+        "element": "Slashing"
+      }
+    },
+    {
+      "id": "spell--damage-section-minor--dice-column-3--damageicons-column1--layer-133",
+      "name": "Layer 133",
+      "path": [
+        "Spell",
+        "Damage Section MINOR",
+        "Dice Column 3",
+        "DamageIcons_Column1",
+        "Layer 133"
+      ],
+      "file": "psd/spell/aoe/layers/spell--damage-section-minor--dice-column-3--damageicons-column1--layer-133.png",
+      "x": 400,
+      "y": 675,
+      "width": 92,
+      "height": 97,
+      "hidden": true,
+      "opacity": 1,
+      "semantic": {
+        "kind": "damageIcon",
+        "row": "minor",
+        "column": 3,
+        "element": "Kinetic"
+      }
+    },
+    {
+      "id": "spell--damage-section-minor--dice-column-3--dice-column1--layer-136",
+      "name": "Layer 136",
+      "path": [
+        "Spell",
+        "Damage Section MINOR",
+        "Dice Column 3",
+        "Dice_Column1",
+        "Layer 136"
+      ],
+      "file": "psd/spell/aoe/layers/spell--damage-section-minor--dice-column-3--dice-column1--layer-136.png",
+      "x": 402,
+      "y": 669,
+      "width": 87,
+      "height": 107,
+      "hidden": true,
+      "opacity": 1,
+      "semantic": {
+        "kind": "die",
+        "row": "minor",
+        "column": 3,
+        "sides": 4
+      }
+    },
+    {
+      "id": "spell--damage-section-minor--dice-column-3--dice-column1--layer-137",
+      "name": "Layer 137",
+      "path": [
+        "Spell",
+        "Damage Section MINOR",
+        "Dice Column 3",
+        "Dice_Column1",
+        "Layer 137"
+      ],
+      "file": "psd/spell/aoe/layers/spell--damage-section-minor--dice-column-3--dice-column1--layer-137.png",
+      "x": 409,
+      "y": 679,
+      "width": 75,
+      "height": 89,
+      "hidden": true,
+      "opacity": 1,
+      "semantic": {
+        "kind": "die",
+        "row": "minor",
+        "column": 3,
+        "sides": 6
+      }
+    },
+    {
+      "id": "spell--damage-section-minor--dice-column-3--dice-column1--layer-138",
+      "name": "Layer 138",
+      "path": [
+        "Spell",
+        "Damage Section MINOR",
+        "Dice Column 3",
+        "Dice_Column1",
+        "Layer 138"
+      ],
+      "file": "psd/spell/aoe/layers/spell--damage-section-minor--dice-column-3--dice-column1--layer-138.png",
+      "x": 411,
+      "y": 678,
+      "width": 71,
+      "height": 91,
+      "hidden": true,
+      "opacity": 1,
+      "semantic": {
+        "kind": "die",
+        "row": "minor",
+        "column": 3,
+        "sides": 8
+      }
+    },
+    {
+      "id": "spell--damage-section-minor--dice-column-3--dice-column1--layer-139",
+      "name": "Layer 139",
+      "path": [
+        "Spell",
+        "Damage Section MINOR",
+        "Dice Column 3",
+        "Dice_Column1",
+        "Layer 139"
+      ],
+      "file": "psd/spell/aoe/layers/spell--damage-section-minor--dice-column-3--dice-column1--layer-139.png",
+      "x": 408,
+      "y": 682,
+      "width": 78,
+      "height": 83,
+      "hidden": true,
+      "opacity": 1,
+      "semantic": {
+        "kind": "die",
+        "row": "minor",
+        "column": 3,
+        "sides": 10
+      }
+    },
+    {
+      "id": "spell--damage-section-minor--dice-column-3--dice-column1--layer-140",
+      "name": "Layer 140",
+      "path": [
+        "Spell",
+        "Damage Section MINOR",
+        "Dice Column 3",
+        "Dice_Column1",
+        "Layer 140"
+      ],
+      "file": "psd/spell/aoe/layers/spell--damage-section-minor--dice-column-3--dice-column1--layer-140.png",
+      "x": 408,
+      "y": 680,
+      "width": 80,
+      "height": 88,
+      "hidden": true,
+      "opacity": 1,
+      "semantic": {
+        "kind": "die",
+        "row": "minor",
+        "column": 3,
+        "sides": 12
+      }
+    },
+    {
+      "id": "spell--damage-section-minor--dice-column-3--dice-column1--layer-141",
+      "name": "Layer 141",
+      "path": [
+        "Spell",
+        "Damage Section MINOR",
+        "Dice Column 3",
+        "Dice_Column1",
+        "Layer 141"
+      ],
+      "file": "psd/spell/aoe/layers/spell--damage-section-minor--dice-column-3--dice-column1--layer-141.png",
+      "x": 408,
+      "y": 682,
+      "width": 79,
+      "height": 81,
+      "hidden": true,
+      "opacity": 1,
+      "semantic": {
+        "kind": "die",
+        "row": "minor",
+        "column": 3,
+        "sides": 20
+      }
+    },
+    {
+      "id": "spell--damage-section-minor--dice-column-2--damageicons-column1--layer-146",
+      "name": "Layer 146",
+      "path": [
+        "Spell",
+        "Damage Section MINOR",
+        "Dice Column 2",
+        "DamageIcons_Column1",
+        "Layer 146"
+      ],
+      "file": "psd/spell/aoe/layers/spell--damage-section-minor--dice-column-2--damageicons-column1--layer-146.png",
+      "x": 305,
+      "y": 681,
+      "width": 79,
+      "height": 83,
+      "hidden": true,
+      "opacity": 1,
+      "semantic": {
+        "kind": "damageIcon",
+        "row": "minor",
+        "column": 2,
+        "element": "Plasma"
+      }
+    },
+    {
+      "id": "spell--damage-section-minor--dice-column-2--damageicons-column1--layer-147",
+      "name": "Layer 147",
+      "path": [
+        "Spell",
+        "Damage Section MINOR",
+        "Dice Column 2",
+        "DamageIcons_Column1",
+        "Layer 147"
+      ],
+      "file": "psd/spell/aoe/layers/spell--damage-section-minor--dice-column-2--damageicons-column1--layer-147.png",
+      "x": 300,
+      "y": 678,
+      "width": 87,
+      "height": 92,
+      "hidden": true,
+      "opacity": 1,
+      "semantic": {
+        "kind": "damageIcon",
+        "row": "minor",
+        "column": 2,
+        "element": "Light"
+      }
+    },
+    {
+      "id": "spell--damage-section-minor--dice-column-2--damageicons-column1--layer-148",
+      "name": "Layer 148",
+      "path": [
+        "Spell",
+        "Damage Section MINOR",
+        "Dice Column 2",
+        "DamageIcons_Column1",
+        "Layer 148"
+      ],
+      "file": "psd/spell/aoe/layers/spell--damage-section-minor--dice-column-2--damageicons-column1--layer-148.png",
+      "x": 303,
+      "y": 678,
+      "width": 84,
+      "height": 89,
+      "hidden": true,
+      "opacity": 1,
+      "semantic": {
+        "kind": "damageIcon",
+        "row": "minor",
+        "column": 2,
+        "element": "Entropy"
+      }
+    },
+    {
+      "id": "spell--damage-section-minor--dice-column-2--damageicons-column1--layer-149",
+      "name": "Layer 149",
+      "path": [
+        "Spell",
+        "Damage Section MINOR",
+        "Dice Column 2",
+        "DamageIcons_Column1",
+        "Layer 149"
+      ],
+      "file": "psd/spell/aoe/layers/spell--damage-section-minor--dice-column-2--damageicons-column1--layer-149.png",
+      "x": 304,
+      "y": 679,
+      "width": 85,
+      "height": 90,
+      "hidden": true,
+      "opacity": 1,
+      "semantic": {
+        "kind": "damageIcon",
+        "row": "minor",
+        "column": 2,
+        "element": "Dark"
+      }
+    },
+    {
+      "id": "spell--damage-section-minor--dice-column-2--damageicons-column1--layer-150",
+      "name": "Layer 150",
+      "path": [
+        "Spell",
+        "Damage Section MINOR",
+        "Dice Column 2",
+        "DamageIcons_Column1",
+        "Layer 150"
+      ],
+      "file": "psd/spell/aoe/layers/spell--damage-section-minor--dice-column-2--damageicons-column1--layer-150.png",
+      "x": 297,
+      "y": 672,
+      "width": 96,
+      "height": 101,
+      "hidden": true,
+      "opacity": 1,
+      "semantic": {
+        "kind": "damageIcon",
+        "row": "minor",
+        "column": 2,
+        "element": "Volt"
+      }
+    },
+    {
+      "id": "spell--damage-section-minor--dice-column-2--damageicons-column1--layer-151",
+      "name": "Layer 151",
+      "path": [
+        "Spell",
+        "Damage Section MINOR",
+        "Dice Column 2",
+        "DamageIcons_Column1",
+        "Layer 151"
+      ],
+      "file": "psd/spell/aoe/layers/spell--damage-section-minor--dice-column-2--damageicons-column1--layer-151.png",
+      "x": 305,
+      "y": 681,
+      "width": 79,
+      "height": 83,
+      "hidden": true,
+      "opacity": 1,
+      "semantic": {
+        "kind": "damageIcon",
+        "row": "minor",
+        "column": 2,
+        "element": "Fire"
+      }
+    },
+    {
+      "id": "spell--damage-section-minor--dice-column-2--damageicons-column1--layer-152",
+      "name": "Layer 152",
+      "path": [
+        "Spell",
+        "Damage Section MINOR",
+        "Dice Column 2",
+        "DamageIcons_Column1",
+        "Layer 152"
+      ],
+      "file": "psd/spell/aoe/layers/spell--damage-section-minor--dice-column-2--damageicons-column1--layer-152.png",
+      "x": 299,
+      "y": 676,
+      "width": 91,
+      "height": 97,
+      "hidden": true,
+      "opacity": 1,
+      "semantic": {
+        "kind": "damageIcon",
+        "row": "minor",
+        "column": 2,
+        "element": "Cold"
+      }
+    },
+    {
+      "id": "spell--damage-section-minor--dice-column-2--damageicons-column1--layer-153",
+      "name": "Layer 153",
+      "path": [
+        "Spell",
+        "Damage Section MINOR",
+        "Dice Column 2",
+        "DamageIcons_Column1",
+        "Layer 153"
+      ],
+      "file": "psd/spell/aoe/layers/spell--damage-section-minor--dice-column-2--damageicons-column1--layer-153.png",
+      "x": 304,
+      "y": 678,
+      "width": 84,
+      "height": 89,
+      "hidden": true,
+      "opacity": 1,
+      "semantic": {
+        "kind": "damageIcon",
+        "row": "minor",
+        "column": 2,
+        "element": "Acid"
+      }
+    },
+    {
+      "id": "spell--damage-section-minor--dice-column-2--damageicons-column1--layer-154",
+      "name": "Layer 154",
+      "path": [
+        "Spell",
+        "Damage Section MINOR",
+        "Dice Column 2",
+        "DamageIcons_Column1",
+        "Layer 154"
+      ],
+      "file": "psd/spell/aoe/layers/spell--damage-section-minor--dice-column-2--damageicons-column1--layer-154.png",
+      "x": 305,
+      "y": 681,
+      "width": 79,
+      "height": 83,
+      "hidden": true,
+      "opacity": 1,
+      "semantic": {
+        "kind": "damageIcon",
+        "row": "minor",
+        "column": 2,
+        "element": "Slashing"
+      }
+    },
+    {
+      "id": "spell--damage-section-minor--dice-column-2--damageicons-column1--layer-155",
+      "name": "Layer 155",
+      "path": [
+        "Spell",
+        "Damage Section MINOR",
+        "Dice Column 2",
+        "DamageIcons_Column1",
+        "Layer 155"
+      ],
+      "file": "psd/spell/aoe/layers/spell--damage-section-minor--dice-column-2--damageicons-column1--layer-155.png",
+      "x": 299,
+      "y": 675,
+      "width": 92,
+      "height": 97,
+      "hidden": false,
+      "opacity": 1,
+      "semantic": {
+        "kind": "damageIcon",
+        "row": "minor",
+        "column": 2,
+        "element": "Kinetic"
+      }
+    },
+    {
+      "id": "spell--damage-section-minor--dice-column-2--dice-column1--layer-158",
+      "name": "Layer 158",
+      "path": [
+        "Spell",
+        "Damage Section MINOR",
+        "Dice Column 2",
+        "Dice_Column1",
+        "Layer 158"
+      ],
+      "file": "psd/spell/aoe/layers/spell--damage-section-minor--dice-column-2--dice-column1--layer-158.png",
+      "x": 301,
+      "y": 669,
+      "width": 87,
+      "height": 107,
+      "hidden": true,
+      "opacity": 1,
+      "semantic": {
+        "kind": "die",
+        "row": "minor",
+        "column": 2,
+        "sides": 4
+      }
+    },
+    {
+      "id": "spell--damage-section-minor--dice-column-2--dice-column1--layer-159",
+      "name": "Layer 159",
+      "path": [
+        "Spell",
+        "Damage Section MINOR",
+        "Dice Column 2",
+        "Dice_Column1",
+        "Layer 159"
+      ],
+      "file": "psd/spell/aoe/layers/spell--damage-section-minor--dice-column-2--dice-column1--layer-159.png",
+      "x": 308,
+      "y": 679,
+      "width": 74,
+      "height": 89,
+      "hidden": true,
+      "opacity": 1,
+      "semantic": {
+        "kind": "die",
+        "row": "minor",
+        "column": 2,
+        "sides": 6
+      }
+    },
+    {
+      "id": "spell--damage-section-minor--dice-column-2--dice-column1--layer-160",
+      "name": "Layer 160",
+      "path": [
+        "Spell",
+        "Damage Section MINOR",
+        "Dice Column 2",
+        "Dice_Column1",
+        "Layer 160"
+      ],
+      "file": "psd/spell/aoe/layers/spell--damage-section-minor--dice-column-2--dice-column1--layer-160.png",
+      "x": 309,
+      "y": 678,
+      "width": 71,
+      "height": 91,
+      "hidden": true,
+      "opacity": 1,
+      "semantic": {
+        "kind": "die",
+        "row": "minor",
+        "column": 2,
+        "sides": 8
+      }
+    },
+    {
+      "id": "spell--damage-section-minor--dice-column-2--dice-column1--layer-161",
+      "name": "Layer 161",
+      "path": [
+        "Spell",
+        "Damage Section MINOR",
+        "Dice Column 2",
+        "Dice_Column1",
+        "Layer 161"
+      ],
+      "file": "psd/spell/aoe/layers/spell--damage-section-minor--dice-column-2--dice-column1--layer-161.png",
+      "x": 306,
+      "y": 682,
+      "width": 79,
+      "height": 83,
+      "hidden": true,
+      "opacity": 1,
+      "semantic": {
+        "kind": "die",
+        "row": "minor",
+        "column": 2,
+        "sides": 10
+      }
+    },
+    {
+      "id": "spell--damage-section-minor--dice-column-2--dice-column1--layer-162",
+      "name": "Layer 162",
+      "path": [
+        "Spell",
+        "Damage Section MINOR",
+        "Dice Column 2",
+        "Dice_Column1",
+        "Layer 162"
+      ],
+      "file": "psd/spell/aoe/layers/spell--damage-section-minor--dice-column-2--dice-column1--layer-162.png",
+      "x": 307,
+      "y": 680,
+      "width": 79,
+      "height": 88,
+      "hidden": true,
+      "opacity": 1,
+      "semantic": {
+        "kind": "die",
+        "row": "minor",
+        "column": 2,
+        "sides": 12
+      }
+    },
+    {
+      "id": "spell--damage-section-minor--dice-column-2--dice-column1--layer-163",
+      "name": "Layer 163",
+      "path": [
+        "Spell",
+        "Damage Section MINOR",
+        "Dice Column 2",
+        "Dice_Column1",
+        "Layer 163"
+      ],
+      "file": "psd/spell/aoe/layers/spell--damage-section-minor--dice-column-2--dice-column1--layer-163.png",
+      "x": 306,
+      "y": 682,
+      "width": 80,
+      "height": 81,
+      "hidden": true,
+      "opacity": 1,
+      "semantic": {
+        "kind": "die",
+        "row": "minor",
+        "column": 2,
+        "sides": 20
+      }
+    },
+    {
+      "id": "spell--damage-section-minor--dice-column-1--damageicons-column1--layer-169",
+      "name": "Layer 169",
+      "path": [
+        "Spell",
+        "Damage Section MINOR",
+        "Dice Column 1",
+        "DamageIcons_Column1",
+        "Layer 169"
+      ],
+      "file": "psd/spell/aoe/layers/spell--damage-section-minor--dice-column-1--damageicons-column1--layer-169.png",
+      "x": 204,
+      "y": 681,
+      "width": 79,
+      "height": 83,
+      "hidden": true,
+      "opacity": 1,
+      "semantic": {
+        "kind": "damageIcon",
+        "row": "minor",
+        "column": 1,
+        "element": "Plasma"
+      }
+    },
+    {
+      "id": "spell--damage-section-minor--dice-column-1--damageicons-column1--layer-170",
+      "name": "Layer 170",
+      "path": [
+        "Spell",
+        "Damage Section MINOR",
+        "Dice Column 1",
+        "DamageIcons_Column1",
+        "Layer 170"
+      ],
+      "file": "psd/spell/aoe/layers/spell--damage-section-minor--dice-column-1--damageicons-column1--layer-170.png",
+      "x": 199,
+      "y": 678,
+      "width": 87,
+      "height": 92,
+      "hidden": true,
+      "opacity": 1,
+      "semantic": {
+        "kind": "damageIcon",
+        "row": "minor",
+        "column": 1,
+        "element": "Light"
+      }
+    },
+    {
+      "id": "spell--damage-section-minor--dice-column-1--damageicons-column1--layer-171",
+      "name": "Layer 171",
+      "path": [
+        "Spell",
+        "Damage Section MINOR",
+        "Dice Column 1",
+        "DamageIcons_Column1",
+        "Layer 171"
+      ],
+      "file": "psd/spell/aoe/layers/spell--damage-section-minor--dice-column-1--damageicons-column1--layer-171.png",
+      "x": 202,
+      "y": 678,
+      "width": 83,
+      "height": 89,
+      "hidden": true,
+      "opacity": 1,
+      "semantic": {
+        "kind": "damageIcon",
+        "row": "minor",
+        "column": 1,
+        "element": "Entropy"
+      }
+    },
+    {
+      "id": "spell--damage-section-minor--dice-column-1--damageicons-column1--layer-172",
+      "name": "Layer 172",
+      "path": [
+        "Spell",
+        "Damage Section MINOR",
+        "Dice Column 1",
+        "DamageIcons_Column1",
+        "Layer 172"
+      ],
+      "file": "psd/spell/aoe/layers/spell--damage-section-minor--dice-column-1--damageicons-column1--layer-172.png",
+      "x": 203,
+      "y": 679,
+      "width": 85,
+      "height": 90,
+      "hidden": true,
+      "opacity": 1,
+      "semantic": {
+        "kind": "damageIcon",
+        "row": "minor",
+        "column": 1,
+        "element": "Dark"
+      }
+    },
+    {
+      "id": "spell--damage-section-minor--dice-column-1--damageicons-column1--layer-173",
+      "name": "Layer 173",
+      "path": [
+        "Spell",
+        "Damage Section MINOR",
+        "Dice Column 1",
+        "DamageIcons_Column1",
+        "Layer 173"
+      ],
+      "file": "psd/spell/aoe/layers/spell--damage-section-minor--dice-column-1--damageicons-column1--layer-173.png",
+      "x": 196,
+      "y": 672,
+      "width": 95,
+      "height": 101,
+      "hidden": true,
+      "opacity": 1,
+      "semantic": {
+        "kind": "damageIcon",
+        "row": "minor",
+        "column": 1,
+        "element": "Volt"
+      }
+    },
+    {
+      "id": "spell--damage-section-minor--dice-column-1--damageicons-column1--layer-174",
+      "name": "Layer 174",
+      "path": [
+        "Spell",
+        "Damage Section MINOR",
+        "Dice Column 1",
+        "DamageIcons_Column1",
+        "Layer 174"
+      ],
+      "file": "psd/spell/aoe/layers/spell--damage-section-minor--dice-column-1--damageicons-column1--layer-174.png",
+      "x": 204,
+      "y": 681,
+      "width": 79,
+      "height": 83,
+      "hidden": true,
+      "opacity": 1,
+      "semantic": {
+        "kind": "damageIcon",
+        "row": "minor",
+        "column": 1,
+        "element": "Fire"
+      }
+    },
+    {
+      "id": "spell--damage-section-minor--dice-column-1--damageicons-column1--layer-175",
+      "name": "Layer 175",
+      "path": [
+        "Spell",
+        "Damage Section MINOR",
+        "Dice Column 1",
+        "DamageIcons_Column1",
+        "Layer 175"
+      ],
+      "file": "psd/spell/aoe/layers/spell--damage-section-minor--dice-column-1--damageicons-column1--layer-175.png",
+      "x": 198,
+      "y": 676,
+      "width": 91,
+      "height": 97,
+      "hidden": true,
+      "opacity": 1,
+      "semantic": {
+        "kind": "damageIcon",
+        "row": "minor",
+        "column": 1,
+        "element": "Cold"
+      }
+    },
+    {
+      "id": "spell--damage-section-minor--dice-column-1--damageicons-column1--layer-176",
+      "name": "Layer 176",
+      "path": [
+        "Spell",
+        "Damage Section MINOR",
+        "Dice Column 1",
+        "DamageIcons_Column1",
+        "Layer 176"
+      ],
+      "file": "psd/spell/aoe/layers/spell--damage-section-minor--dice-column-1--damageicons-column1--layer-176.png",
+      "x": 203,
+      "y": 678,
+      "width": 84,
+      "height": 89,
+      "hidden": true,
+      "opacity": 1,
+      "semantic": {
+        "kind": "damageIcon",
+        "row": "minor",
+        "column": 1,
+        "element": "Acid"
+      }
+    },
+    {
+      "id": "spell--damage-section-minor--dice-column-1--damageicons-column1--layer-177",
+      "name": "Layer 177",
+      "path": [
+        "Spell",
+        "Damage Section MINOR",
+        "Dice Column 1",
+        "DamageIcons_Column1",
+        "Layer 177"
+      ],
+      "file": "psd/spell/aoe/layers/spell--damage-section-minor--dice-column-1--damageicons-column1--layer-177.png",
+      "x": 204,
+      "y": 681,
+      "width": 79,
+      "height": 83,
+      "hidden": true,
+      "opacity": 1,
+      "semantic": {
+        "kind": "damageIcon",
+        "row": "minor",
+        "column": 1,
+        "element": "Slashing"
+      }
+    },
+    {
+      "id": "spell--damage-section-minor--dice-column-1--damageicons-column1--layer-178",
+      "name": "Layer 178",
+      "path": [
+        "Spell",
+        "Damage Section MINOR",
+        "Dice Column 1",
+        "DamageIcons_Column1",
+        "Layer 178"
+      ],
+      "file": "psd/spell/aoe/layers/spell--damage-section-minor--dice-column-1--damageicons-column1--layer-178.png",
+      "x": 197,
+      "y": 675,
+      "width": 93,
+      "height": 97,
+      "hidden": true,
+      "opacity": 1,
+      "semantic": {
+        "kind": "damageIcon",
+        "row": "minor",
+        "column": 1,
+        "element": "Kinetic"
+      }
+    },
+    {
+      "id": "spell--damage-section-minor--dice-column-1--dice-column1--layer-181",
+      "name": "Layer 181",
+      "path": [
+        "Spell",
+        "Damage Section MINOR",
+        "Dice Column 1",
+        "Dice_Column1",
+        "Layer 181"
+      ],
+      "file": "psd/spell/aoe/layers/spell--damage-section-minor--dice-column-1--dice-column1--layer-181.png",
+      "x": 199,
+      "y": 669,
+      "width": 87,
+      "height": 107,
+      "hidden": true,
+      "opacity": 1,
+      "semantic": {
+        "kind": "die",
+        "row": "minor",
+        "column": 1,
+        "sides": 4
+      }
+    },
+    {
+      "id": "spell--damage-section-minor--dice-column-1--dice-column1--layer-182",
+      "name": "Layer 182",
+      "path": [
+        "Spell",
+        "Damage Section MINOR",
+        "Dice Column 1",
+        "Dice_Column1",
+        "Layer 182"
+      ],
+      "file": "psd/spell/aoe/layers/spell--damage-section-minor--dice-column-1--dice-column1--layer-182.png",
+      "x": 206,
+      "y": 679,
+      "width": 75,
+      "height": 89,
+      "hidden": true,
+      "opacity": 1,
+      "semantic": {
+        "kind": "die",
+        "row": "minor",
+        "column": 1,
+        "sides": 6
+      }
+    },
+    {
+      "id": "spell--damage-section-minor--dice-column-1--dice-column1--layer-183",
+      "name": "Layer 183",
+      "path": [
+        "Spell",
+        "Damage Section MINOR",
+        "Dice Column 1",
+        "Dice_Column1",
+        "Layer 183"
+      ],
+      "file": "psd/spell/aoe/layers/spell--damage-section-minor--dice-column-1--dice-column1--layer-183.png",
+      "x": 208,
+      "y": 678,
+      "width": 71,
+      "height": 91,
+      "hidden": false,
+      "opacity": 1,
+      "semantic": {
+        "kind": "die",
+        "row": "minor",
+        "column": 1,
+        "sides": 8
+      }
+    },
+    {
+      "id": "spell--damage-section-minor--dice-column-1--dice-column1--layer-184",
+      "name": "Layer 184",
+      "path": [
+        "Spell",
+        "Damage Section MINOR",
+        "Dice Column 1",
+        "Dice_Column1",
+        "Layer 184"
+      ],
+      "file": "psd/spell/aoe/layers/spell--damage-section-minor--dice-column-1--dice-column1--layer-184.png",
+      "x": 205,
+      "y": 682,
+      "width": 78,
+      "height": 83,
+      "hidden": true,
+      "opacity": 1,
+      "semantic": {
+        "kind": "die",
+        "row": "minor",
+        "column": 1,
+        "sides": 10
+      }
+    },
+    {
+      "id": "spell--damage-section-minor--dice-column-1--dice-column1--layer-185",
+      "name": "Layer 185",
+      "path": [
+        "Spell",
+        "Damage Section MINOR",
+        "Dice Column 1",
+        "Dice_Column1",
+        "Layer 185"
+      ],
+      "file": "psd/spell/aoe/layers/spell--damage-section-minor--dice-column-1--dice-column1--layer-185.png",
+      "x": 206,
+      "y": 680,
+      "width": 79,
+      "height": 88,
+      "hidden": true,
+      "opacity": 1,
+      "semantic": {
+        "kind": "die",
+        "row": "minor",
+        "column": 1,
+        "sides": 12
+      }
+    },
+    {
+      "id": "spell--damage-section-minor--dice-column-1--dice-column1--layer-186",
+      "name": "Layer 186",
+      "path": [
+        "Spell",
+        "Damage Section MINOR",
+        "Dice Column 1",
+        "Dice_Column1",
+        "Layer 186"
+      ],
+      "file": "psd/spell/aoe/layers/spell--damage-section-minor--dice-column-1--dice-column1--layer-186.png",
+      "x": 205,
+      "y": 682,
+      "width": 80,
+      "height": 81,
+      "hidden": true,
+      "opacity": 1,
+      "semantic": {
+        "kind": "die",
+        "row": "minor",
+        "column": 1,
+        "sides": 20
+      }
+    },
+    {
+      "id": "spell--damage-section-minor--additional-effect-textbox",
+      "name": "Additional Effect Textbox",
+      "path": [
+        "Spell",
+        "Damage Section MINOR",
+        "Additional Effect Textbox"
+      ],
+      "file": "psd/spell/aoe/layers/spell--damage-section-minor--additional-effect-textbox.png",
+      "x": 951,
+      "y": 706,
+      "width": 18,
+      "height": 33,
+      "hidden": true,
+      "opacity": 1,
+      "semantic": {
+        "kind": "additionalEffectTextbox",
+        "row": "minor"
+      }
+    },
+    {
+      "id": "spell--layer-191",
+      "name": "Layer 191",
+      "path": [
+        "Spell",
+        "Layer 191"
+      ],
+      "file": "psd/spell/aoe/layers/spell--layer-191.png",
+      "x": 310,
+      "y": 229,
+      "width": 378,
+      "height": 275,
+      "hidden": false,
+      "opacity": 1,
+      "semantic": {
+        "kind": "spellArt"
+      }
+    },
+    {
+      "id": "spell--rarities--common-rarity-setting--box-left",
+      "name": "Box Left",
+      "path": [
+        "Spell",
+        "Rarities",
+        "Common Rarity Setting",
+        "Box Left"
+      ],
+      "file": "psd/spell/aoe/layers/spell--rarities--common-rarity-setting--box-left.png",
+      "x": 62,
+      "y": 207,
+      "width": 286,
+      "height": 9,
+      "hidden": false,
+      "opacity": 1,
+      "semantic": {
+        "kind": "rarityBox",
+        "rarity": "Common",
+        "side": "left"
+      }
+    },
+    {
+      "id": "spell--rarities--common-rarity-setting--box-right",
+      "name": "Box Right",
+      "path": [
+        "Spell",
+        "Rarities",
+        "Common Rarity Setting",
+        "Box Right"
+      ],
+      "file": "psd/spell/aoe/layers/spell--rarities--common-rarity-setting--box-right.png",
+      "x": 653,
+      "y": 207,
+      "width": 286,
+      "height": 9,
+      "hidden": false,
+      "opacity": 1,
+      "semantic": {
+        "kind": "rarityBox",
+        "rarity": "Common",
+        "side": "right"
+      }
+    },
+    {
+      "id": "spell--rarities--common-rarity-setting--common-text-box",
+      "name": "Common Text Box",
+      "path": [
+        "Spell",
+        "Rarities",
+        "Common Rarity Setting",
+        "Common Text Box"
+      ],
+      "file": "psd/spell/aoe/layers/spell--rarities--common-rarity-setting--common-text-box.png",
+      "x": 409,
+      "y": 187,
+      "width": 183,
+      "height": 50,
+      "hidden": false,
+      "opacity": 1,
+      "semantic": {
+        "kind": "rarityText",
+        "rarity": "Common"
+      }
+    },
+    {
+      "id": "spell--rarities--uncommon-rarity-setting--box-left",
+      "name": "Box Left",
+      "path": [
+        "Spell",
+        "Rarities",
+        "Uncommon Rarity Setting",
+        "Box Left"
+      ],
+      "file": "psd/spell/aoe/layers/spell--rarities--uncommon-rarity-setting--box-left.png",
+      "x": 62,
+      "y": 207,
+      "width": 286,
+      "height": 9,
+      "hidden": false,
+      "opacity": 1,
+      "semantic": {
+        "kind": "rarityBox",
+        "rarity": "Uncommon",
+        "side": "left"
+      }
+    },
+    {
+      "id": "spell--rarities--uncommon-rarity-setting--box-right",
+      "name": "Box Right",
+      "path": [
+        "Spell",
+        "Rarities",
+        "Uncommon Rarity Setting",
+        "Box Right"
+      ],
+      "file": "psd/spell/aoe/layers/spell--rarities--uncommon-rarity-setting--box-right.png",
+      "x": 653,
+      "y": 207,
+      "width": 286,
+      "height": 9,
+      "hidden": false,
+      "opacity": 1,
+      "semantic": {
+        "kind": "rarityBox",
+        "rarity": "Uncommon",
+        "side": "right"
+      }
+    },
+    {
+      "id": "spell--rarities--uncommon-rarity-setting--uncommon-text-box",
+      "name": "Uncommon Text Box",
+      "path": [
+        "Spell",
+        "Rarities",
+        "Uncommon Rarity Setting",
+        "Uncommon Text Box"
+      ],
+      "file": "psd/spell/aoe/layers/spell--rarities--uncommon-rarity-setting--uncommon-text-box.png",
+      "x": 380,
+      "y": 187,
+      "width": 241,
+      "height": 50,
+      "hidden": false,
+      "opacity": 1,
+      "semantic": {
+        "kind": "rarityText",
+        "rarity": "Uncommon"
+      }
+    },
+    {
+      "id": "spell--rarities--rare-rarity-setting--box-left",
+      "name": "Box Left",
+      "path": [
+        "Spell",
+        "Rarities",
+        "Rare Rarity Setting",
+        "Box Left"
+      ],
+      "file": "psd/spell/aoe/layers/spell--rarities--rare-rarity-setting--box-left.png",
+      "x": 62,
+      "y": 207,
+      "width": 286,
+      "height": 9,
+      "hidden": false,
+      "opacity": 1,
+      "semantic": {
+        "kind": "rarityBox",
+        "rarity": "Rare",
+        "side": "left"
+      }
+    },
+    {
+      "id": "spell--rarities--rare-rarity-setting--box-right",
+      "name": "Box Right",
+      "path": [
+        "Spell",
+        "Rarities",
+        "Rare Rarity Setting",
+        "Box Right"
+      ],
+      "file": "psd/spell/aoe/layers/spell--rarities--rare-rarity-setting--box-right.png",
+      "x": 653,
+      "y": 207,
+      "width": 286,
+      "height": 9,
+      "hidden": false,
+      "opacity": 1,
+      "semantic": {
+        "kind": "rarityBox",
+        "rarity": "Rare",
+        "side": "right"
+      }
+    },
+    {
+      "id": "spell--rarities--rare-rarity-setting--rare-text-box",
+      "name": "Rare Text Box",
+      "path": [
+        "Spell",
+        "Rarities",
+        "Rare Rarity Setting",
+        "Rare Text Box"
+      ],
+      "file": "psd/spell/aoe/layers/spell--rarities--rare-rarity-setting--rare-text-box.png",
+      "x": 447,
+      "y": 188,
+      "width": 109,
+      "height": 48,
+      "hidden": false,
+      "opacity": 1,
+      "semantic": {
+        "kind": "rarityText",
+        "rarity": "Rare"
+      }
+    },
+    {
+      "id": "spell--rarities--epic-rarity-setting--box-left",
+      "name": "Box Left",
+      "path": [
+        "Spell",
+        "Rarities",
+        "Epic Rarity Setting",
+        "Box Left"
+      ],
+      "file": "psd/spell/aoe/layers/spell--rarities--epic-rarity-setting--box-left.png",
+      "x": 62,
+      "y": 207,
+      "width": 286,
+      "height": 9,
+      "hidden": false,
+      "opacity": 1,
+      "semantic": {
+        "kind": "rarityBox",
+        "rarity": "Epic",
+        "side": "left"
+      }
+    },
+    {
+      "id": "spell--rarities--epic-rarity-setting--box-right",
+      "name": "Box Right",
+      "path": [
+        "Spell",
+        "Rarities",
+        "Epic Rarity Setting",
+        "Box Right"
+      ],
+      "file": "psd/spell/aoe/layers/spell--rarities--epic-rarity-setting--box-right.png",
+      "x": 653,
+      "y": 207,
+      "width": 286,
+      "height": 9,
+      "hidden": false,
+      "opacity": 1,
+      "semantic": {
+        "kind": "rarityBox",
+        "rarity": "Epic",
+        "side": "right"
+      }
+    },
+    {
+      "id": "spell--rarities--epic-rarity-setting--epic-text-box",
+      "name": "Epic Text Box",
+      "path": [
+        "Spell",
+        "Rarities",
+        "Epic Rarity Setting",
+        "Epic Text Box"
+      ],
+      "file": "psd/spell/aoe/layers/spell--rarities--epic-rarity-setting--epic-text-box.png",
+      "x": 456,
+      "y": 187,
+      "width": 90,
+      "height": 50,
+      "hidden": false,
+      "opacity": 1,
+      "semantic": {
+        "kind": "rarityText",
+        "rarity": "Epic"
+      }
+    },
+    {
+      "id": "spell--rarities--legendary-rarity-setting--box-left",
+      "name": "Box Left",
+      "path": [
+        "Spell",
+        "Rarities",
+        "Legendary Rarity Setting",
+        "Box Left"
+      ],
+      "file": "psd/spell/aoe/layers/spell--rarities--legendary-rarity-setting--box-left.png",
+      "x": 62,
+      "y": 207,
+      "width": 286,
+      "height": 9,
+      "hidden": false,
+      "opacity": 1,
+      "semantic": {
+        "kind": "rarityBox",
+        "rarity": "Legendary",
+        "side": "left"
+      }
+    },
+    {
+      "id": "spell--rarities--legendary-rarity-setting--box-right",
+      "name": "Box Right",
+      "path": [
+        "Spell",
+        "Rarities",
+        "Legendary Rarity Setting",
+        "Box Right"
+      ],
+      "file": "psd/spell/aoe/layers/spell--rarities--legendary-rarity-setting--box-right.png",
+      "x": 653,
+      "y": 207,
+      "width": 286,
+      "height": 9,
+      "hidden": false,
+      "opacity": 1,
+      "semantic": {
+        "kind": "rarityBox",
+        "rarity": "Legendary",
+        "side": "right"
+      }
+    },
+    {
+      "id": "spell--rarities--legendary-rarity-setting--legendary-text-box",
+      "name": "Legendary Text Box",
+      "path": [
+        "Spell",
+        "Rarities",
+        "Legendary Rarity Setting",
+        "Legendary Text Box"
+      ],
+      "file": "psd/spell/aoe/layers/spell--rarities--legendary-rarity-setting--legendary-text-box.png",
+      "x": 382,
+      "y": 187,
+      "width": 241,
+      "height": 50,
+      "hidden": false,
+      "opacity": 1,
+      "semantic": {
+        "kind": "rarityText",
+        "rarity": "Legendary"
+      }
+    },
+    {
+      "id": "spell--rarities--luminous-rarity-setting",
+      "name": "Luminous Rarity Setting",
+      "path": [
+        "Spell",
+        "Rarities",
+        "Luminous Rarity Setting"
+      ],
+      "file": "psd/spell/aoe/layers/spell--rarities--luminous-rarity-setting.png",
+      "x": 62,
+      "y": 187,
+      "width": 877,
+      "height": 50,
+      "hidden": true,
+      "opacity": 1,
+      "semantic": {
+        "kind": "rarityText",
+        "rarity": "Luminous"
+      }
+    },
+    {
+      "id": "spell--name--name-text-box",
+      "name": "Name Text Box",
+      "path": [
+        "Spell",
+        "Name",
+        "Name Text Box"
+      ],
+      "file": "psd/spell/aoe/layers/spell--name--name-text-box.png",
+      "x": 306,
+      "y": 55,
+      "width": 391,
+      "height": 74,
+      "hidden": false,
+      "opacity": 1,
+      "semantic": {
+        "kind": "nameTextbox"
+      }
+    }
+  ]
+}

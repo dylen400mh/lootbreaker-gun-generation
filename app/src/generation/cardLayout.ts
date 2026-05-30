@@ -1,5 +1,10 @@
-import { findDamageIcon, findDie, type PsdLayer } from '../assets/psdManifest';
-import type { BaseDamage, ElementResult, WeaponCategory } from './types';
+import {
+  findDamageIcon,
+  findDie,
+  type ManifestKey,
+  type PsdLayer,
+} from '../assets/psdManifest';
+import type { BaseDamage, ElementResult } from './types';
 import type { DamageRowName } from '../assets/psdManifest';
 import { parseDamage } from './damage';
 
@@ -16,7 +21,7 @@ const MAX_COLUMNS = 7;
 //     next col   : element damage icon
 //   columns are capped at MAX_COLUMNS.
 export function damageRowLayers(
-  category: WeaponCategory,
+  manifestKey: ManifestKey,
   row: DamageRowName,
   baseFormula: string,
   baseDamage: BaseDamage,
@@ -55,8 +60,8 @@ export function damageRowLayers(
     const slot = slots[i];
     const layer =
       slot.kind === 'die'
-        ? findDie(category, row, column, slot.sides)
-        : findDamageIcon(category, row, column, slot.element as never);
+        ? findDie(manifestKey, row, column, slot.sides)
+        : findDamageIcon(manifestKey, row, column, slot.element as never);
     if (layer) out.push(layer);
   }
 

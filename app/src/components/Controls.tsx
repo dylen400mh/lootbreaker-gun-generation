@@ -57,9 +57,15 @@ export function Controls({
   downloading,
 }: Props) {
   const isShield = category === 'shield';
+  const isSpell = category === 'spell';
+  // Spells have no pre-rollable "weapon type" — the delivery type is rolled
+  // mid-procedure. Guns/melee gun expose their player-choice type list.
   const typeOptions: ReadonlyArray<GunType | MeleeType> =
     category === 'gun' ? GUN_PLAYER_CHOICE_TYPES : MELEE_PLAYER_CHOICE_TYPES;
-  // Shields roll on a 2d8 → 14-guild table; guns/melee on a d12 → 12-guild table.
+  // Shields roll on a 2d8 → 14-guild table; guns/melee/spells on a d12 → 12
+  // guilds (offensive spells share the gun/melee table; support spells use a
+  // 6-guild subset). When the user pins a non-applicable guild for a support
+  // spell, the procedure quietly re-rolls.
   const guildOptions: ReadonlyArray<GuildName> = isShield
     ? SHIELD_PLAYER_CHOICE_GUILDS
     : GUILD_BY_D12;
@@ -84,8 +90,9 @@ export function Controls({
         </div>
       </fieldset>
 
-      {/* Shields have no per-type roll — guild is the first dice step. */}
-      {!isShield && (
+      {/* Shields have no per-type roll — guild is the first dice step. Spells
+          have a delivery type but it's rolled mid-procedure, not pre-pinned. */}
+      {!isShield && !isSpell && (
         <fieldset className="controls__group">
           <legend>Weapon</legend>
           <select
@@ -135,8 +142,9 @@ export function Controls({
         </select>
       </fieldset>
 
-      {/* Red text is a gun/melee mechanic only. Shields don't have a red-text step. */}
-      {!isShield && (
+      {/* Red text is a gun/melee mechanic only. Shields and spells don't have
+          a red-text step. */}
+      {!isShield && !isSpell && (
         <label className="controls__toggle">
           <input
             type="checkbox"

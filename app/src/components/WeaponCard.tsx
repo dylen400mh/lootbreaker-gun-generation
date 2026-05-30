@@ -1,20 +1,35 @@
 import { useEffect, useMemo, useRef } from 'react';
 import {
   findByKind,
+  findDamageIcon,
+  findDie,
   getBackgroundLayers,
   getGuildLayers,
   getRarityLayers,
   getShieldTableLayers,
   getStatisticsLayers,
   PSD_CANVAS,
+  spellManifestKey,
+  type ManifestKey,
+  type PsdLayer,
 } from '../assets/psdManifest';
 import { weaponArtUrl, pickWeaponWidth } from '../assets/manifest';
 import { damageRowLayers } from '../generation/cardLayout';
+import { parseDamage } from '../generation/damage';
+import {
+  OFFENSIVE_DELIVERY_DESCRIPTIONS,
+  SUPPORT_DELIVERY_DESCRIPTIONS,
+} from '../generation/tables/spell/deliveryTypes';
 import {
   weaponDisplayName,
   type GunWeapon,
   type MeleeWeapon,
+  type OffensiveSpellWeapon,
   type ShieldWeapon,
+  type SpellCondition,
+  type SpellGuildBonus,
+  type SpellWeapon,
+  type SupportSpellWeapon,
   type Weapon,
 } from '../generation/types';
 import { PsdComposite, PsdOverlay } from './PsdComposite';
@@ -42,6 +57,9 @@ const STATS_LAYOUT = {
 export function WeaponCard({ weapon }: Props) {
   if (weapon.category === 'shield') {
     return <ShieldCard weapon={weapon} />;
+  }
+  if (weapon.category === 'spell') {
+    return <SpellCard weapon={weapon} />;
   }
   return <DamageWeaponCard weapon={weapon} />;
 }
@@ -422,11 +440,16 @@ function ShieldCard({ weapon }: { weapon: ShieldWeapon }) {
   );
 }
 
-// Mirrors AutoFitEffects: render the guild passive (and the optional
-// threshold modifier) as effect lines and shrink the font until everything
-// fits the bounded effects band.
+// Renders the shield's guild passive (with the rolled value woven into the
+// description text via a `{value}` placeholder) plus the optional threshold
+// modifier. Guilds whose value is the spec's "X" marker (no bonus at Common)
+// skip the passive line entirely. Shrinks font until everything fits.
 function AutoFitShieldEffects({ weapon }: { weapon: ShieldWeapon }) {
   const ref = useRef<HTMLDivElement>(null);
+  const hasBonus = weapon.guildPassive.value !== 'X';
+  const passiveText = hasBonus
+    ? weapon.guildPassive.description.replace('{value}', weapon.guildPassive.value)
+    : '';
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
@@ -438,16 +461,16 @@ function AutoFitShieldEffects({ weapon }: { weapon: ShieldWeapon }) {
       size -= 1;
       el.style.setProperty('--effect-size', `${size}px`);
     }
-  }, [weapon]);
-  const value = weapon.guildPassive.value === 'X' ? null : weapon.guildPassive.value;
+  }, [weapon, passiveText]);
   const mod = weapon.thresholdModifier;
   return (
     <div ref={ref} className="weapon-card__effects">
-      {value && <div className="weapon-card__effect">{formatBonus(value)}</div>}
-      <div className="weapon-card__effect">
-        <span className="weapon-card__module-name">{weapon.guildPassive.name}:</span>{' '}
-        {weapon.guildPassive.description}
-      </div>
+      {hasBonus && (
+        <div className="weapon-card__effect">
+          <span className="weapon-card__module-name">{weapon.guildPassive.name}:</span>{' '}
+          {passiveText}
+        </div>
+      )}
       {mod && (
         <div className="weapon-card__effect">
           <span className="weapon-card__module-name">Threshold Modifier:</span>{' '}
@@ -462,4 +485,364 @@ function AutoFitShieldEffects({ weapon }: { weapon: ShieldWeapon }) {
 function signed(n: number): string {
   if (n === 0) return '0';
   return n > 0 ? `+${n}` : String(n);
+}
+
+// ---- Spell card ------------------------------------------------------------
+
+// Picks the correct manifest (AOE vs Missile/Beam) for the spell's delivery
+// type. AOE PSD only ships a single Minor damage row; Missile/Beam ships all
+// three (Minor/Major/Grave).
+function spellCardKey(weapon: SpellWeapon): ManifestKey {
+  return spellManifestKey(weapon.deliveryType);
+}
+
+// Y position (canvas px) for the effects content overlay — anchored below
+// the dice rows so the description and guild-bonus text never overlap dice
+// icons. Missile/Beam packs three dice rows (Minor/Major/Grave) ending at
+// canvas y≈937, then a divider at ≈940. AOE has a single Damage row ending
+// at canvas y≈764, then a divider at ≈767. Both PSDs have their lower
+// placeholder bands masked at extract time so the overlay sits on a clean
+// background.
+function spellEffectsY(key: ManifestKey): number {
+  return key === 'spell-missile-beam' ? 945 : 770;
+}
+
+// Spells reuse the gun/melee damage card geometry but skip the elemental cell
+// roll — the icon next to each die row is the spell's rolled DamageType, and
+// there are no bonus dice. AOE spells render one flat row; single-target
+// offensive spells render Minor/Major/Grave.
+function spellDamageRow(
+  key: ManifestKey,
+  row: 'minor' | 'major' | 'grave',
+  formula: string,
+  damageType: string,
+): PsdLayer[] {
+  const out: PsdLayer[] = [];
+  let column = 1;
+  for (const term of parseDamage(formula)) {
+    for (let i = 0; i < term.count; i += 1) {
+      const die = findDie(key, row, column, term.sides);
+      if (die) out.push(die);
+      column += 1;
+      if (column > 7) return out;
+    }
+  }
+  const icon = findDamageIcon(key, row, column, damageType as never);
+  if (icon) out.push(icon);
+  return out;
+}
+
+function SpellCard({ weapon }: { weapon: SpellWeapon }) {
+  if (weapon.subType === 'Offensive') {
+    return <OffensiveSpellCard weapon={weapon} />;
+  }
+  return <SupportSpellCard weapon={weapon} />;
+}
+
+function OffensiveSpellCard({ weapon }: { weapon: OffensiveSpellWeapon }) {
+  const fullName = weaponDisplayName(weapon);
+  const key = spellCardKey(weapon);
+
+  const baseLayers = useMemo(() => getBackgroundLayers(key), [key]);
+  const rarityLayers = useMemo(() => getRarityLayers(key, weapon.rarity), [key, weapon.rarity]);
+  const guildLayers = useMemo(() => getGuildLayers(key), [key]);
+  const statsLayers = useMemo(() => getStatisticsLayers(key), [key]);
+
+  const damageLayers = useMemo(() => {
+    if (weapon.damage.kind === 'aoe') {
+      return spellDamageRow(key, 'minor', weapon.damage.damage, weapon.damageType);
+    }
+    return [
+      ...spellDamageRow(key, 'minor', weapon.damage.minor, weapon.damageType),
+      ...spellDamageRow(key, 'major', weapon.damage.major, weapon.damageType),
+      ...spellDamageRow(key, 'grave', weapon.damage.grave, weapon.damageType),
+    ];
+  }, [key, weapon.damage, weapon.damageType]);
+
+  const allLayers = useMemo(
+    () => [...baseLayers, ...rarityLayers, ...guildLayers, ...statsLayers, ...damageLayers],
+    [baseLayers, rarityLayers, guildLayers, statsLayers, damageLayers],
+  );
+
+  const nameSlot = useMemo(() => findByKind(key, 'nameTextbox'), [key]);
+  const guildSlot = useMemo(() => findByKind(key, 'guildTextbox'), [key]);
+  const quoteRect = useMemo(() => findByKind(key, 'quoteBottomRect'), [key]);
+
+  const rangeValue = String(weapon.damage.range);
+  const areaValue =
+    weapon.damage.kind === 'aoe' ? weapon.damage.area ?? '' : '';
+
+  return (
+    <div className={`weapon-card weapon-card--${weapon.rarity.toLowerCase()}`}>
+      <PsdComposite layers={allLayers}>
+        {nameSlot && (
+          <PsdOverlay
+            x={0}
+            y={nameSlot.y - 20}
+            width={PSD_CANVAS.width}
+            height={nameSlot.height + 40}
+            className="weapon-card__name-wrap"
+          >
+            <AutoFitName name={fullName} />
+          </PsdOverlay>
+        )}
+
+        {guildSlot && (
+          <PsdOverlay
+            x={0}
+            y={guildSlot.y - 10}
+            width={PSD_CANVAS.width}
+            height={guildSlot.height + 30}
+            className="weapon-card__guild-wrap"
+          >
+            <div className="weapon-card__guild">{weapon.guild}</div>
+          </PsdOverlay>
+        )}
+
+        {/* The raster's top two placeholder rows ("Tier 1 Spell" / "Range" and
+            "Delivery type: X" / "Area: X [s]s]") were cleared at extract
+            time, leaving an empty 112-px band that holds these two live
+            overlays. */}
+        <PsdOverlay
+          x={STATS_LAYOUT.tableX + 20}
+          y={STATS_LAYOUT.headerY}
+          width={STATS_LAYOUT.tableWidth - 40}
+          height={56}
+          className="weapon-card__row"
+        >
+          <span>Tier {weapon.tier} Spell</span>
+          <span className="weapon-card__row-range">
+            <span>Range:</span>
+            <span>{rangeValue}</span>
+          </span>
+        </PsdOverlay>
+
+        <PsdOverlay
+          x={STATS_LAYOUT.tableX + 20}
+          y={STATS_LAYOUT.headerY + 56}
+          width={STATS_LAYOUT.tableWidth - 40}
+          height={56}
+          className="weapon-card__row"
+        >
+          <span>Delivery Type: {weapon.deliveryType}</span>
+          {areaValue ? (
+            <span className="weapon-card__row-range">
+              <span>Area:</span>
+              <span>{areaValue}</span>
+            </span>
+          ) : (
+            <span />
+          )}
+        </PsdOverlay>
+
+        {quoteRect && (
+          <PsdOverlay
+            x={STATS_LAYOUT.contentLeftX}
+            y={spellEffectsY(key)}
+            width={STATS_LAYOUT.tableX + STATS_LAYOUT.tableWidth - STATS_LAYOUT.contentLeftX - 20}
+            height={quoteRect.y - spellEffectsY(key) - 8}
+          >
+            <AutoFitSpellEffects
+              mpCost={weapon.mpCost}
+              conditions={weapon.conditions}
+              description={OFFENSIVE_DELIVERY_DESCRIPTIONS[weapon.deliveryType]}
+              bonus={weapon.guildBonus}
+            />
+          </PsdOverlay>
+        )}
+      </PsdComposite>
+    </div>
+  );
+}
+
+function SupportSpellCard({ weapon }: { weapon: SupportSpellWeapon }) {
+  const fullName = weaponDisplayName(weapon);
+  // Support spells always render on the Missile/Beam card frame — its taller
+  // statistics table fits the healing / range / VP cost stack better, and
+  // support deliveries (Missile / Beam / Multi-Target Missile / Cube) all
+  // skip damage dice, so the three damage rows are simply empty.
+  const key: ManifestKey = 'spell-missile-beam';
+
+  const baseLayers = useMemo(() => getBackgroundLayers(key), [key]);
+  const rarityLayers = useMemo(() => getRarityLayers(key, weapon.rarity), [key, weapon.rarity]);
+  const guildLayers = useMemo(() => getGuildLayers(key), [key]);
+  const statsLayers = useMemo(() => getStatisticsLayers(key), [key]);
+
+  const allLayers = useMemo(
+    () => [...baseLayers, ...rarityLayers, ...guildLayers, ...statsLayers],
+    [baseLayers, rarityLayers, guildLayers, statsLayers],
+  );
+
+  const nameSlot = useMemo(() => findByKind(key, 'nameTextbox'), [key]);
+  const guildSlot = useMemo(() => findByKind(key, 'guildTextbox'), [key]);
+  const quoteRect = useMemo(() => findByKind(key, 'quoteBottomRect'), [key]);
+
+  return (
+    <div className={`weapon-card weapon-card--${weapon.rarity.toLowerCase()}`}>
+      <PsdComposite layers={allLayers}>
+        {nameSlot && (
+          <PsdOverlay
+            x={0}
+            y={nameSlot.y - 20}
+            width={PSD_CANVAS.width}
+            height={nameSlot.height + 40}
+            className="weapon-card__name-wrap"
+          >
+            <AutoFitName name={fullName} />
+          </PsdOverlay>
+        )}
+
+        {guildSlot && (
+          <PsdOverlay
+            x={0}
+            y={guildSlot.y - 10}
+            width={PSD_CANVAS.width}
+            height={guildSlot.height + 30}
+            className="weapon-card__guild-wrap"
+          >
+            <div className="weapon-card__guild">{weapon.guild}</div>
+          </PsdOverlay>
+        )}
+
+        {/* The raster's top two placeholder rows were cleared at extract
+            time; these two overlays fill the resulting 112-px band. */}
+        <PsdOverlay
+          x={STATS_LAYOUT.tableX + 20}
+          y={STATS_LAYOUT.headerY}
+          width={STATS_LAYOUT.tableWidth - 40}
+          height={56}
+          className="weapon-card__row"
+        >
+          <span>Tier {weapon.tier} Spell</span>
+          <span className="weapon-card__row-range">
+            <span>Range:</span>
+            <span>{weapon.healing.range}</span>
+          </span>
+        </PsdOverlay>
+
+        <PsdOverlay
+          x={STATS_LAYOUT.tableX + 20}
+          y={STATS_LAYOUT.headerY + 56}
+          width={STATS_LAYOUT.tableWidth - 40}
+          height={56}
+          className="weapon-card__row"
+        >
+          <span>Delivery Type: {weapon.deliveryType}</span>
+          {weapon.healing.area ? (
+            <span className="weapon-card__row-range">
+              <span>Area:</span>
+              <span>{weapon.healing.area}</span>
+            </span>
+          ) : (
+            <span />
+          )}
+        </PsdOverlay>
+
+        {quoteRect && (
+          <PsdOverlay
+            x={STATS_LAYOUT.contentLeftX}
+            y={spellEffectsY(key)}
+            width={STATS_LAYOUT.tableX + STATS_LAYOUT.tableWidth - STATS_LAYOUT.contentLeftX - 20}
+            height={quoteRect.y - spellEffectsY(key) - 8}
+          >
+            <AutoFitSpellEffects
+              mpCost={weapon.mpCost}
+              vitalityCost={weapon.healing.vitalityCost}
+              description={SUPPORT_DELIVERY_DESCRIPTIONS[weapon.deliveryType] ?? ''}
+              bonus={weapon.guildBonus}
+            />
+          </PsdOverlay>
+        )}
+      </PsdComposite>
+    </div>
+  );
+}
+
+
+// Stacked content for the spell card's lower effects band, top → bottom:
+//   1. MP Cost (always)
+//   2. Conditions list (offensive only, hidden when empty)
+//      OR Vitality Cost (support only)
+//   3. Delivery-type description (spec verbatim)
+//   4. Guild bonus, with `{value}` woven into the description text
+// Bonus is hidden entirely when the rolled value is the spec's "X" marker
+// (no bonus at this rarity). One shared font-size auto-shrink pass keeps
+// every line at a consistent size.
+function AutoFitSpellEffects({
+  mpCost,
+  conditions,
+  vitalityCost,
+  description,
+  bonus,
+}: {
+  mpCost: number;
+  conditions?: SpellCondition[];
+  vitalityCost?: number;
+  description: string;
+  bonus: SpellGuildBonus;
+}) {
+  const ref = useRef<HTMLDivElement>(null);
+  const hasBonus = bonus.value !== 'X';
+  const bonusText = hasBonus
+    ? bonus.description.replace('{value}', bonus.value)
+    : '';
+  const conditionsText = conditions && conditions.length > 0
+    ? conditions.map((c) => `${c.name} (${c.duration} turn${c.duration === 1 ? '' : 's'})`).join(', ')
+    : '';
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const MAX = 44;
+    const MIN = 24;
+    let size = MAX;
+    el.style.setProperty('--effect-size', `${size}px`);
+    while (size > MIN && el.scrollHeight > el.clientHeight) {
+      size -= 1;
+      el.style.setProperty('--effect-size', `${size}px`);
+    }
+  }, [mpCost, conditionsText, vitalityCost, description, bonusText]);
+  return (
+    <div ref={ref} className="weapon-card__effects">
+      <div className="weapon-card__effect">MP Cost: {mpCost}</div>
+      {conditionsText && (
+        <div className="weapon-card__effect">Conditions: {conditionsText}</div>
+      )}
+      {vitalityCost != null && (
+        <div className="weapon-card__effect">Vitality Cost: {vitalityCost}</div>
+      )}
+      {description && (
+        <div className="weapon-card__effect">{description}</div>
+      )}
+      {hasBonus && (
+        <div className="weapon-card__effect">
+          <span className="weapon-card__module-name">{bonus.name}:</span>{' '}
+          {bonusText}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// Spell names like "Crimson Multi-Target Missile of Plasma" can blow past
+// the name-slot width at the default 84-px font. Shrink to fit so the name
+// stays on one centered line without clipping.
+function AutoFitName({ name }: { name: string }) {
+  const ref = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const MAX = 84;
+    const MIN = 40;
+    let size = MAX;
+    el.style.setProperty('--name-size', `${size}px`);
+    while (size > MIN && el.scrollWidth > el.clientWidth) {
+      size -= 2;
+      el.style.setProperty('--name-size', `${size}px`);
+    }
+  }, [name]);
+  return (
+    <div ref={ref} className="weapon-card__name weapon-card__name--fit">
+      {name}
+    </div>
+  );
 }

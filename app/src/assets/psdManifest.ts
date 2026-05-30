@@ -1,7 +1,30 @@
 import gunManifestJson from '../generated/gunPsdManifest.json';
 import meleeManifestJson from '../generated/meleePsdManifest.json';
 import shieldManifestJson from '../generated/shieldPsdManifest.json';
-import type { Element, Rarity, WeaponCategory } from '../generation/types';
+import spellAoeManifestJson from '../generated/spellAoePsdManifest.json';
+import spellMissileBeamManifestJson from '../generated/spellMissileBeamPsdManifest.json';
+import type {
+  Element,
+  Rarity,
+  SpellDeliveryType,
+  WeaponCategory,
+} from '../generation/types';
+import { SINGLE_TARGET_DELIVERIES } from '../generation/types';
+
+// Spells ship two PSDs (delivery-type dependent), so the manifest key set is
+// wider than WeaponCategory. Everything except spells uses the category as-is.
+export type ManifestKey =
+  | 'gun'
+  | 'melee'
+  | 'shield'
+  | 'spell-aoe'
+  | 'spell-missile-beam';
+
+export function spellManifestKey(delivery: SpellDeliveryType): ManifestKey {
+  return SINGLE_TARGET_DELIVERIES.includes(delivery)
+    ? 'spell-missile-beam'
+    : 'spell-aoe';
+}
 
 type DamageRowName = 'minor' | 'major' | 'grave';
 
@@ -10,6 +33,7 @@ type SemanticDescriptor =
   | { kind: 'gradientBg' }
   | { kind: 'paintstroke' }
   | { kind: 'weaponArtSlot' }
+  | { kind: 'spellArt' }
   | { kind: 'statisticsTable' }
   | { kind: 'topBacking' }
   | { kind: 'statsBacking' }
@@ -51,51 +75,53 @@ export interface PsdManifest {
   layers: PsdLayer[];
 }
 
-const MANIFESTS: Record<WeaponCategory, PsdManifest> = {
+const MANIFESTS: Record<ManifestKey, PsdManifest> = {
   gun: gunManifestJson as PsdManifest,
   melee: meleeManifestJson as PsdManifest,
   shield: shieldManifestJson as PsdManifest,
+  'spell-aoe': spellAoeManifestJson as PsdManifest,
+  'spell-missile-beam': spellMissileBeamManifestJson as PsdManifest,
 };
 
 // Both PSDs use the same 1000×1363 canvas. The composite scaler treats the
 // canvas as a fixed-size design surface independent of category.
 export const PSD_CANVAS = MANIFESTS.gun.canvas;
 
-export function psdCanvas(category: WeaponCategory) {
-  return MANIFESTS[category].canvas;
+export function psdCanvas(key: ManifestKey) {
+  return MANIFESTS[key].canvas;
 }
 
-export function psdLayers(category: WeaponCategory): PsdLayer[] {
-  return MANIFESTS[category].layers;
+export function psdLayers(key: ManifestKey): PsdLayer[] {
+  return MANIFESTS[key].layers;
 }
 
 export function findByKind(
-  category: WeaponCategory,
+  key: ManifestKey,
   kind: SemanticDescriptor['kind'],
 ): PsdLayer | undefined {
-  return MANIFESTS[category].layers.find((l) => l.semantic?.kind === kind);
+  return MANIFESTS[key].layers.find((l) => l.semantic?.kind === kind);
 }
 
 export function allByKind(
-  category: WeaponCategory,
+  key: ManifestKey,
   kind: SemanticDescriptor['kind'],
 ): PsdLayer[] {
-  return MANIFESTS[category].layers.filter((l) => l.semantic?.kind === kind);
+  return MANIFESTS[key].layers.filter((l) => l.semantic?.kind === kind);
 }
 
-export function findRarityText(category: WeaponCategory, rarity: Rarity): PsdLayer | undefined {
-  return MANIFESTS[category].layers.find(
+export function findRarityText(key: ManifestKey, rarity: Rarity): PsdLayer | undefined {
+  return MANIFESTS[key].layers.find(
     (l) => l.semantic?.kind === 'rarityText' && l.semantic.rarity === rarity,
   );
 }
 
 export function findDie(
-  category: WeaponCategory,
+  key: ManifestKey,
   row: DamageRowName,
   column: number,
   sides: number,
 ): PsdLayer | undefined {
-  return MANIFESTS[category].layers.find(
+  return MANIFESTS[key].layers.find(
     (l) =>
       l.semantic?.kind === 'die' &&
       l.semantic.row === row &&
@@ -107,8 +133,8 @@ export function findDie(
 // The two flanking lines of the guild strip. The guild name itself varies per
 // roll (not in the PSD), so it's rendered as an HTML overlay in matching
 // typography rather than coming from a layer here.
-export function getGuildLayers(category: WeaponCategory): PsdLayer[] {
-  const layers = MANIFESTS[category].layers;
+export function getGuildLayers(key: ManifestKey): PsdLayer[] {
+  const layers = MANIFESTS[key].layers;
   const out: PsdLayer[] = [];
   const boxL = layers.find((l) => l.semantic?.kind === 'guildBox' && l.semantic.side === 'left');
   const boxR = layers.find((l) => l.semantic?.kind === 'guildBox' && l.semantic.side === 'right');
@@ -121,8 +147,8 @@ export function getGuildLayers(category: WeaponCategory): PsdLayer[] {
 // followed by the centered text. Each rarity has its own rasterized PNGs with
 // the right CMYK fill color baked in. Some rarities (e.g. Luminous) have only
 // the text layer; missing layers are silently dropped.
-export function getRarityLayers(category: WeaponCategory, rarity: Rarity): PsdLayer[] {
-  const layers = MANIFESTS[category].layers;
+export function getRarityLayers(key: ManifestKey, rarity: Rarity): PsdLayer[] {
+  const layers = MANIFESTS[key].layers;
   const out: PsdLayer[] = [];
   const boxL = layers.find(
     (l) =>
@@ -138,7 +164,7 @@ export function getRarityLayers(category: WeaponCategory, rarity: Rarity): PsdLa
   );
   if (boxL) out.push(boxL);
   if (boxR) out.push(boxR);
-  const text = findRarityText(category, rarity);
+  const text = findRarityText(key, rarity);
   if (text) out.push(text);
   return out;
 }
@@ -148,30 +174,33 @@ export function getRarityLayers(category: WeaponCategory, rarity: Rarity): PsdLa
 // extract time to strip the rasterized "Tier 1 WEAPONTYPE / Range" header and
 // the trailing "Effects" word — see `postProcessRaster` in extract-psd.mjs.
 // Live header text is overlaid as HTML by WeaponCard.
-export function getStatisticsLayers(category: WeaponCategory): PsdLayer[] {
+export function getStatisticsLayers(key: ManifestKey): PsdLayer[] {
   const out: PsdLayer[] = [];
   const push = (l?: PsdLayer) => l && out.push(l);
-  push(findByKind(category, 'statisticsTable'));
-  push(findByKind(category, 'quoteBottomRect'));
+  push(findByKind(key, 'statisticsTable'));
+  push(findByKind(key, 'quoteBottomRect'));
   return out;
 }
 
 // The card background, in PSD bottom-up stacking order. Gun/melee have a
 // `paintstroke` layer that shield's PSD doesn't; shield contributes
 // effectsPanel dark backings (under the stat tables) and two decorAccent
-// slashes (flanking the title — must paint in front of the panels). Missing
-// kinds are silently skipped.
-export function getBackgroundLayers(category: WeaponCategory): PsdLayer[] {
+// slashes (flanking the title — must paint in front of the panels); spells
+// contribute the `spellArt` book illustration (Layer 191 / 553 in the PSDs)
+// which sits between the grunge and the rarity strip. Missing kinds are
+// silently skipped.
+export function getBackgroundLayers(key: ManifestKey): PsdLayer[] {
   const layers: PsdLayer[] = [];
   const push = (l?: PsdLayer) => l && layers.push(l);
-  push(findByKind(category, 'background'));
-  push(findByKind(category, 'gradientBg'));
-  push(findByKind(category, 'paintstroke'));
-  push(findByKind(category, 'topBacking'));
-  allByKind(category, 'statsBacking').forEach(push);
-  allByKind(category, 'grunge').forEach(push);
-  allByKind(category, 'effectsPanel').forEach(push);
-  allByKind(category, 'decorAccent').forEach(push);
+  push(findByKind(key, 'background'));
+  push(findByKind(key, 'gradientBg'));
+  push(findByKind(key, 'paintstroke'));
+  push(findByKind(key, 'topBacking'));
+  allByKind(key, 'statsBacking').forEach(push);
+  allByKind(key, 'grunge').forEach(push);
+  push(findByKind(key, 'spellArt'));
+  allByKind(key, 'effectsPanel').forEach(push);
+  allByKind(key, 'decorAccent').forEach(push);
   return layers;
 }
 
@@ -191,18 +220,25 @@ export function getShieldTableLayers(): PsdLayer[] {
 }
 
 export function findDamageIcon(
-  category: WeaponCategory,
+  key: ManifestKey,
   row: DamageRowName,
   column: number,
   element: Element | 'Kinetic' | 'Slashing',
 ): PsdLayer | undefined {
-  return MANIFESTS[category].layers.find(
+  return MANIFESTS[key].layers.find(
     (l) =>
       l.semantic?.kind === 'damageIcon' &&
       l.semantic.row === row &&
       l.semantic.column === column &&
       l.semantic.element === element,
   );
+}
+
+// Most callers still operate on `WeaponCategory` (gun/melee/shield). For those
+// the ManifestKey is identical to the category name; only spell rendering has
+// to pick a variant first.
+export function categoryToManifestKey(category: Exclude<WeaponCategory, 'spell'>): ManifestKey {
+  return category;
 }
 
 export type { DamageRowName };

@@ -12,10 +12,13 @@
     "test:watch": "vitest",
     "prepare-assets": "node scripts/optimize-assets.mjs",
     "inspect-psd": "node scripts/inspect-psd.mjs",
-    "extract-psd": "npm run extract-psd:gun && npm run extract-psd:melee && npm run extract-psd:shield",
+    "extract-psd": "npm run extract-psd:gun && npm run extract-psd:melee && npm run extract-psd:shield && npm run extract-psd:spell",
     "extract-psd:gun": "node scripts/extract-psd.mjs --category gun",
     "extract-psd:melee": "node scripts/extract-psd.mjs --category melee",
-    "extract-psd:shield": "node scripts/extract-psd.mjs --category shield"
+    "extract-psd:shield": "node scripts/extract-psd.mjs --category shield",
+    "extract-psd:spell": "npm run extract-psd:spell:aoe && npm run extract-psd:spell:missile-beam",
+    "extract-psd:spell:aoe": "node scripts/extract-psd.mjs --category spell --variant aoe",
+    "extract-psd:spell:missile-beam": "node scripts/extract-psd.mjs --category spell --variant missile-beam"
   },
   "dependencies": {
     "html-to-image": "^1.11.13",

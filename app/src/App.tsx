@@ -22,6 +22,7 @@ const CATEGORIES: ReadonlyArray<{ value: WeaponCategory; label: string }> = [
   { value: 'gun', label: 'Guns' },
   { value: 'melee', label: 'Melee' },
   { value: 'shield', label: 'Shields' },
+  { value: 'spell', label: 'Spells' },
 ];
 
 export default function App() {
@@ -37,8 +38,13 @@ export default function App() {
   const [downloading, setDownloading] = useState(false);
   const { askChoice, modal } = useChoiceModal();
   // Empty-state background follows the active category so switching tabs
-  // before rolling shows the right card frame.
-  const backgroundLayers = useMemo(() => getBackgroundLayers(category), [category]);
+  // before rolling shows the right card frame. Spells default to the
+  // Missile/Beam variant for the empty-state preview; the live SpellCard
+  // swaps to the AOE manifest when a generated spell uses an AOE delivery.
+  const backgroundLayers = useMemo(
+    () => getBackgroundLayers(category === 'spell' ? 'spell-missile-beam' : category),
+    [category],
+  );
   const cardRef = useRef<HTMLDivElement>(null);
 
   // Switching category resets the pinned weapon-type selection (the option

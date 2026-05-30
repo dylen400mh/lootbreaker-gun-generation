@@ -39,6 +39,13 @@
   white-space: nowrap;
 }
 
+/* Spell names can be very long ("Crimson Multi-Target Missile of Plasma").
+   This variant lets the JS auto-shrink the font-size via --name-size to fit
+   the overlay width without clipping. */
+.weapon-card__name--fit {
+  font-size: var(--name-size, 84px);
+}
+
 .weapon-card__guild {
   font-family: 'Bahnschrift', 'Bahnschrift Condensed', system-ui, sans-serif;
   font-stretch: 75%;

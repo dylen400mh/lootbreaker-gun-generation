@@ -45,7 +45,7 @@ export const SHIELD_GUILDS: Record<GuildName, ShieldGuildDef> = {
     name: 'Vandal',
     passiveName: 'Unstable Construction',
     description:
-      'Deals Kinetic Damage to all Adjacent Targets when depleted for the first time in an encounter',
+      'Deals {value} Kinetic Damage to all Adjacent Targets when depleted for the first time in an encounter',
     valueByRarity: {
       Common: 'X',
       Uncommon: '1d4',
@@ -57,7 +57,7 @@ export const SHIELD_GUILDS: Record<GuildName, ShieldGuildDef> = {
   Stormforged: {
     name: 'Stormforged',
     passiveName: 'Voltaic Core',
-    description: 'Decreases incoming Volt',
+    description: '{value} Resistance to incoming Volt damage',
     valueByRarity: {
       Common: '+1',
       Uncommon: '+1',
@@ -70,7 +70,7 @@ export const SHIELD_GUILDS: Record<GuildName, ShieldGuildDef> = {
     name: 'Noctra',
     passiveName: 'Vampiric Lattice',
     description:
-      'When you slay an enemy, you regain Shields. Additionally, shields created by Noctra grant protection for creatures who would take damage from sunlight/starlight/moonlight.',
+      'When you slay an enemy, you regain {value} Shields. Additionally, shields created by Noctra grant protection for creatures who would take damage from sunlight/starlight/moonlight.',
     valueByRarity: {
       Common: 'X',
       Uncommon: '+1',
@@ -82,7 +82,7 @@ export const SHIELD_GUILDS: Record<GuildName, ShieldGuildDef> = {
   Dominion: {
     name: 'Dominion',
     passiveName: 'Shield Excel',
-    description: 'Bonus to Capacity',
+    description: '{value} bonus to Capacity',
     valueByRarity: {
       Common: '+1',
       Uncommon: '+3',
@@ -95,7 +95,7 @@ export const SHIELD_GUILDS: Record<GuildName, ShieldGuildDef> = {
     name: 'Ordis',
     passiveName: 'Automatic Targeting',
     description:
-      'Gain a bonus to Accuracy Rolls against the last target that damaged you.',
+      'Gain {value} to Accuracy Rolls against the last target that damaged you.',
     valueByRarity: {
       Common: 'X',
       Uncommon: '+1',
@@ -107,7 +107,7 @@ export const SHIELD_GUILDS: Record<GuildName, ShieldGuildDef> = {
   'Ironwood Rangers': {
     name: 'Ironwood Rangers',
     passiveName: 'Passive Sound Dampeners',
-    description: 'Gain a bonus to Shadow Checks',
+    description: 'Gain {value} to Shadow Checks',
     valueByRarity: {
       Common: '+1',
       Uncommon: '+2',
@@ -120,7 +120,7 @@ export const SHIELD_GUILDS: Record<GuildName, ShieldGuildDef> = {
     name: 'Wytchwyrd',
     passiveName: 'Hexfield',
     description:
-      'Bonus to Checks against Spells, or other effects that would apply a Condition on you',
+      '{value} bonus to Checks against Spells, or other effects that would apply a Condition on you',
     valueByRarity: {
       Common: '+1',
       Uncommon: '+1',
@@ -133,7 +133,7 @@ export const SHIELD_GUILDS: Record<GuildName, ShieldGuildDef> = {
     name: 'NecroTek',
     passiveName: 'Osteopathic Barrier',
     description:
-      'When Shields are depleted, gain damage resistance to all types of damage (Excluding True Damage) until the start of your next turn.',
+      'When Shields are depleted, gain {value} to all types of damage (Excluding True Damage) until the start of your next turn.',
     valueByRarity: {
       Common: 'X',
       Uncommon: '+1 Damage Resistance',
@@ -145,7 +145,7 @@ export const SHIELD_GUILDS: Record<GuildName, ShieldGuildDef> = {
   'Vow of Vending': {
     name: 'Vow of Vending',
     passiveName: "Paladin's Codex",
-    description: 'Gain a bonus to Regeneration Score',
+    description: 'Gain {value} to Regeneration Score',
     valueByRarity: {
       Common: 'X',
       Uncommon: '+1',
@@ -158,7 +158,7 @@ export const SHIELD_GUILDS: Record<GuildName, ShieldGuildDef> = {
     name: 'Arkana',
     passiveName: 'Arcane Overflow',
     description:
-      'When casting a Spell, gain a bonus to Damage (Matching Damage Type of Spell)',
+      'When casting a Spell, gain {value} to Damage (Matching Damage Type of Spell)',
     valueByRarity: {
       Common: 'X',
       Uncommon: '+1',
@@ -170,7 +170,7 @@ export const SHIELD_GUILDS: Record<GuildName, ShieldGuildDef> = {
   Flamekeepers: {
     name: 'Flamekeepers',
     passiveName: 'Blazing Aegis',
-    description: 'When struck by a Melee Attack, deal Damage to Attacker',
+    description: 'When struck by a Melee Attack, deal {value} to Attacker',
     valueByRarity: {
       Common: 'X',
       Uncommon: '+1 Fire Damage',
@@ -183,7 +183,7 @@ export const SHIELD_GUILDS: Record<GuildName, ShieldGuildDef> = {
     name: 'Banshee',
     passiveName: 'Scream of Despair',
     description:
-      'The first time your Shields are depleted in an encounter, they release a scream psychic energy, granting enemies within 8 Squares a penalty to Willpower and Mind Checks until the end of their next turn.',
+      'The first time your Shields are depleted in an encounter, they release a scream of psychic energy, granting enemies within 8 Squares {value} to Willpower and Mind Checks until the end of their next turn.',
     valueByRarity: {
       Common: 'X',
       Uncommon: '-1',
@@ -195,7 +195,7 @@ export const SHIELD_GUILDS: Record<GuildName, ShieldGuildDef> = {
   Fortis: {
     name: 'Fortis',
     passiveName: 'Bulwark Frame',
-    description: 'Bonus to Capacity, Penalty to Regeneration',
+    description: 'Provides {value}',
     valueByRarity: {
       Common: '+5 Capacity, -1 Regeneration',
       Uncommon: '+10 Capacity, -2 Regeneration',
@@ -206,8 +206,8 @@ export const SHIELD_GUILDS: Record<GuildName, ShieldGuildDef> = {
   },
   Ressurecta: {
     name: 'Ressurecta',
-    passiveName: 'Increase Thresholds by Bonus Score',
-    description: 'Increase Thresholds by Bonus Score',
+    passiveName: 'Threshold Boost',
+    description: 'Increase Thresholds: {value}',
     valueByRarity: {
       Common: 'X',
       Uncommon: '+1 Grave Hit Threshold',

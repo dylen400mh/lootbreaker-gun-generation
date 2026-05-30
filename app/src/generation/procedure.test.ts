@@ -3,7 +3,8 @@ import { autoChoice, generateWeapon } from './procedure';
 import { MELEE_BASE_NAMES } from './tables/melee/naming';
 import { MELEE_PLAYER_CHOICE_TYPES } from './tables/melee/weaponTypes';
 import { PREFIXES, SUFFIXES } from './tables/shared/naming';
-import type { GunWeapon, MeleeWeapon, Weapon } from './types';
+import { weaponDisplayName } from './types';
+import type { GunWeapon, MeleeWeapon, SpellWeapon, Weapon } from './types';
 
 // TS-level narrowing helper. All tests in this file pass category: 'gun' or
 // 'melee', so this never throws at runtime; it just tells the compiler the
@@ -303,6 +304,120 @@ describe('generateWeapon(shield)', () => {
       expect(w.name.digits!.length).toBeGreaterThanOrEqual(1);
       expect(w.name.digits!.length).toBeLessThanOrEqual(3);
       expect(/^\d+$/.test(w.name.digits!)).toBe(true);
+    }
+  });
+});
+
+function assertSpellWeapon(w: Weapon): asserts w is SpellWeapon {
+  if (w.category !== 'spell') {
+    throw new Error(`expected spell, got ${w.category}`);
+  }
+}
+
+describe('generateWeapon(spell)', () => {
+  it('produces a deterministic spell for a fixed seed', async () => {
+    const a = await generateWeapon(
+      { category: 'spell', tier: 2, redTextEnabled: false, seed: 99 },
+      autoChoice(),
+    );
+    const b = await generateWeapon(
+      { category: 'spell', tier: 2, redTextEnabled: false, seed: 99 },
+      autoChoice(),
+    );
+    assertSpellWeapon(a);
+    assertSpellWeapon(b);
+    expect(a.seed).toBe(99);
+    expect(a.subType).toBe(b.subType);
+    expect(a.rarity).toBe(b.rarity);
+    expect(a.deliveryType).toBe(b.deliveryType);
+    expect(a.guild).toBe(b.guild);
+    expect(a.mpCost).toBe(b.mpCost);
+    expect(a.name).toEqual(b.name);
+  });
+
+  it('subType is always Offensive or Support', async () => {
+    for (let seed = 1; seed <= 60; seed += 1) {
+      const w = await generateWeapon(
+        { category: 'spell', tier: 2, redTextEnabled: false, seed },
+        autoChoice(),
+      );
+      assertSpellWeapon(w);
+      expect(['Offensive', 'Support']).toContain(w.subType);
+    }
+  });
+
+  it('offensive spells carry damage, damage type, and conditions list', async () => {
+    let found = false;
+    for (let seed = 1; seed <= 200 && !found; seed += 1) {
+      const w = await generateWeapon(
+        { category: 'spell', tier: 3, redTextEnabled: false, seed },
+        autoChoice(),
+      );
+      assertSpellWeapon(w);
+      if (w.subType !== 'Offensive') continue;
+      found = true;
+      expect(w.damageType).toBeTruthy();
+      expect(Array.isArray(w.conditions)).toBe(true);
+      // Damage discriminant is set; either kind is valid.
+      expect(['single-target', 'aoe']).toContain(w.damage.kind);
+      // MP cost includes 1 (base) + rarity adder + condition MP.
+      expect(w.mpCost).toBeGreaterThanOrEqual(1);
+      // Guild is one of the 12 damage guilds.
+      expect(w.guild).toBeTruthy();
+    }
+    expect(found).toBe(true);
+  });
+
+  it('support spells carry healing, healingType, and a 6-guild subset', async () => {
+    const SUPPORT_GUILDS = new Set([
+      'Ressurecta', 'Fortis', 'Noctra', 'Dominion', 'Vow of Vending', 'Ironwood Rangers',
+    ]);
+    let found = false;
+    for (let seed = 1; seed <= 400 && !found; seed += 1) {
+      const w = await generateWeapon(
+        { category: 'spell', tier: 1, redTextEnabled: false, seed },
+        autoChoice(),
+      );
+      assertSpellWeapon(w);
+      if (w.subType !== 'Support') continue;
+      found = true;
+      expect(w.healing.healing).toBeTruthy();
+      expect(['Shields', 'Health']).toContain(w.healingType);
+      expect(SUPPORT_GUILDS.has(w.guild)).toBe(true);
+      expect(w.mpCost).toBeGreaterThanOrEqual(2); // 1 base + min +1 rarity adder
+    }
+    expect(found).toBe(true);
+  });
+
+  it('Kinetic offensive spell renames to "Kinetic Prefix Delivery"', async () => {
+    let found = false;
+    for (let seed = 1; seed <= 1000 && !found; seed += 1) {
+      const w = await generateWeapon(
+        { category: 'spell', tier: 3, redTextEnabled: false, seed },
+        autoChoice(),
+      );
+      assertSpellWeapon(w);
+      if (w.subType !== 'Offensive' || w.damageType !== 'Kinetic') continue;
+      found = true;
+      const display = weaponDisplayName(w);
+      expect(display.startsWith('Kinetic ')).toBe(true);
+      expect(display.endsWith(w.deliveryType)).toBe(true);
+      // Should NOT contain "of Kinetic"
+      expect(display.includes(' of ')).toBe(false);
+    }
+    expect(found).toBe(true);
+  });
+
+  it('condition count is bounded by the per-tier × rarity matrix', async () => {
+    // Tier 1 / Common offensive: chances are [0, 0, 0] → 0 conditions.
+    for (let seed = 1; seed <= 100; seed += 1) {
+      const w = await generateWeapon(
+        { category: 'spell', tier: 1, redTextEnabled: false, seed, rarity: 'Common' },
+        autoChoice(),
+      );
+      assertSpellWeapon(w);
+      if (w.subType !== 'Offensive') continue;
+      expect(w.conditions.length).toBe(0);
     }
   });
 });

@@ -6,12 +6,16 @@
 //   node scripts/extract-psd.mjs --category gun
 //   node scripts/extract-psd.mjs --category melee
 //   node scripts/extract-psd.mjs --category shield
-//   node scripts/extract-psd.mjs --psd <abs-or-rel-path> --category <name>
+//   node scripts/extract-psd.mjs --category spell --variant aoe
+//   node scripts/extract-psd.mjs --category spell --variant missile-beam
+//   node scripts/extract-psd.mjs --psd <abs-or-rel-path> --category <name> [--variant <variant>]
 //
 // `--category` is required; it determines the output subdirectory and the
 // generated manifest filename (e.g. `gun` → `src/generated/gunPsdManifest.json`).
+// `--variant` is required when `--category=spell` because spells ship two
+// PSDs (AOE single-damage card vs Missile/Beam Minor/Major/Grave card).
 //
-// Run with: npm run extract-psd:gun  /  npm run extract-psd:melee  /  npm run extract-psd:shield  /  npm run extract-psd
+// Run with: npm run extract-psd:gun  /  npm run extract-psd:melee  /  npm run extract-psd:shield  /  npm run extract-psd:spell  /  npm run extract-psd
 
 import { initializeCanvas, readPsd } from 'ag-psd';
 import { createCanvas, createImageData } from 'canvas';
@@ -31,22 +35,55 @@ const DEFAULT_PSD_BY_CATEGORY = {
   shield: join(ASSETS_ROOT, 'Shield Assets', 'Shield_Base.psd'),
 };
 
-const { category, psdPath } = parseArgs(process.argv.slice(2));
+// Spell category ships two PSDs (selected by delivery type at render time).
+const DEFAULT_PSD_BY_SPELL_VARIANT = {
+  aoe: join(ASSETS_ROOT, 'Spell Assets', 'Spell_AOE_Base.psd'),
+  'missile-beam': join(ASSETS_ROOT, 'Spell Assets', 'Spell_Missile_Beam_Base.psd'),
+};
+
+const { category, variant, psdPath } = parseArgs(process.argv.slice(2));
 if (!category) {
-  console.error('Missing required --category <gun|melee|shield>');
+  console.error('Missing required --category <gun|melee|shield|spell>');
   process.exit(1);
 }
-const PSD_PATH = psdPath ?? DEFAULT_PSD_BY_CATEGORY[category];
-if (!PSD_PATH) {
-  console.error(`Unknown category "${category}" and no --psd path given`);
+if (category === 'spell' && !variant) {
+  console.error('Spell extraction requires --variant <aoe|missile-beam>');
   process.exit(1);
 }
 
-const OUT_DIR = join(ROOT, 'public', 'psd', category);
+const PSD_PATH = psdPath
+  ?? (category === 'spell'
+    ? DEFAULT_PSD_BY_SPELL_VARIANT[variant]
+    : DEFAULT_PSD_BY_CATEGORY[category]);
+if (!PSD_PATH) {
+  console.error(`Unknown category "${category}" / variant "${variant}" and no --psd path given`);
+  process.exit(1);
+}
+
+// Output dir slug: "gun" / "melee" / "shield" / "spell/aoe" / "spell/missile-beam".
+// Used for both the public asset dir and the relative `file:` URLs the runtime
+// references.
+const OUT_SLUG = variant ? `${category}/${variant}` : category;
+// Camel-cased name for the JSON manifest filename in src/generated/
+// (Vite skips JSON in /public so we bundle a parallel copy here).
+//   gun → gunPsdManifest.json
+//   spell + aoe → spellAoePsdManifest.json
+//   spell + missile-beam → spellMissileBeamPsdManifest.json
+const MANIFEST_NAME = variant
+  ? `${category}${camel(variant)}PsdManifest.json`
+  : `${category}PsdManifest.json`;
+
+const OUT_DIR = join(ROOT, 'public', 'psd', OUT_SLUG);
 const LAYERS_DIR = join(OUT_DIR, 'layers');
 const PUBLIC_MANIFEST_PATH = join(OUT_DIR, 'manifest.json');
-// Also write into src/ so Vite bundles it (Vite skips JSON in /public).
-const SRC_MANIFEST_PATH = join(ROOT, 'src', 'generated', `${category}PsdManifest.json`);
+const SRC_MANIFEST_PATH = join(ROOT, 'src', 'generated', MANIFEST_NAME);
+
+function camel(s) {
+  return s
+    .split('-')
+    .map((p) => p.charAt(0).toUpperCase() + p.slice(1))
+    .join('');
+}
 
 // Layers we don't want exported (designer notes, redundant duplicates).
 // `Mythic Rarity Setting` exists in the melee/shield PSDs but the spec never
@@ -159,7 +196,7 @@ async function emitRasterLayer(layer, newPath, used) {
     id,
     name: layer.name ?? '<unnamed>',
     path: newPath,
-    file: `psd/${category}/layers/${filename}`,
+    file: `psd/${OUT_SLUG}/layers/${filename}`,
     x: layer.left ?? 0,
     y: layer.top ?? 0,
     width: (layer.right ?? 0) - (layer.left ?? 0),
@@ -275,7 +312,7 @@ async function emitVectorLayer(layer, newPath, used, rarityTextColors) {
     id,
     name: layer.name ?? '<unnamed>',
     path: newPath,
-    file: `psd/${category}/layers/${filename}`,
+    file: `psd/${OUT_SLUG}/layers/${filename}`,
     x: ox,
     y: oy,
     width: cw,
@@ -334,8 +371,30 @@ function postProcessRaster(layer, newPath) {
     const out = createCanvas(src.width, src.height);
     const ctx = out.getContext('2d');
     ctx.drawImage(src, 0, 0);
-    // Header text (above the first divider at local y≈49). 0..46 covers the
-    // text without touching the rule.
+
+    if (newPath[0] === 'Spell') {
+      // The two stacked rows above the first divider (local y≈115) bake
+      // placeholders that the live overlay replaces:
+      //   Row 0: "Tier 1 Spell" + "Range" + small value glyph
+      //   Row 1: "Delivery type: X" + "Area: X [s]s]" (AOE only)
+      ctx.clearRect(0, 0, src.width, 112);
+      if (src.height > 320) {
+        // Missile/Beam variant (table h≈424): the bottom band after
+        // divider 4 (local y≈377) holds a baked "Effects" placeholder.
+        ctx.clearRect(0, 378, src.width, src.height - 378);
+      } else {
+        // AOE variant (table h≈312): the bottom band after divider 2
+        // (local y≈204) holds a baked "DC: Willpower Check against your
+        // Willpower DC" descriptive placeholder followed by a baked
+        // "Effects" label. Clear the whole band so the live delivery-type
+        // description and guild-bonus overlays sit on a clean canvas.
+        ctx.clearRect(0, 205, src.width, src.height - 205);
+      }
+      return out;
+    }
+
+    // Gun/melee Statistics Table: header text (above the first divider at
+    // local y≈49). 0..46 covers the text without touching the rule.
     ctx.clearRect(0, 0, src.width, 47);
     // "Lightweight" + "Effects" placeholder. The last divider sits at local
     // y≈309-311, so 320 starts a clean row below it.
@@ -578,6 +637,17 @@ function deriveSemantic(path, leafIdx) {
   if (leaf === 'Gradient BG') return { kind: 'gradientBg' };
   if (leaf === 'Paintstroke') return { kind: 'paintstroke' };
   if (leaf === 'Weapon Art') return { kind: 'weaponArtSlot' };
+  // Spell book art: the only raster direct child of the `Spell` root group
+  // is the bound-tome illustration, named `Layer 191` (AOE PSD) / `Layer 553`
+  // (Missile/Beam PSD). Same bounds in both. Tag it so SpellCard can pull it
+  // out by kind rather than chasing the layer number.
+  if (
+    path.length === 2 &&
+    path[0] === 'Spell' &&
+    /^Layer \d+$/.test(leaf)
+  ) {
+    return { kind: 'spellArt' };
+  }
   if (leaf === 'Statistics Table') return { kind: 'statisticsTable' };
   if (leaf === 'Name Text Box') return { kind: 'nameTextbox' };
   if (leaf === 'Guild Text Box') return { kind: 'guildTextbox' };
@@ -645,22 +715,28 @@ function slug(name) {
 
 function parseArgs(argv) {
   let category = null;
+  let variant = null;
   let psdPath = null;
   for (let i = 0; i < argv.length; i += 1) {
     const a = argv[i];
     if (a === '--category') {
       category = argv[i + 1];
       i += 1;
+    } else if (a === '--variant') {
+      variant = argv[i + 1];
+      i += 1;
     } else if (a === '--psd') {
       psdPath = resolve(argv[i + 1]);
       i += 1;
     } else if (a.startsWith('--category=')) {
       category = a.slice('--category='.length);
+    } else if (a.startsWith('--variant=')) {
+      variant = a.slice('--variant='.length);
     } else if (a.startsWith('--psd=')) {
       psdPath = resolve(a.slice('--psd='.length));
     }
   }
-  return { category, psdPath };
+  return { category, variant, psdPath };
 }
 
 main().catch((e) => {
