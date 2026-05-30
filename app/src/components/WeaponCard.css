@@ -68,10 +68,20 @@
   line-height: 1;
 }
 
-/* "Range:" and its value sit ~100 PSD-px apart in the original layer. */
+/* Range: label sits at PSD-x ≈706 (overlay-local ≈626) in the original
+   Statistics Table raster; the value's right edge sits at the overlay's
+   right edge. The value gets a fixed-width slot (right-aligned, sized to
+   fit the widest realistic value "1/5") so the label doesn't shift sideways
+   for single-digit values, and `gap` is tuned so the row-range's left edge
+   lands at local 626 — restoring the original PSD position. */
 .weapon-card__row-range {
   display: inline-flex;
-  gap: 100px;
+  gap: 60px;
+}
+
+.weapon-card__row-range > span:last-child {
+  min-width: 60px;
+  text-align: right;
 }
 
 /* Lightweight cell content (special / guildBonus / module). Bahnschrift
