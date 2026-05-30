@@ -172,3 +172,8 @@
   line-height: 1;
   white-space: nowrap;
 }
+
+.shield-card__threshold-note {
+  font-style: italic;
+  opacity: 0.85;
+}

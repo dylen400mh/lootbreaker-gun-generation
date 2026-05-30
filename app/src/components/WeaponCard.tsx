@@ -478,6 +478,11 @@ function AutoFitShieldEffects({ weapon }: { weapon: ShieldWeapon }) {
           {signed(mod.grave)})
         </div>
       )}
+      {mod && (
+        <div className="weapon-card__effect shield-card__threshold-note">
+          Modifier Included in Impact Threshold
+        </div>
+      )}
     </div>
   );
 }
