@@ -54,6 +54,10 @@ export function elementIconUrl(element: Element): string {
 
 export const KINETIC_ICON_URL = '/icons/kinetic.webp';
 
+// Support spell HP symbol — sits at the end of the support card's healing
+// row in place of the offensive card's damage-type icon.
+export const HP_ICON_URL = '/icons/hp.webp';
+
 export type DieSides = 4 | 6 | 8 | 10 | 12 | 20;
 export const DIE_SIDES: ReadonlyArray<DieSides> = [4, 6, 8, 10, 12, 20];
 

@@ -16,6 +16,7 @@ const GUN_SRC = join(ASSETS, 'Weapon Art');
 const MELEE_SRC = join(ASSETS, 'Melee Weapon Assets');
 const ICON_SRC = join(ASSETS, 'Icons');
 const DICE_SRC = join(ASSETS, 'Dice');
+const SPELL_SRC = join(ASSETS, 'Spell Assets');
 const WEAPON_OUT = join(ROOT, 'public', 'weapons');
 const ICON_OUT = join(ROOT, 'public', 'icons');
 const DICE_OUT = join(ROOT, 'public', 'dice');
@@ -64,6 +65,13 @@ const diceMap = {
   'd20.png': 'd20',
 };
 
+// Spell-only icons living under `Spell Assets/`. The HP symbol sits at the
+// end of the support spell card's healing row in place of the offensive
+// card's damage-type icon.
+const spellIconMap = {
+  'HP_Symbol_Final.png': 'hp',
+};
+
 async function ensureDir(dir) {
   await fs.mkdir(dir, { recursive: true });
 }
@@ -82,6 +90,16 @@ async function processWeapon(srcDir, srcName, slug) {
 
 async function processIcon(srcName, slug) {
   const srcPath = join(ICON_SRC, srcName);
+  const outPath = join(ICON_OUT, `${slug}.webp`);
+  await sharp(srcPath)
+    .resize({ width: ICON_WIDTH, withoutEnlargement: true })
+    .webp({ quality: WEBP_QUALITY, alphaQuality: 95 })
+    .toFile(outPath);
+  process.stdout.write(`  ${slug}.webp\n`);
+}
+
+async function processSpellIcon(srcName, slug) {
+  const srcPath = join(SPELL_SRC, srcName);
   const outPath = join(ICON_OUT, `${slug}.webp`);
   await sharp(srcPath)
     .resize({ width: ICON_WIDTH, withoutEnlargement: true })
@@ -125,6 +143,11 @@ async function main() {
   console.log('Processing dice:');
   for (const [src, slug] of Object.entries(diceMap)) {
     await processDice(src, slug);
+  }
+
+  console.log('Processing spell icons:');
+  for (const [src, slug] of Object.entries(spellIconMap)) {
+    await processSpellIcon(src, slug);
   }
 
   console.log('Done.');

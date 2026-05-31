@@ -389,6 +389,12 @@ function postProcessRaster(layer, newPath) {
         // "Effects" label. Clear the whole band so the live delivery-type
         // description and guild-bonus overlays sit on a clean canvas.
         ctx.clearRect(0, 205, src.width, src.height - 205);
+        // Also clear the rasterized "Damage" row label — the live card
+        // paints its own label so offensive spells can show "Damage" while
+        // support spells show "HP". Cleared band sits between the upper
+        // divider (~local y 115-120) and the lower divider (~y 198-203),
+        // staying clear of dice column 1 (local x ≈145+) at the high end.
+        ctx.clearRect(0, 125, 230, 70);
       }
       return out;
     }

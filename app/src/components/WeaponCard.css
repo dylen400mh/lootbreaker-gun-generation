@@ -75,6 +75,28 @@
   line-height: 1;
 }
 
+/* AOE spell row that only renders a left-aligned label (the "Damage" /
+   "HP" tag at the start of the AOE damage/HP row). */
+.weapon-card__row--label {
+  justify-content: flex-start;
+}
+
+/* Support spell HP icon, painted into the trailing damage-icon slot of the
+   AOE row. The slot bounds come from the PSD's damage-icon layers (~80×85),
+   so the image just fills its container with object-contain so the symbol's
+   transparent margins don't get squished. */
+.weapon-card__hp-icon-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.weapon-card__hp-icon {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
 /* Range: label sits at PSD-x ≈706 (overlay-local ≈626) in the original
    Statistics Table raster; the value's right edge sits at the overlay's
    right edge. The value gets a fixed-width slot (right-aligned, sized to

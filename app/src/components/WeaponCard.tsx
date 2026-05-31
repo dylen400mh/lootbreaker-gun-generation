@@ -13,7 +13,7 @@ import {
   type ManifestKey,
   type PsdLayer,
 } from '../assets/psdManifest';
-import { weaponArtUrl, pickWeaponWidth } from '../assets/manifest';
+import { HP_ICON_URL, weaponArtUrl, pickWeaponWidth } from '../assets/manifest';
 import { damageRowLayers } from '../generation/cardLayout';
 import { parseDamage } from '../generation/damage';
 import {
@@ -52,6 +52,13 @@ const STATS_LAYOUT = {
   // here but is now masked out at extract time.
   effectsY: 880,
   contentLeftX: 80,
+  // AOE spell damage row — the band between the upper and lower dividers of
+  // the AOE stats table where the "Damage" label used to sit (now masked out
+  // at extract time so live overlays can paint "Damage" / "HP" depending on
+  // spell type). Canvas y 690-760 corresponds to local y 127-197 of the
+  // 881×312 stats table.
+  aoeDamageRowY: 690,
+  aoeDamageRowHeight: 70,
 };
 
 export function WeaponCard({ weapon }: Props) {
@@ -537,6 +544,42 @@ function spellDamageRow(
   return out;
 }
 
+// Support spell healing row: dice PSD layers for the rolled healing formula.
+// Unlike spellDamageRow this stops at the dice — the trailing slot is filled
+// by an HTML <img> of the HP symbol, positioned via `spellTrailingIconSlot`
+// below (which reuses the AOE damage-icon layer bounds for that column).
+function spellHealingDiceLayers(key: ManifestKey, formula: string): PsdLayer[] {
+  const out: PsdLayer[] = [];
+  let column = 1;
+  for (const term of parseDamage(formula)) {
+    for (let i = 0; i < term.count; i += 1) {
+      const die = findDie(key, 'minor', column, term.sides);
+      if (die) out.push(die);
+      column += 1;
+      if (column > 7) return out;
+    }
+  }
+  return out;
+}
+
+// Returns the bounds of the trailing icon slot for a given healing formula
+// (column = dice count + 1). Reuses the AOE PSD's damage-icon layer for that
+// column to get exact pixel coordinates — element choice is irrelevant here,
+// only the bounds matter.
+function spellTrailingIconSlot(
+  key: ManifestKey,
+  formula: string,
+): { x: number; y: number; width: number; height: number } | undefined {
+  let column = 1;
+  for (const term of parseDamage(formula)) {
+    column += term.count;
+    if (column > 7) return undefined;
+  }
+  const ref = findDamageIcon(key, 'minor', column, 'Fire');
+  if (!ref) return undefined;
+  return { x: ref.x, y: ref.y, width: ref.width, height: ref.height };
+}
+
 function SpellCard({ weapon }: { weapon: SpellWeapon }) {
   if (weapon.subType === 'Offensive') {
     return <OffensiveSpellCard weapon={weapon} />;
@@ -640,6 +683,21 @@ function OffensiveSpellCard({ weapon }: { weapon: OffensiveSpellWeapon }) {
           )}
         </PsdOverlay>
 
+        {/* AOE-only damage row label. Missile/Beam keeps its raster Minor/
+            Major/Grave labels; the AOE stats table has the "Damage" label
+            masked out at extract time so the live card paints it here. */}
+        {key === 'spell-aoe' && (
+          <PsdOverlay
+            x={STATS_LAYOUT.tableX + 20}
+            y={STATS_LAYOUT.aoeDamageRowY}
+            width={210}
+            height={STATS_LAYOUT.aoeDamageRowHeight}
+            className="weapon-card__row weapon-card__row--label"
+          >
+            <span>Damage</span>
+          </PsdOverlay>
+        )}
+
         {quoteRect && (
           <PsdOverlay
             x={STATS_LAYOUT.contentLeftX}
@@ -662,20 +720,32 @@ function OffensiveSpellCard({ weapon }: { weapon: OffensiveSpellWeapon }) {
 
 function SupportSpellCard({ weapon }: { weapon: SupportSpellWeapon }) {
   const fullName = weaponDisplayName(weapon);
-  // Support spells always render on the Missile/Beam card frame — its taller
-  // statistics table fits the healing / range / VP cost stack better, and
-  // support deliveries (Missile / Beam / Multi-Target Missile / Cube) all
-  // skip damage dice, so the three damage rows are simply empty.
-  const key: ManifestKey = 'spell-missile-beam';
+  // Support spells always render on the AOE card frame — its single damage
+  // row is repurposed as the "HP" row showing the healing formula. The
+  // Missile/Beam template's Minor/Major/Grave rows don't fit support spells,
+  // which produce a single healing roll regardless of delivery type.
+  const key: ManifestKey = 'spell-aoe';
 
   const baseLayers = useMemo(() => getBackgroundLayers(key), [key]);
   const rarityLayers = useMemo(() => getRarityLayers(key, weapon.rarity), [key, weapon.rarity]);
   const guildLayers = useMemo(() => getGuildLayers(key), [key]);
   const statsLayers = useMemo(() => getStatisticsLayers(key), [key]);
+  // Dice PSD layers for each term in the healing formula, placed left-to-
+  // right under the AOE template's Minor row icons. The trailing HP symbol
+  // sits in the next column over and is rendered as an HTML <img> overlay
+  // below (it's not a PSD layer).
+  const healingDiceLayers = useMemo(
+    () => spellHealingDiceLayers(key, weapon.healing.healing),
+    [key, weapon.healing.healing],
+  );
+  const hpIconSlot = useMemo(
+    () => spellTrailingIconSlot(key, weapon.healing.healing),
+    [key, weapon.healing.healing],
+  );
 
   const allLayers = useMemo(
-    () => [...baseLayers, ...rarityLayers, ...guildLayers, ...statsLayers],
-    [baseLayers, rarityLayers, guildLayers, statsLayers],
+    () => [...baseLayers, ...rarityLayers, ...guildLayers, ...statsLayers, ...healingDiceLayers],
+    [baseLayers, rarityLayers, guildLayers, statsLayers, healingDiceLayers],
   );
 
   const nameSlot = useMemo(() => findByKind(key, 'nameTextbox'), [key]);
@@ -742,6 +812,33 @@ function SupportSpellCard({ weapon }: { weapon: SupportSpellWeapon }) {
             <span />
           )}
         </PsdOverlay>
+
+        {/* HP row label — repurposes the AOE template's "Damage" row (label
+            masked out at extract time). Dice icons for the healing formula
+            are appended as PSD layers (healingDiceLayers); the HP symbol at
+            the trailing column position is rendered as the HTML <img>
+            overlay below. */}
+        <PsdOverlay
+          x={STATS_LAYOUT.tableX + 20}
+          y={STATS_LAYOUT.aoeDamageRowY}
+          width={210}
+          height={STATS_LAYOUT.aoeDamageRowHeight}
+          className="weapon-card__row weapon-card__row--label"
+        >
+          <span>HP</span>
+        </PsdOverlay>
+
+        {hpIconSlot && (
+          <PsdOverlay
+            x={hpIconSlot.x}
+            y={hpIconSlot.y}
+            width={hpIconSlot.width}
+            height={hpIconSlot.height}
+            className="weapon-card__hp-icon-wrap"
+          >
+            <img src={HP_ICON_URL} alt="" className="weapon-card__hp-icon" />
+          </PsdOverlay>
+        )}
 
         {quoteRect && (
           <PsdOverlay
