@@ -30,6 +30,13 @@
   text-transform: uppercase;
 }
 
+.app__divider {
+  height: 1px;
+  background: var(--border);
+  opacity: 0.6;
+  margin: 8px 0;
+}
+
 .app__tabs {
   display: flex;
   gap: 4px;

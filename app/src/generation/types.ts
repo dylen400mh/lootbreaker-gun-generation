@@ -2,6 +2,20 @@ export type Tier = 1 | 2 | 3;
 
 export type WeaponCategory = 'gun' | 'melee' | 'shield' | 'spell';
 
+// Chests are a separate procedure from the four weapon categories — they
+// produce a text loot bundle, not a weapon card. ChestSize lives here so the
+// types file remains the single export point for shared procedure types.
+export type ChestSize = 'Small' | 'Medium' | 'Large' | 'Giga';
+
+export interface ChestRoll {
+  size: ChestSize;
+  tier: Tier;
+  rolls: number[];
+  total: number;
+  gold: number;
+  items: string;
+}
+
 export type GunType =
   | 'Pistol'
   | 'SMG'

@@ -1,6 +1,7 @@
 import { useCallback, useMemo, useRef, useState } from 'react';
 import { toBlob } from 'html-to-image';
 import { getBackgroundLayers } from './assets/psdManifest';
+import { ChestPanel } from './components/ChestPanel';
 import { useChoiceModal } from './components/ChoiceModal';
 import { Controls } from './components/Controls';
 import { PsdComposite } from './components/PsdComposite';
@@ -149,6 +150,10 @@ export default function App() {
         <h1 className="app__title">Lootbreaker</h1>
         <p className="app__subtitle">Procedural Weapon Generator</p>
       </header>
+
+      <ChestPanel />
+
+      <div className="app__divider" role="presentation" />
 
       <div className="app__tabs" role="tablist" aria-label="Weapon category">
         {CATEGORIES.map((c) => (
