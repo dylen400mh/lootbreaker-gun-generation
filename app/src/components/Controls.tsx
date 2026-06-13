@@ -58,6 +58,9 @@ export function Controls({
 }: Props) {
   const isShield = category === 'shield';
   const isSpell = category === 'spell';
+  // Potions have only a rarity roll and a per-rarity result roll — no weapon
+  // type, no guild, no red-text step.
+  const isPotion = category === 'potion';
   // Spells have no pre-rollable "weapon type" — the delivery type is rolled
   // mid-procedure. Guns/melee gun expose their player-choice type list.
   const typeOptions: ReadonlyArray<GunType | MeleeType> =
@@ -91,8 +94,9 @@ export function Controls({
       </fieldset>
 
       {/* Shields have no per-type roll — guild is the first dice step. Spells
-          have a delivery type but it's rolled mid-procedure, not pre-pinned. */}
-      {!isShield && !isSpell && (
+          have a delivery type but it's rolled mid-procedure, not pre-pinned.
+          Potions have no weapon type at all. */}
+      {!isShield && !isSpell && !isPotion && (
         <fieldset className="controls__group">
           <legend>Weapon</legend>
           <select
@@ -110,21 +114,24 @@ export function Controls({
         </fieldset>
       )}
 
-      <fieldset className="controls__group">
-        <legend>Guild</legend>
-        <select
-          className="controls__select"
-          value={guild}
-          onChange={(e) => onGuildChange(e.target.value as GuildName | '')}
-        >
-          <option value="">Random</option>
-          {guildOptions.map((g) => (
-            <option key={g} value={g}>
-              {g}
-            </option>
-          ))}
-        </select>
-      </fieldset>
+      {/* Potions have no guild step. */}
+      {!isPotion && (
+        <fieldset className="controls__group">
+          <legend>Guild</legend>
+          <select
+            className="controls__select"
+            value={guild}
+            onChange={(e) => onGuildChange(e.target.value as GuildName | '')}
+          >
+            <option value="">Random</option>
+            {guildOptions.map((g) => (
+              <option key={g} value={g}>
+                {g}
+              </option>
+            ))}
+          </select>
+        </fieldset>
+      )}
 
       <fieldset className="controls__group">
         <legend>Rarity</legend>
@@ -142,9 +149,9 @@ export function Controls({
         </select>
       </fieldset>
 
-      {/* Red text is a gun/melee mechanic only. Shields and spells don't have
-          a red-text step. */}
-      {!isShield && !isSpell && (
+      {/* Red text is a gun/melee mechanic only. Shields, spells, and potions
+          don't have a red-text step. */}
+      {!isShield && !isSpell && !isPotion && (
         <label className="controls__toggle">
           <input
             type="checkbox"
@@ -174,7 +181,7 @@ export function Controls({
         onClick={onRoll}
         disabled={rolling}
       >
-        {rolling ? 'Rolling…' : 'Roll Weapon'}
+        {rolling ? 'Rolling…' : isPotion ? 'Roll Potion' : 'Roll Weapon'}
       </button>
 
       <button

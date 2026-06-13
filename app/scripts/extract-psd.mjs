@@ -33,6 +33,7 @@ const DEFAULT_PSD_BY_CATEGORY = {
   gun: join(ASSETS_ROOT, 'Weapon_PSD.psd'),
   melee: join(ASSETS_ROOT, 'Melee Weapon Assets', 'Melee_Weapon_Card_Root.psd'),
   shield: join(ASSETS_ROOT, 'Shield Assets', 'Shield_Base.psd'),
+  potion: join(ASSETS_ROOT, 'Potion Assets', 'Potion_Base.psd'),
 };
 
 // Spell category ships two PSDs (selected by delivery type at render time).
@@ -43,7 +44,7 @@ const DEFAULT_PSD_BY_SPELL_VARIANT = {
 
 const { category, variant, psdPath } = parseArgs(process.argv.slice(2));
 if (!category) {
-  console.error('Missing required --category <gun|melee|shield|spell>');
+  console.error('Missing required --category <gun|melee|shield|spell|potion>');
   process.exit(1);
 }
 if (category === 'spell' && !variant) {
@@ -372,6 +373,21 @@ function postProcessRaster(layer, newPath) {
     const ctx = out.getContext('2d');
     ctx.drawImage(src, 0, 0);
 
+    // Potions ship from a copy of the spell PSD (root group still named
+    // 'Spell'). The Statistics Table layer bakes in "Tier 1 Potion" / "Range:
+    // Self" at the top and an "Effects" label near the bottom. Both need to
+    // come out — the tier has to track the live player tier, and the
+    // description body replaces the "Effects" label. Clearing the whole
+    // raster leaves only the underlying stats backing rule showing through;
+    // the live overlay paints "Tier X Potion | Range: Self" in the cleared
+    // space.
+    if (category === 'potion') {
+      const out = createCanvas(src.width, src.height);
+      const ctx = out.getContext('2d');
+      ctx.clearRect(0, 0, src.width, src.height);
+      return out;
+    }
+
     if (newPath[0] === 'Spell') {
       // The two stacked rows above the first divider (local y≈115) bake
       // placeholders that the live overlay replaces:
@@ -653,6 +669,16 @@ function deriveSemantic(path, leafIdx) {
     /^Layer \d+$/.test(leaf)
   ) {
     return { kind: 'spellArt' };
+  }
+  // Potion bottle illustration — the potion PSD was built from a copy of the
+  // spell PSD (root group is still called "Spell"), so the only place an
+  // unnamed raster shows up under it is the `Statistics > Layer N` slot.
+  if (
+    path.length === 3 &&
+    path[1] === 'Statistics' &&
+    /^Layer \d+$/.test(leaf)
+  ) {
+    return { kind: 'potionArt' };
   }
   if (leaf === 'Statistics Table') return { kind: 'statisticsTable' };
   if (leaf === 'Name Text Box') return { kind: 'nameTextbox' };

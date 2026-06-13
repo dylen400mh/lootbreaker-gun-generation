@@ -3,6 +3,7 @@ import meleeManifestJson from '../generated/meleePsdManifest.json';
 import shieldManifestJson from '../generated/shieldPsdManifest.json';
 import spellAoeManifestJson from '../generated/spellAoePsdManifest.json';
 import spellMissileBeamManifestJson from '../generated/spellMissileBeamPsdManifest.json';
+import potionManifestJson from '../generated/potionPsdManifest.json';
 import type {
   Element,
   Rarity,
@@ -18,7 +19,8 @@ export type ManifestKey =
   | 'melee'
   | 'shield'
   | 'spell-aoe'
-  | 'spell-missile-beam';
+  | 'spell-missile-beam'
+  | 'potion';
 
 export function spellManifestKey(delivery: SpellDeliveryType): ManifestKey {
   return SINGLE_TARGET_DELIVERIES.includes(delivery)
@@ -34,6 +36,7 @@ type SemanticDescriptor =
   | { kind: 'paintstroke' }
   | { kind: 'weaponArtSlot' }
   | { kind: 'spellArt' }
+  | { kind: 'potionArt' }
   | { kind: 'statisticsTable' }
   | { kind: 'topBacking' }
   | { kind: 'statsBacking' }
@@ -81,6 +84,7 @@ const MANIFESTS: Record<ManifestKey, PsdManifest> = {
   shield: shieldManifestJson as PsdManifest,
   'spell-aoe': spellAoeManifestJson as PsdManifest,
   'spell-missile-beam': spellMissileBeamManifestJson as PsdManifest,
+  potion: potionManifestJson as PsdManifest,
 };
 
 // Both PSDs use the same 1000×1363 canvas. The composite scaler treats the
@@ -199,6 +203,7 @@ export function getBackgroundLayers(key: ManifestKey): PsdLayer[] {
   allByKind(key, 'statsBacking').forEach(push);
   allByKind(key, 'grunge').forEach(push);
   push(findByKind(key, 'spellArt'));
+  push(findByKind(key, 'potionArt'));
   allByKind(key, 'effectsPanel').forEach(push);
   allByKind(key, 'decorAccent').forEach(push);
   return layers;
@@ -234,9 +239,9 @@ export function findDamageIcon(
   );
 }
 
-// Most callers still operate on `WeaponCategory` (gun/melee/shield). For those
-// the ManifestKey is identical to the category name; only spell rendering has
-// to pick a variant first.
+// Most callers still operate on `WeaponCategory` (gun/melee/shield/potion).
+// For those the ManifestKey is identical to the category name; only spell
+// rendering has to pick a variant first (AOE vs Missile/Beam).
 export function categoryToManifestKey(category: Exclude<WeaponCategory, 'spell'>): ManifestKey {
   return category;
 }

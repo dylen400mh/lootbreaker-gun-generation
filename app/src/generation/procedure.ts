@@ -77,6 +77,10 @@ import {
   OFFENSIVE_SPELL_PREFIXES_D100,
   SUPPORT_SPELL_PREFIXES_D20,
 } from './tables/spell/naming';
+import {
+  POTION_ROLL_BY_RARITY,
+  POTION_TABLE_BY_RARITY,
+} from './tables/potion';
 import type {
   BaseDamage,
   DamageGuildName,
@@ -89,6 +93,8 @@ import type {
   MeleeType,
   MeleeWeapon,
   OffensiveSpellWeapon,
+  PotionEffect,
+  PotionWeapon,
   Rarity,
   ShieldWeapon,
   SpellCondition,
@@ -164,6 +170,10 @@ export async function generateWeapon(
 
   if (opts.category === 'spell') {
     return generateSpell(opts, seed, rng, askChoice);
+  }
+
+  if (opts.category === 'potion') {
+    return generatePotion(opts, seed, rng);
   }
 
   const category: 'gun' | 'melee' = opts.category;
@@ -348,6 +358,42 @@ async function generateShield(
       baseName,
       digits,
     },
+  };
+}
+
+// Potions: roll the shared 2d6 rarity table, then a per-rarity result roll
+// that picks a single (name, description) row. No weapon type, no guild, no
+// damage dice, no player-choice steps — the simplest weapon category.
+function generatePotion(
+  opts: GenerateOptions,
+  seed: number,
+  rng: () => number,
+): PotionWeapon {
+  // STEP 1 — Rarity (shared 2d6 cross-table). Skipped when opts.rarity pins it.
+  let rarity: Rarity;
+  if (opts.rarity) {
+    rarity = opts.rarity;
+  } else {
+    const row = d(rng, 6);
+    const col = d(rng, 6);
+    rarity = RARITY_TABLE[row - 1][col - 1];
+  }
+
+  // STEP 2 — Result roll (per-rarity dice → table lookup). The Uncommon table
+  // re-indexes around the spec's duplicate row 8 (see effects.ts header).
+  const { dice, sides } = POTION_ROLL_BY_RARITY[rarity];
+  let total = 0;
+  for (let i = 0; i < dice; i += 1) total += d(rng, sides);
+  const table = POTION_TABLE_BY_RARITY[rarity];
+  const effect: PotionEffect = table[total];
+
+  return {
+    category: 'potion',
+    seed,
+    tier: opts.tier,
+    rarity,
+    effect,
+    name: { kind: 'potion', baseName: effect.name },
   };
 }
 

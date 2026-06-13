@@ -421,3 +421,100 @@ describe('generateWeapon(spell)', () => {
     }
   });
 });
+
+import {
+  COMMON_2D12_TABLE,
+  UNCOMMON_1D20_TABLE,
+  RARE_2D8_TABLE,
+  EPIC_1D12_TABLE,
+  LEGENDARY_1D10_TABLE,
+} from './tables/potion';
+import type { PotionWeapon, Rarity } from './types';
+
+function assertPotionWeapon(w: Weapon): asserts w is PotionWeapon {
+  if (w.category !== 'potion') {
+    throw new Error(`expected potion, got ${w.category}`);
+  }
+}
+
+describe('generateWeapon(potion)', () => {
+  it('produces a deterministic potion for a fixed seed', async () => {
+    const w = await generateWeapon(
+      { category: 'potion', tier: 2, redTextEnabled: false, seed: 42 },
+      autoChoice(),
+    );
+    assertPotionWeapon(w);
+    expect(w.seed).toBe(42);
+    expect(w.category).toBe('potion');
+    expect(['Common', 'Uncommon', 'Rare', 'Epic', 'Legendary']).toContain(w.rarity);
+    expect(w.effect.name).toBeTruthy();
+    expect(w.effect.description).toBeTruthy();
+    expect(w.name.kind).toBe('potion');
+    expect(weaponDisplayName(w)).toBe(w.effect.name);
+  });
+
+  it('same seed produces identical potion', async () => {
+    const a = await generateWeapon(
+      { category: 'potion', tier: 1, redTextEnabled: false, seed: 9999 },
+      autoChoice(),
+    );
+    const b = await generateWeapon(
+      { category: 'potion', tier: 1, redTextEnabled: false, seed: 9999 },
+      autoChoice(),
+    );
+    expect(a).toEqual(b);
+  });
+
+  it('rarity pin always wins', async () => {
+    const rarities: Rarity[] = ['Common', 'Uncommon', 'Rare', 'Epic', 'Legendary'];
+    for (const rarity of rarities) {
+      for (let seed = 1; seed <= 20; seed += 1) {
+        const w = await generateWeapon(
+          { category: 'potion', tier: 2, redTextEnabled: false, seed, rarity },
+          autoChoice(),
+        );
+        assertPotionWeapon(w);
+        expect(w.rarity).toBe(rarity);
+      }
+    }
+  });
+
+  it('every rolled effect comes from the matching per-rarity table', async () => {
+    const tables: Record<Rarity, Record<number, { name: string; description: string }>> = {
+      Common: COMMON_2D12_TABLE,
+      Uncommon: UNCOMMON_1D20_TABLE,
+      Rare: RARE_2D8_TABLE,
+      Epic: EPIC_1D12_TABLE,
+      Legendary: LEGENDARY_1D10_TABLE,
+    };
+    for (let seed = 1; seed <= 300; seed += 1) {
+      const w = await generateWeapon(
+        { category: 'potion', tier: 1, redTextEnabled: false, seed },
+        autoChoice(),
+      );
+      assertPotionWeapon(w);
+      const row = tables[w.rarity][w.effect.roll];
+      expect(row).toBeTruthy();
+      expect(row.name).toBe(w.effect.name);
+      expect(row.description).toBe(w.effect.description);
+    }
+  });
+
+  // Spec-fidelity smoke check on one known entry per table — guards against
+  // silent edits to the transcribed strings.
+  it('preserves verbatim spec strings on known rows', () => {
+    expect(COMMON_2D12_TABLE[3]?.name).toBe('Bottled Lightning');
+    expect(COMMON_2D12_TABLE[3]?.description).toBe(
+      'All Attacks gain +1 Volt Damage until the end of the current encounter',
+    );
+    expect(UNCOMMON_1D20_TABLE[8]?.name).toBe('Battery Acid Cola');
+    // The duplicate-row-8 shift: Hot Sauce moved to slot 9.
+    expect(UNCOMMON_1D20_TABLE[9]?.name).toBe('Hot Sauce');
+    // Moose Juice was the original row 20; cut off by the shift.
+    expect(UNCOMMON_1D20_TABLE[20]?.name).not.toBe('Moose Juice');
+    expect(UNCOMMON_1D20_TABLE[20]?.name).toBe('Quick Concentrate');
+    expect(RARE_2D8_TABLE[14]?.name).toBe('Venereal Vacator');
+    expect(EPIC_1D12_TABLE[7]?.name).toBe('Lucky Potion');
+    expect(LEGENDARY_1D10_TABLE[10]?.name).toBe('Moonmilk');
+  });
+});

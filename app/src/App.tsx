@@ -24,6 +24,7 @@ const CATEGORIES: ReadonlyArray<{ value: WeaponCategory; label: string }> = [
   { value: 'melee', label: 'Melee' },
   { value: 'shield', label: 'Shields' },
   { value: 'spell', label: 'Spells' },
+  { value: 'potion', label: 'Potions' },
 ];
 
 export default function App() {

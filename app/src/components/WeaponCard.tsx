@@ -25,6 +25,7 @@ import {
   type GunWeapon,
   type MeleeWeapon,
   type OffensiveSpellWeapon,
+  type PotionWeapon,
   type ShieldWeapon,
   type SpellCondition,
   type SpellGuildBonus,
@@ -67,6 +68,9 @@ export function WeaponCard({ weapon }: Props) {
   }
   if (weapon.category === 'spell') {
     return <SpellCard weapon={weapon} />;
+  }
+  if (weapon.category === 'potion') {
+    return <PotionCard weapon={weapon} />;
   }
   return <DamageWeaponCard weapon={weapon} />;
 }
@@ -921,6 +925,126 @@ function AutoFitSpellEffects({
           {bonusText}
         </div>
       )}
+    </div>
+  );
+}
+
+// ---- Potion card ----------------------------------------------------------
+
+// The Statistics Table raster ships with "Effects" baked in near the bottom
+// of the strip; the top band that originally said "Tier 1 Potion / Range:
+// Self" is cleared at extract time so the live overlay can paint the actual
+// player tier (see extract-psd.mjs#postProcessRaster). The card paints the
+// name across the top, the live "Tier X Potion | Range: Self" header inside
+// the cleared band, and the description body below the "Effects" label.
+// The quote band stays empty by design.
+const POTION_LAYOUT = {
+  // Top band of the Statistics Table — canvas y≈563-612 — was cleared at
+  // extract time so the live "Tier X Potion / Range: Self" header sits on
+  // a clean strip.
+  headerY: 568,
+  headerHeight: 44,
+  effectsX: 80,
+  // Description starts just below the live header overlay. The previous
+  // "Effects" label band (y=625-660) was masked out at extract time, so the
+  // body can climb up into that space and use the full open band down to
+  // the Bottom Rectangle quote rule at ~y=1222.
+  effectsY: 630,
+  effectsWidthMargin: 80,
+};
+
+function PotionCard({ weapon }: { weapon: PotionWeapon }) {
+  const fullName = weaponDisplayName(weapon);
+
+  const baseLayers = useMemo(() => getBackgroundLayers('potion'), []);
+  const rarityLayers = useMemo(
+    () => getRarityLayers('potion', weapon.rarity),
+    [weapon.rarity],
+  );
+  const statsLayers = useMemo(() => getStatisticsLayers('potion'), []);
+
+  const allLayers = useMemo(
+    () => [...baseLayers, ...rarityLayers, ...statsLayers],
+    [baseLayers, rarityLayers, statsLayers],
+  );
+
+  const nameSlot = useMemo(() => findByKind('potion', 'nameTextbox'), []);
+  const quoteRect = useMemo(() => findByKind('potion', 'quoteBottomRect'), []);
+
+  const descriptionBottom = quoteRect
+    ? quoteRect.y - 16
+    : PSD_CANVAS.height - 200;
+
+  return (
+    <div className={`weapon-card weapon-card--${weapon.rarity.toLowerCase()}`}>
+      <PsdComposite layers={allLayers}>
+        {nameSlot && (
+          <PsdOverlay
+            x={0}
+            y={nameSlot.y - 20}
+            width={PSD_CANVAS.width}
+            height={nameSlot.height + 40}
+            className="weapon-card__name-wrap"
+          >
+            <AutoFitName name={fullName} />
+          </PsdOverlay>
+        )}
+
+        {/* "Tier X Potion | Range: Self" header — anchored inside the
+            Statistics Table band the extract step cleared so the live tier
+            number replaces the raster's frozen "Tier 1". */}
+        <PsdOverlay
+          x={STATS_LAYOUT.tableX + 20}
+          y={POTION_LAYOUT.headerY}
+          width={STATS_LAYOUT.tableWidth - 40}
+          height={POTION_LAYOUT.headerHeight}
+          className="weapon-card__row"
+        >
+          <span>Tier {weapon.tier} Potion</span>
+          <span className="weapon-card__row-range">
+            <span>Range:</span>
+            <span>Self</span>
+          </span>
+        </PsdOverlay>
+
+        <PsdOverlay
+          x={POTION_LAYOUT.effectsX}
+          y={POTION_LAYOUT.effectsY}
+          width={PSD_CANVAS.width - POTION_LAYOUT.effectsWidthMargin}
+          height={descriptionBottom - POTION_LAYOUT.effectsY}
+        >
+          <AutoFitPotionDescription text={weapon.effect.description} />
+        </PsdOverlay>
+      </PsdComposite>
+    </div>
+  );
+}
+
+// Same shrink-to-fit pattern as AutoFitEffects. Descriptions vary wildly in
+// length — "+1 Shields" vs the multi-sentence Goose Grease / Moonmilk
+// blocks — so the font auto-scales between 28 and 60 PSD-px to keep the
+// body legible without overflow.
+function AutoFitPotionDescription({ text }: { text: string }) {
+  const ref = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    // Same 44→28 PSD-px range as gun/melee/shield AutoFitEffects so the
+    // potion description body matches the baked-in "Tier 1 Potion / Effects"
+    // glyph size on the Statistics Table raster and lines up with every
+    // other weapon card's effect text.
+    const MAX = 44;
+    const MIN = 28;
+    let size = MAX;
+    el.style.setProperty('--effect-size', `${size}px`);
+    while (size > MIN && el.scrollHeight > el.clientHeight) {
+      size -= 1;
+      el.style.setProperty('--effect-size', `${size}px`);
+    }
+  }, [text]);
+  return (
+    <div ref={ref} className="weapon-card__effects">
+      <div className="weapon-card__effect">{text}</div>
     </div>
   );
 }

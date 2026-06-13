@@ -1,6 +1,6 @@
 export type Tier = 1 | 2 | 3;
 
-export type WeaponCategory = 'gun' | 'melee' | 'shield' | 'spell';
+export type WeaponCategory = 'gun' | 'melee' | 'shield' | 'spell' | 'potion';
 
 // Chests are a separate procedure from the four weapon categories — they
 // produce a text loot bundle, not a weapon card. ChestSize lives here so the
@@ -244,7 +244,8 @@ export type WeaponName =
       prefix: string;
       deliveryType: SpellDeliveryType;
       healingType: SpellHealingType;
-    };
+    }
+  | { kind: 'potion'; baseName: string };
 
 // Fields shared by gun and melee weapons — the rolled damage card shape.
 // Shield doesn't extend this; see ShieldWeapon below.
@@ -294,6 +295,25 @@ export interface ShieldGuildPassive {
   value: string;
 }
 
+// Potions roll the shared rarity table (2d6) then a per-rarity result table
+// that produces a (name, description) pair. No weapon type, guild, damage
+// dice, elements, or red text — the card just renders the name and the
+// description.
+export interface PotionEffect {
+  roll: number;
+  name: string;
+  description: string;
+}
+
+export interface PotionWeapon {
+  category: 'potion';
+  seed: number;
+  tier: Tier;
+  rarity: Rarity;
+  effect: PotionEffect;
+  name: Extract<WeaponName, { kind: 'potion' }>;
+}
+
 export interface ShieldWeapon {
   category: 'shield';
   seed: number;
@@ -315,7 +335,7 @@ export interface ShieldWeapon {
   name: Extract<WeaponName, { kind: 'shield' }>;
 }
 
-export type Weapon = GunWeapon | MeleeWeapon | ShieldWeapon | SpellWeapon;
+export type Weapon = GunWeapon | MeleeWeapon | ShieldWeapon | SpellWeapon | PotionWeapon;
 
 // Display + filename helpers — the only places that need to know about the
 // per-category naming format.
@@ -341,6 +361,9 @@ export function weaponDisplayName(weapon: Weapon): string {
   if (n.kind === 'spell-support') {
     return `${n.prefix} ${n.deliveryType} of ${n.healingType}`;
   }
+  if (n.kind === 'potion') {
+    return n.baseName;
+  }
   return n.placement === 'prefix'
     ? `${n.modifier} ${n.baseName}`
     : `${n.baseName} ${n.modifier}`;
@@ -360,6 +383,8 @@ export function weaponFilenameStem(weapon: Weapon): string {
       : [n.prefix, n.deliveryType, n.damageType];
   } else if (n.kind === 'spell-support') {
     parts = [n.prefix, n.deliveryType, n.healingType];
+  } else if (n.kind === 'potion') {
+    parts = ['potion', n.baseName];
   } else {
     parts = n.placement === 'prefix' ? [n.modifier, n.baseName] : [n.baseName, n.modifier];
   }
