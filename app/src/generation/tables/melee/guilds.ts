@@ -8,10 +8,11 @@ export interface GuildDef {
   bonusByRarity: Record<Rarity, string>;
 }
 
-// Source: Lootbreaker_MeleeWeaponGeneration_Version0dot10.pdf — Step Two.
-// 1d12 → guild. The 12 guild names match the gun spec, but passive
+// Source: spec v0.12 (Lootbreaker_MeleeWeaponGeneration_Version0dot12.pdf) —
+// Step Two. 1d12 → guild. The 12 guild names match the gun spec, but passive
 // descriptions and several bonus values differ; both transcribed verbatim
-// from the melee PDF (do not copy from the gun tables).
+// from the melee PDF (do not copy from the gun tables). "X" = no bonus at
+// Common; Dominion is the only guild with a Common-tier bonus.
 
 export const GUILD_BY_D12: ReadonlyArray<DamageGuildName> = [
   'Vandal',
@@ -69,14 +70,15 @@ export const GUILDS: Record<DamageGuildName, GuildDef> = {
   },
   Dominion: {
     name: 'Dominion',
-    passive: 'Efficient Construction (Bonus to Accuracy)',
-    bonusLabel: 'Acc Bonus Amount',
+    passive:
+      'Riot Suppressor (All Dominion Melee Weapons grant a Bane to Impact Rolls to offer more damage)',
+    bonusLabel: 'Bonus Damage',
     bonusByRarity: {
-      Common: 'X',
-      Uncommon: '+1',
-      Rare: '+1',
-      Epic: '+2',
-      Legendary: '+3',
+      Common: '+1',
+      Uncommon: '+2',
+      Rare: '+4',
+      Epic: '+6',
+      Legendary: '+8',
     },
   },
   Ordis: {
@@ -175,7 +177,7 @@ export const GUILDS: Record<DamageGuildName, GuildDef> = {
   Banshee: {
     name: 'Banshee',
     passive:
-      'Curse of the Banshee (Major Hits apply Dark Affliction 1, Grave hits apply Dark Affliction 3. Additionally, Banshee weapons grant bonus Damage to Targets that suffer from Afflictions [Any Affliction])',
+      'Curse of the Banshee (Medium Hits apply Dark Affliction 1, Maximum hits apply Dark Affliction 3. Additionally, Banshee weapons grant bonus Damage to Targets that suffer from Afflictions [Any Affliction])',
     bonusLabel: 'Bonus Damage to Afflicted Targets (When the Condition is granted by this weapon)',
     bonusByRarity: {
       Common: 'X',

@@ -5,14 +5,19 @@ export interface ModuleEntry {
   text: string;
 }
 
-// Source: Lootbreaker_MeleeWeaponGeneration_Version0dot10.pdf — Step Five.
-// Each guild has 6 modules, rolled 1d6. Names and effect text transcribed
-// verbatim from the PDF.
+// Source: spec v0.12 (Lootbreaker_MeleeWeaponGeneration_Version0dot12.pdf) —
+// Step Five. Each guild has 6 modules, rolled 1d6, written "Name: effect".
+// Transcribed verbatim (name = module title, text = effect).
+//
+// Spec fidelity note: a few modules still use the pre-v0.12 hit terminology
+// ("Major and Grave Hits") even though the rest of the spec moved to
+// Medium/Maximum — kept as written (Ordis "Stalker Enhancement", Wytchwyrd
+// "Curse-Born").
 export const GUILD_MODULES: Record<DamageGuildName, ReadonlyArray<ModuleEntry>> = {
   Vandal: [
     {
       name: 'Sheol Flames',
-      text: "Fire Damage from this weapon ignores any of the Target's Damage Resistance",
+      text: 'Fire Damage from this weapon ignores any of the Target’s Damage Resistance',
     },
     {
       name: 'Broken Pieces',
@@ -20,13 +25,10 @@ export const GUILD_MODULES: Record<DamageGuildName, ReadonlyArray<ModuleEntry>> 
     },
     {
       name: 'Shoddy Build',
-      text: 'Grave Hits with this weapon eject shrapnel in a 3 Square cone behind the target, dealing 2d4 Slashing Damage targets in the cone',
+      text: 'Maximum Hits with this weapon eject shrapnel in a 3 Square cone behind the target, dealing 2d4 Slashing Damage targets in the cone',
     },
     { name: 'Overdrive', text: 'Overheat Bonuses are doubled on this weapon' },
-    {
-      name: 'Riot Grip',
-      text: '+5 Accuracy and +5 Damage against Horde/Swarm enemy types',
-    },
+    { name: 'Riot Grip', text: '+5 Damage against Horde/Swarm enemy types' },
     { name: 'Concrete Breaker', text: '+15 Damage against structures' },
   ],
   Stormforged: [
@@ -40,7 +42,7 @@ export const GUILD_MODULES: Record<DamageGuildName, ReadonlyArray<ModuleEntry>> 
     },
     {
       name: 'Eye Of The Storm',
-      text: '+3 Accuracy with this weapon when more than one enemy is adjacent to you',
+      text: 'Gain a Boost with this weapon when more than one enemy is adjacent to you',
     },
     {
       name: 'Storm Array',
@@ -48,114 +50,99 @@ export const GUILD_MODULES: Record<DamageGuildName, ReadonlyArray<ModuleEntry>> 
     },
     {
       name: 'Thunderblast',
-      text: 'Grave Hits give Knockback 2 to the target, and Knockback 1 to any adjacent targets',
+      text: 'Maximum Hits give Push 2 to the target, and Push 1 to any adjacent targets',
     },
     {
       name: 'Equilibrium Shatter',
-      text: "Grave Hits with this weapon affect the target's balance, giving the target -2 Accuracy until the end of their next turn",
+      text: 'Maximum Hits with this weapon affect the target’s balance, giving the target a Bane on the next Impact Roll they make',
     },
   ],
   Noctra: [
     { name: 'Nightclaw', text: '+4 Entropy Damage, +2 Speed when climbing' },
     {
       name: 'Do A Fade',
-      text: 'Grave Hits with this weapon grant you Cloaked until the end of your next turn',
+      text: 'Maximum Hits with this weapon grant you Cloaked until the end of your next turn',
     },
-    { name: 'Predator Refined', text: '+3 Shadow, +6 when Cloaked' },
+    { name: 'Predator Refined', text: 'Gain a Boost to Larceny Rolls' },
     {
       name: 'Nightwalker Infection',
-      text: 'Grave Hits with this weapon apply Vampire Weaknesses to the Target until the end of their next turn',
+      text: 'Maximum Hits with this weapon apply Vampire Weaknesses to the Target until the end of their next turn',
     },
-    {
-      name: 'Shadowblade',
-      text: 'This weapon gains +10 Damage while you are Cloaked',
-    },
+    { name: 'Shadowblade', text: 'This weapon gains +5 Damage while you are Cloaked' },
     {
       name: 'Unholy Edge',
-      text: 'You gain +2d12 Damage against paladins, clerics, or other, similar "Good Guys."',
+      text: 'You gain +2d12 Damage against paladins, clerics, or other, similar “Good Guys.”',
     },
   ],
   Dominion: [
     { name: 'Shock Attachment', text: '+1d8 Volt Damage' },
     {
       name: 'Banneret',
-      text: 'Grave Hits restore Shields equal to your Willpower score (Minimum 1) to all allies within 3 Squares',
+      text: 'Maximum Hits restore Shields equal to your Willpower score (Minimum 1) to all allies within 3 Squares',
     },
-    { name: 'Basket Hilt', text: 'This weapon gains the Riposte' },
+    { name: 'Basket Hilt', text: 'This weapon gains the Riposte Keyword' },
     {
       name: 'Imperial Might',
-      text: 'When you gain the Downed Condition, you also gain Invincible 1',
+      text: 'The first time you gain the Dying Condition in an encounter, you also gain Invincible 1',
     },
-    {
-      name: 'Riot Suppression Attachment',
-      text: 'This weapon gains Cleave 2',
-    },
+    { name: 'Crowd Control Attachment', text: 'This weapon gains Cleave 2' },
     {
       name: 'Dominion Power',
-      text: 'Grave Hits with this weapon apply Broken 1 to the target',
+      text: 'Maximum Hits with this weapon apply Broken 1 to the target',
     },
   ],
   Ordis: [
     {
-      name: "Hunter's Tempo",
-      text: 'After you slay an enemy with this weapon, you gain stacking +1 Accuracy buff with this weapon until the end of the current encounter (Maximum +6)',
+      name: 'Hunter’s Tempo',
+      text: 'After you slay an enemy with this weapon, you gain a Boost to all Impact Rolls until the end of your turn.',
     },
     { name: 'Trophy Hunter', text: 'Loot Piles grant an additional +10 Gold' },
     {
       name: 'Ambush Tactics',
-      text: 'Attacking an enemy who has not taken a turn in the first round of combat grants Advantage and +10 Damage',
+      text: 'Attacking an enemy who has not taken a turn in the first round of combat grants a Boost to Impact Rolls and +5 Damage',
     },
     {
       name: 'Armour Is My Religion',
-      text: 'Whenever you gain Shields, you gain an additional +5 Shields',
+      text: 'Whenever you gain Shields, you gain an additional +2 Shields',
     },
     {
       name: 'Poisoned Upgrade',
-      text: 'Grave Hits with this weapon apply Vulnerable 1 to the target',
+      text: 'Maximum Hits with this weapon apply Broken 1 to the target',
     },
     {
       name: 'Stalker Enhancement',
-      text: 'Major and Grave Hits with this weapon apply Slowed 1 to the target',
+      text: 'Major and Grave Hits with this weapon apply Hinder 1 to the target',
     },
   ],
   'Ironwood Rangers': [
     {
       name: 'Wind Enchantments',
-      text: 'Major and Grave Hits with this weapon apply Slashing Affliction 1',
+      text: 'Medium and Maximum Hits with this weapon apply Slashing Affliction 1',
     },
-    {
-      name: 'Thorned Charm',
-      text: 'While this weapon is equipped, you gain Thorns 2',
-    },
+    { name: 'Thorned Charm', text: 'While this weapon is equipped, you gain Thorns 1' },
     {
       name: 'Ghillied Up',
-      text: '+3 Shadow, +5 when you are in a forested or similar environment',
+      text: 'Gain a Boost on Larceny Rolls, Gain the Sneaking Skill',
     },
     {
       name: 'Campfire Temperance',
-      text: 'After taking a Quick Break, this weapon gains a +5 bonus to Accuracy and Damage for the next Combat Encounter',
+      text: 'After taking a Quick Break, this weapon gains a +5 bonus to Damage for the next Combat Encounter',
     },
     {
       name: 'Rooted Stance',
       text: 'If you end your turn having not moved a Square, you gain +3 Overshields',
     },
-    {
-      name: 'Bleed Them',
-      text: 'Grave Hits with this weapon apply Broken 1',
-    },
+    { name: 'Bleed Them', text: 'Maximum Hits with this weapon apply Broken 1' },
   ],
   Wytchwyrd: [
-    {
-      name: 'Curse-Born',
-      text: 'Major and Grave Hits with this weapon apply Hexed 1',
-    },
+    { name: 'Curse-Born', text: 'Major and Grave Hits with this weapon apply Hexed 1' },
     {
       name: 'Spell-Leech',
-      text: 'After you cast a Spell, the next Melee Weapon Attack you make with this weapon before the end of your current turn gains +3 Accuracy and +3 Damage',
+      text: 'After you cast a Spell, the next Melee Weapon Attack you make with this weapon before the end of your current turn gains +3 Damage',
     },
     {
       name: 'Eldritch Resonator',
-      text: 'Major and Grave Hits grant allies within 3 Squares a +2 bonus to their next Accuracy Roll',
+      text: 'Medium and Maximum Hits grant allies within 3 Squares a Boost to their next Impact Roll',
     },
     {
       name: 'Hex Plague',
@@ -164,17 +151,17 @@ export const GUILD_MODULES: Record<DamageGuildName, ReadonlyArray<ModuleEntry>> 
     { name: 'Darkblood', text: '+5 Dark Damage Resistance' },
     {
       name: 'Cauldron Charisma',
-      text: 'Grave Hits with this weapon apply Taunted 1',
+      text: 'Maximum Hits with this weapon apply Taunted 1',
     },
   ],
   NecroTek: [
     {
       name: 'Reverse Funeral',
-      text: 'Attacking a Downed target revives the target for the damage rolled. This Attack Action costs 1 VP',
+      text: 'Attacking a Dying target revives the target for the damage rolled. This Attack Action costs 1 VP',
     },
     {
       name: 'Funeral Crown',
-      text: 'For each adjacent Loot Pile, you gain +2 to Accuracy Rolls',
+      text: 'When you are adjacent to a Loot Pile, you gain Boost to Impact Rolls',
     },
     {
       name: 'Marrowguard',
@@ -186,22 +173,19 @@ export const GUILD_MODULES: Record<DamageGuildName, ReadonlyArray<ModuleEntry>> 
     },
     {
       name: 'Vile Creation',
-      text: 'When you deal damage to Humanoid or Light Tagged enemies, you gain an additional +2 Damage against that target',
+      text: 'When you deal damage to Humanoid or Light Tagged enemies, you gain an additional +3 Damage against that target',
     },
     {
       name: 'Blade Of Malice',
-      text: 'Major and Grave Hits deal an additional +2d4 Entropy Damage',
+      text: 'Medium and Maximum Hits deal an additional +2d4 Entropy Damage',
     },
   ],
   'Vow of Vending': [
-    {
-      name: 'Lanternbearer',
-      text: 'Adjacent Allies gain +3 to Checks made to resist or end Conditions affecting them',
-    },
-    { name: 'Open Hand', text: 'This weapon gains Crumple 2' },
+    { name: 'Lanternbearer', text: 'Adjacent Allies gain a Boost to Impact Rolls' },
+    { name: 'Open Hand', text: 'This weapon gains Push 2' },
     {
       name: 'Almskeeper Seal',
-      text: 'Whenever you heal a target while this weapon is equipped, you gain +3 to your next Accuracy Roll',
+      text: 'Whenever you heal a target while this weapon is equipped, you gain a Boost to your next Impact Roll',
     },
     {
       name: 'Light Inlay',
@@ -212,18 +196,15 @@ export const GUILD_MODULES: Record<DamageGuildName, ReadonlyArray<ModuleEntry>> 
       text: 'When you deal damage to Undead, Dark, or Entropy Tagged enemies, you gain an additional +5 Damage against that target',
     },
     {
-      name: "Paladin's Acceleration",
-      text: 'When you heal a Downed target, you gain +2 MP',
+      name: 'Paladin’s Acceleration',
+      text: 'When you heal a Dying target, you gain +2 MP',
     },
   ],
   Arkana: [
-    {
-      name: 'Spellbound Solution',
-      text: '+3 to Checks made to resist Spells and Magic Effects',
-    },
+    { name: 'Spellbound Solution', text: 'Gain a Magic Skill' },
     {
       name: 'Spellblade',
-      text: 'After you make a Melee Attack with this weapon, the next Spell you cast before the end of your current turn costs -1 MP',
+      text: 'After you make a Melee Attack with this weapon, the next Spell you cast before the end of your current turn costs -1 MP (minimum 0)',
     },
     {
       name: 'Arcane Burn',
@@ -235,7 +216,7 @@ export const GUILD_MODULES: Record<DamageGuildName, ReadonlyArray<ModuleEntry>> 
     },
     {
       name: 'Future Sight',
-      text: 'You gain +1 to your Grave hit Impact Threshold while this weapon is equipped',
+      text: 'You gain a Boost to Impact Rolls you are subjected to',
     },
     {
       name: 'Trapped Caster',
@@ -245,7 +226,7 @@ export const GUILD_MODULES: Record<DamageGuildName, ReadonlyArray<ModuleEntry>> 
   Flamekeepers: [
     {
       name: 'Ignition Enchantment',
-      text: 'Major and Grave Hits with this weapon grant Fire Affliction 1 to the target',
+      text: 'Medium and Maximum Hits with this weapon grant Fire Affliction 1 to the target',
     },
     {
       name: 'Sanctified Steel',
@@ -261,7 +242,7 @@ export const GUILD_MODULES: Record<DamageGuildName, ReadonlyArray<ModuleEntry>> 
     },
     {
       name: 'Link The Fires',
-      text: 'When you deal Fire Damage to a target, adjacent enemies take the same Fire Damage',
+      text: 'When you deal Fire Damage to a target, adjacent enemies take half Fire Damage',
     },
     {
       name: 'Embered Inlay',
@@ -270,20 +251,20 @@ export const GUILD_MODULES: Record<DamageGuildName, ReadonlyArray<ModuleEntry>> 
   ],
   Banshee: [
     {
-      name: "Deathbringer's Steel",
+      name: 'Deathbringer’s Steel',
       text: 'You deal an additional +2d12 Damage to Spooked targets',
     },
     {
       name: 'Last Breath',
-      text: 'When you are Downed, you gain a +5 Accuracy Bonus with this weapon',
+      text: 'When you are Dying, you gain a Boost to Impact Rolls with this weapon',
     },
     {
       name: 'Touch Of Fear',
-      text: 'Grave Hits with this weapon grant Spooked 1 to all adjacent enemies',
+      text: 'Maximum Hits with this weapon grant Spooked 1 to all adjacent enemies',
     },
     {
       name: 'Spirit Edge',
-      text: '+3 Accuracy to incorporeal targets with this weapon',
+      text: 'Gain a Boost to Impact Rolls against incorporeal targets with this weapon',
     },
     {
       name: 'Grip Of Death',
@@ -291,7 +272,7 @@ export const GUILD_MODULES: Record<DamageGuildName, ReadonlyArray<ModuleEntry>> 
     },
     {
       name: 'Encroaching Doom',
-      text: 'You gain +3 to Accuracy and Damage rolls with this weapon when your Shields are depleted',
+      text: 'You gain a Boost to Impact Rolls and +2 Damage rolls with this weapon when your Shields are depleted',
     },
   ],
 };

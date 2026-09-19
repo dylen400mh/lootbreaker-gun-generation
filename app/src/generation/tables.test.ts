@@ -147,12 +147,12 @@ describe('melee tables', () => {
     expect(MELEE_BY_2D4[8]).toBeNull();
   });
 
-  it('every melee type has tier 1/2/3 damage rows', () => {
+  it('every melee type has tier 1/2/3 flat-integer damage rows (v0.12)', () => {
     for (const def of Object.values(MELEE_TYPES)) {
       ([1, 2, 3] as Tier[]).forEach((t) => {
-        expect(def.damage[t].minor).toBeTruthy();
-        expect(def.damage[t].major).toBeTruthy();
-        expect(def.damage[t].grave).toBeTruthy();
+        expect(def.damage[t].minor).toMatch(/^\d+$/);
+        expect(def.damage[t].major).toMatch(/^\d+$/);
+        expect(def.damage[t].grave).toMatch(/^\d+$/);
       });
     }
   });
