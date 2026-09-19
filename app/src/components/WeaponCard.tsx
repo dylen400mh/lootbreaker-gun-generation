@@ -10,7 +10,6 @@ import {
   getShieldTableLayers,
   getStatisticsLayers,
   PSD_CANVAS,
-  spellManifestKey,
   type ManifestKey,
   type PsdLayer,
 } from '../assets/psdManifest';
@@ -538,13 +537,6 @@ function signed(n: number): string {
 
 // ---- Spell card ------------------------------------------------------------
 
-// Picks the correct manifest (AOE vs Missile/Beam) for the spell's delivery
-// type. AOE PSD only ships a single Minor damage row; Missile/Beam ships all
-// three (Minor/Major/Grave).
-function spellCardKey(weapon: SpellWeapon): ManifestKey {
-  return spellManifestKey(weapon.deliveryType);
-}
-
 // Y position (canvas px) for the effects content overlay — anchored below
 // the dice rows so the description and guild-bonus text never overlap dice
 // icons. Missile/Beam packs three dice rows (Minor/Major/Grave) ending at
@@ -556,10 +548,10 @@ function spellEffectsY(key: ManifestKey): number {
   return key === 'spell-missile-beam' ? 945 : 770;
 }
 
-// Spells reuse the gun/melee damage card geometry but skip the elemental cell
-// roll — the icon next to each die row is the spell's rolled DamageType, and
-// there are no bonus dice. AOE spells render one flat row; single-target
-// offensive spells render Minor/Major/Grave.
+// Offensive spell damage row: the DamageType icon next to the base value.
+// v0.12 base damage is a flat integer (no dice) — column 1 is reserved for the
+// HTML number overlay (see OffensiveSpellCard) and the icon sits in column 2.
+// Dice-based formulas (kept for safety) still place die layers first.
 function spellDamageRow(
   key: ManifestKey,
   row: 'minor' | 'major' | 'grave',
@@ -568,13 +560,19 @@ function spellDamageRow(
 ): PsdLayer[] {
   const out: PsdLayer[] = [];
   let column = 1;
-  for (const term of parseDamage(formula)) {
-    for (let i = 0; i < term.count; i += 1) {
-      const die = findDie(key, row, column, term.sides);
-      if (die) out.push(die);
-      column += 1;
-      if (column > 7) return out;
+  const terms = parseDamage(formula);
+  if (terms.length > 0) {
+    for (const term of terms) {
+      for (let i = 0; i < term.count; i += 1) {
+        const die = findDie(key, row, column, term.sides);
+        if (die) out.push(die);
+        column += 1;
+        if (column > 7) return out;
+      }
     }
+  } else if (/\d/.test(formula)) {
+    // Flat number occupies column 1 (drawn as an overlay); icon goes in col 2.
+    column = 2;
   }
   const icon = findDamageIcon(key, row, column, damageType as never);
   if (icon) out.push(icon);
@@ -626,23 +624,37 @@ function SpellCard({ weapon }: { weapon: SpellWeapon }) {
 
 function OffensiveSpellCard({ weapon }: { weapon: OffensiveSpellWeapon }) {
   const fullName = weaponDisplayName(weapon);
-  const key = spellCardKey(weapon);
+  // v0.12: every offensive delivery has three damage values, so all offensive
+  // spells render on the three-row Missile/Beam frame (AOE deliveries too —
+  // their area shows in the header).
+  const key: ManifestKey = 'spell-missile-beam';
 
   const baseLayers = useMemo(() => getBackgroundLayers(key), [key]);
   const rarityLayers = useMemo(() => getRarityLayers(key, weapon.rarity), [key, weapon.rarity]);
   const guildLayers = useMemo(() => getGuildLayers(key), [key]);
   const statsLayers = useMemo(() => getStatisticsLayers(key), [key]);
 
-  const damageLayers = useMemo(() => {
-    if (weapon.damage.kind === 'aoe') {
-      return spellDamageRow(key, 'minor', weapon.damage.damage, weapon.damageType);
-    }
-    return [
+  const damageLayers = useMemo(
+    () => [
       ...spellDamageRow(key, 'minor', weapon.damage.minor, weapon.damageType),
       ...spellDamageRow(key, 'major', weapon.damage.major, weapon.damageType),
       ...spellDamageRow(key, 'grave', weapon.damage.grave, weapon.damageType),
-    ];
-  }, [key, weapon.damage, weapon.damageType]);
+    ],
+    [key, weapon.damage, weapon.damageType],
+  );
+
+  // Flat base-damage numbers, one per row, drawn in the reserved column-1 dice
+  // slot (spellDamageRow places the DamageType icon in column 2).
+  const baseNumbers = useMemo(() => {
+    const rows: Array<'minor' | 'major' | 'grave'> = ['minor', 'major', 'grave'];
+    return rows.flatMap((row) => {
+      const value = weapon.damage[row];
+      if (parseDamage(value).length > 0 || !/^\s*\d+\s*$/.test(value)) return [];
+      const slot = findDieSlot(key, row, 1);
+      if (!slot) return [];
+      return [{ row, value: value.trim(), slot }];
+    });
+  }, [key, weapon.damage]);
 
   const allLayers = useMemo(
     () => [...baseLayers, ...rarityLayers, ...guildLayers, ...statsLayers, ...damageLayers],
@@ -654,8 +666,7 @@ function OffensiveSpellCard({ weapon }: { weapon: OffensiveSpellWeapon }) {
   const quoteRect = useMemo(() => findByKind(key, 'quoteBottomRect'), [key]);
 
   const rangeValue = String(weapon.damage.range);
-  const areaValue =
-    weapon.damage.kind === 'aoe' ? weapon.damage.area ?? '' : '';
+  const areaValue = weapon.damage.area ?? '';
 
   return (
     <div className={`weapon-card weapon-card--${weapon.rarity.toLowerCase()}`}>
@@ -720,20 +731,19 @@ function OffensiveSpellCard({ weapon }: { weapon: OffensiveSpellWeapon }) {
           )}
         </PsdOverlay>
 
-        {/* AOE-only damage row label. Missile/Beam keeps its raster Minor/
-            Major/Grave labels; the AOE stats table has the "Damage" label
-            masked out at extract time so the live card paints it here. */}
-        {key === 'spell-aoe' && (
+        {/* Flat base-damage numbers in the reserved column-1 dice slots. */}
+        {baseNumbers.map(({ row, value, slot }) => (
           <PsdOverlay
-            x={STATS_LAYOUT.tableX + 20}
-            y={STATS_LAYOUT.aoeDamageRowY}
-            width={210}
-            height={STATS_LAYOUT.aoeDamageRowHeight}
-            className="weapon-card__row weapon-card__row--label"
+            key={row}
+            x={slot.x}
+            y={slot.y}
+            width={slot.width}
+            height={slot.height}
+            className="weapon-card__damage-number-wrap"
           >
-            <span>Damage</span>
+            <span className="weapon-card__damage-number">{value}</span>
           </PsdOverlay>
-        )}
+        ))}
 
         {quoteRect && (
           <PsdOverlay

@@ -79,8 +79,9 @@ export type GuildName = DamageGuildName | ShieldOnlyGuildName;
 
 export type SpellSubType = 'Offensive' | 'Support';
 
-// Single-target deliveries render on the Missile/Beam PSD (Minor/Major/Grave
-// damage rows). AOE deliveries render on the AOE PSD (single flat damage row).
+// v0.12: every offensive delivery supplies Minor/Major/Grave damage values, so
+// offensive spells all render on the Missile/Beam (3-row) PSD frame. Support
+// spells render on the AOE PSD frame (single healing row).
 export type SpellDeliveryType =
   | 'Missile'
   | 'Beam'
@@ -90,12 +91,6 @@ export type SpellDeliveryType =
   | 'Cube'
   | 'Cylinder'
   | 'Sphere';
-
-export const SINGLE_TARGET_DELIVERIES: ReadonlyArray<SpellDeliveryType> = [
-  'Missile',
-  'Beam',
-  'Multi-Target Missile',
-];
 
 // Spec damage-type list (2d12). Wider than Element — includes Kinetic +
 // Slashing (which Element excludes since guns/melee derive base damage from
@@ -124,25 +119,18 @@ export interface SpellCondition {
   duration: number;
 }
 
-// Offensive base-damage row. Single-target deliveries supply Minor/Major/Grave
-// dice; AOE deliveries supply a single flat damage string. Both shapes carry
-// a numeric range; AOE adds an area string (spec format: "LxWxH"); Multi-
-// Target Missile carries a target count.
-export type OffensiveSpellDamage =
-  | {
-      kind: 'single-target';
-      minor: string;
-      major: string;
-      grave: string;
-      range: number;
-      targets?: number;
-    }
-  | {
-      kind: 'aoe';
-      damage: string;
-      range: number;
-      area?: string;
-    };
+// v0.12 offensive base damage: a flat integer per hit band (Minimum→minor,
+// Medium→major, Maximum→grave), stored as numeric strings. Every delivery
+// carries a numeric range; AOE deliveries add an area string (spec format
+// "LxWxH"); Multi-Target Missile carries a target count.
+export interface OffensiveSpellDamage {
+  minor: string;
+  major: string;
+  grave: string;
+  range: number;
+  area?: string;
+  targets?: number;
+}
 
 export interface SupportSpellHealing {
   healing: string;

@@ -20,6 +20,7 @@ import {
   MELEE_PLAYER_CHOICE_TYPES,
   MELEE_TYPES,
 } from './tables/melee/weaponTypes';
+import { OFFENSIVE_BASE_DAMAGE } from './tables/spell/baseDamage';
 import type { DamageGuildName, GunType, MeleeType, Rarity, Tier } from './types';
 
 describe('weapon types', () => {
@@ -181,5 +182,29 @@ describe('melee tables', () => {
     for (const t of types) {
       expect(MELEE_BASE_NAMES[t]).toHaveLength(6);
     }
+  });
+});
+
+describe('spell tables (v0.12)', () => {
+  it('every offensive delivery/tier has flat-integer Min/Med/Max damage', () => {
+    for (const byTier of Object.values(OFFENSIVE_BASE_DAMAGE)) {
+      ([1, 2, 3] as Tier[]).forEach((t) => {
+        const d = byTier[t];
+        expect(d.minor).toMatch(/^\d+$/);
+        expect(d.major).toMatch(/^\d+$/);
+        expect(d.grave).toMatch(/^\d+$/);
+        expect(d.range).toBeGreaterThan(0);
+      });
+    }
+  });
+
+  it('AOE deliveries carry an area string; single-target ones do not', () => {
+    for (const t of [1, 2, 3] as Tier[]) {
+      expect(OFFENSIVE_BASE_DAMAGE.Cube[t].area).toBeTruthy();
+      expect(OFFENSIVE_BASE_DAMAGE.Sphere[t].area).toBeTruthy();
+      expect(OFFENSIVE_BASE_DAMAGE.Missile[t].area).toBeUndefined();
+    }
+    // Multi-Target Missile carries a target count.
+    expect(OFFENSIVE_BASE_DAMAGE['Multi-Target Missile'][1].targets).toBe(3);
   });
 });

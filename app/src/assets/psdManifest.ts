@@ -7,13 +7,13 @@ import potionManifestJson from '../generated/potionPsdManifest.json';
 import type {
   Element,
   Rarity,
-  SpellDeliveryType,
   WeaponCategory,
 } from '../generation/types';
-import { SINGLE_TARGET_DELIVERIES } from '../generation/types';
 
-// Spells ship two PSDs (delivery-type dependent), so the manifest key set is
-// wider than WeaponCategory. Everything except spells uses the category as-is.
+// Spells ship two PSDs, so the manifest key set is wider than WeaponCategory.
+// Everything except spells uses the category as-is. v0.12: offensive spells
+// always render on 'spell-missile-beam' (three damage rows) and support spells
+// on 'spell-aoe' (single healing row) — WeaponCard picks the key directly.
 export type ManifestKey =
   | 'gun'
   | 'melee'
@@ -21,12 +21,6 @@ export type ManifestKey =
   | 'spell-aoe'
   | 'spell-missile-beam'
   | 'potion';
-
-export function spellManifestKey(delivery: SpellDeliveryType): ManifestKey {
-  return SINGLE_TARGET_DELIVERIES.includes(delivery)
-    ? 'spell-missile-beam'
-    : 'spell-aoe';
-}
 
 type DamageRowName = 'minor' | 'major' | 'grave';
 
