@@ -3,6 +3,7 @@ import {
   findByKind,
   findDamageIcon,
   findDie,
+  findDieSlot,
   getBackgroundLayers,
   getGuildLayers,
   getRarityLayers,
@@ -95,6 +96,20 @@ function DamageWeaponCard({ weapon }: { weapon: GunWeapon | MeleeWeapon }) {
     [weapon.category, weapon.damage, weapon.baseDamage, weapon.elements],
   );
 
+  // v0.12: base damage is a flat integer rather than dice. Each such row gets
+  // an HTML number overlay in the reserved column-1 dice slot (see
+  // damageRowLayers). Dice-based rows (no flat number) produce no overlay.
+  const baseNumbers = useMemo(() => {
+    const rows: Array<'minor' | 'major' | 'grave'> = ['minor', 'major', 'grave'];
+    return rows.flatMap((row) => {
+      const formula = weapon.damage[row];
+      if (parseDamage(formula).length > 0 || !/^\s*\d+\s*$/.test(formula)) return [];
+      const slot = findDieSlot(weapon.category, row, 1);
+      if (!slot) return [];
+      return [{ row, value: formula.trim(), slot }];
+    });
+  }, [weapon.category, weapon.damage]);
+
   const allLayers = useMemo(
     () => [...baseLayers, ...rarityLayers, ...guildLayers, ...statsLayers, ...damageLayers],
     [baseLayers, rarityLayers, guildLayers, statsLayers, damageLayers],
@@ -155,6 +170,21 @@ function DamageWeaponCard({ weapon }: { weapon: GunWeapon | MeleeWeapon }) {
             />
           </PsdOverlay>
         )}
+
+        {/* v0.12 flat base-damage numbers, one per row, in the reserved
+            column-1 dice slot. */}
+        {baseNumbers.map(({ row, value, slot }) => (
+          <PsdOverlay
+            key={row}
+            x={slot.x}
+            y={slot.y}
+            width={slot.width}
+            height={slot.height}
+            className="weapon-card__damage-number-wrap"
+          >
+            <span className="weapon-card__damage-number">{value}</span>
+          </PsdOverlay>
+        ))}
 
         {/* Name across the top */}
         {nameSlot && (

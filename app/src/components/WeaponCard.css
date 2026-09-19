@@ -81,6 +81,23 @@
   justify-content: flex-start;
 }
 
+/* v0.12 flat base-damage number, painted into the reserved column-1 dice slot.
+   Sized to fill the die slot so it reads at the same scale as the die art it
+   replaces. */
+.weapon-card__damage-number-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.weapon-card__damage-number {
+  font-family: 'Bahnschrift', 'Bahnschrift Condensed', system-ui, sans-serif;
+  font-weight: 700;
+  font-size: 92px;
+  line-height: 1;
+  color: #ffffff;
+}
+
 /* Support spell HP icon, painted into the trailing damage-icon slot of the
    AOE row. The slot bounds come from the PSD's damage-icon layers (~80×85),
    so the image just fills its container with object-contain so the symbol's

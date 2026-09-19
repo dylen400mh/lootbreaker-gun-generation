@@ -45,7 +45,7 @@ A single test file: `npx vitest run src/generation/procedure.test.ts` (add `-t "
 
 `procedure.ts → generateWeapon(opts, askChoice)` is a direct, ordered transcription of each spec's procedure. `opts.category` (`'gun' | 'melee' | 'shield' | 'spell' | 'potion'`) dispatches the per-category table set and procedure. **Gun and melee share the same overall shape** (damage card with elements, modules, red text); **shield is structurally different** (no damage dice, no elements, no modules, no red text) and gets its own 7-step flow; **spell** has two further sub-types (Offensive and Support) rolled at Step 0 on a 1d20, each running its own multi-step flow; **potion is the simplest category** — rarity then a per-rarity result roll that picks one row that provides both a name and a description (no weapon type, no guild, no damage, no red text).
 
-- Step 1: **Guns** roll Weapon Type on 1d8 (slot 5 silently re-rolls, slot 8 = Player Choice); **melee** rolls Weapon Type on 2d4 (sum 8 = Player Choice); **shields** skip weapon-type entirely and roll Guild on 2d8 (sum 16 = Player Choice); **spells** roll Sub-Type on 1d20 (1–16 Offensive, 17–19 Support, 20 = Player Choice); **potions** start at Rarity — no Step 1.
+- Step 1: **Guns** roll Weapon Type on 1d8 (slots 1–6 = the six types, slots 7 & 8 = Player Choice; v0.12); **melee** rolls Weapon Type on 2d4 (sum 8 = Player Choice); **shields** skip weapon-type entirely and roll Guild on 2d8 (sum 16 = Player Choice); **spells** roll Sub-Type on 1d20 (1–16 Offensive, 17–19 Support, 20 = Player Choice); **potions** start at Rarity — no Step 1.
 - Steps 2–6: gun/melee share shape (rarity → elements → module chance → guild → red text); shield runs (rarity → capacity → regeneration → guild passive → threshold modifier); spell runs (rarity → delivery type → base damage/healing → guild → damage type or healing type → conditions for offensive only); potions are just (rarity → per-rarity result roll: 2d12 Common, 1d20 Uncommon, 2d8 Rare, 1d12 Epic, 1d10 Legendary). Shared tables live under `tables/shared/` (rarity, naming pieces); per-category tables under `tables/{gun,melee,shield,spell,potion}/`.
 - Final step (Name): **guns** produce `Prefix ABBR-### Suffix`; **melee** does a coin flip between prefix and suffix joined with a per-type base name (Stiletto, Maul, Glaive, …); **shields** roll 1d100 to pick prefix vs suffix and join it with a 1d10 base name (Aegis, Bulwark, …), optionally appending a 1–3 digit numeric suffix when the UI's `shieldDigits` toggle is on; **offensive spells** produce `Prefix [Delivery] of [DamageType]` from a 1d100 prefix (the spec list is byte-identical to the shared `PREFIXES` table, so it's re-exported rather than duplicated) — with the special case that Kinetic damage renames to `Kinetic Prefix [Delivery]`; **support spells** produce `Prefix [Delivery] of [HealingType]` from a 1d20 support-specific prefix list.
 
@@ -73,11 +73,14 @@ Maps a small set of source filenames to clean slugs and emits responsive WebP va
 
 These are intentional and live in code/tables, not in the spec — keep them in sync if you touch the relevant tables:
 
-**Guns**
-- **Scout Rifle is dropped.** d8 slot 5 silently re-rolls (`procedure.ts` loop).
+**Guns** (migrated to the v0.12 spec — `Lootbreaker_GunGeneration_Version0dot12.pdf`)
+- **Scout Rifle is gone entirely.** The v0.12 d8 table maps 1–6 to the six weapon types and 7 & 8 to Player Choice — no silent re-roll (the old slot-5 re-roll is removed).
+- **Base damage is a flat integer**, not dice. `GUN_TYPES.damage` stores numeric strings (`'1'`, `'4'`, …) per tier × hit band (Minimum→minor, Medium→major, Maximum→grave). Elemental bonuses (`+1d6`) and Vandal Overheat stay dice. The card renders the number as an HTML overlay in the reserved column-1 dice slot (`damageRowLayers` emits a `number` slot; `WeaponCard` draws it via `findDieSlot`).
+- **Card row labels are still `Minor/Major/Grave`.** The v0.12 relabel to `<13` / `14 - 19` / `20+` is deferred pending client confirmation of the exact label text and whether new PSDs will ship. No `extract-psd.mjs`/raster changes were made.
+- **Noctra keeps the spec's 7th module ("Deadly Rounds")**, which the 1d6 module roll can't reach — transcribed for fidelity, unreachable in code. Flamekeepers "Blazing Step" ships with no effect text (spec omits it).
 - **Launcher's asset slug is `plasma-caster`** because the source PNG depicts a plasma-style gun. The user-facing label and `WeaponType` are still `Launcher`; only the on-disk slug differs.
-- **Noctra modules trimmed from 7 to 6** (the unreachable "Deadly Rounds" was removed).
 - The `Element` type only includes the 8 elements the gun procedure actually rolls; `Gold`, `Slashing`, `Luminite`, `Kinetic` icons exist as art but are not part of generation.
+- **Melee and Spell are not yet migrated to v0.12** — they follow in separate PRs.
 
 **Melee**
 - **Dagger's asset slug is `dagger`** but the source PNG file is `Kunai.png`. The user-facing label and `MeleeType` are `Dagger` per the spec; only the on-disk source filename differs.

@@ -134,6 +134,22 @@ export function findDie(
   );
 }
 
+// Bounds of a damage-row dice slot regardless of die size. Used to position an
+// HTML overlay (e.g. a flat base-damage number in v0.12) where a die would go.
+// All die-size variants at a given (row, column) share the same bounds.
+export function findDieSlot(
+  key: ManifestKey,
+  row: DamageRowName,
+  column: number,
+): PsdLayer | undefined {
+  return MANIFESTS[key].layers.find(
+    (l) =>
+      l.semantic?.kind === 'die' &&
+      l.semantic.row === row &&
+      l.semantic.column === column,
+  );
+}
+
 // The two flanking lines of the guild strip. The guild name itself varies per
 // roll (not in the PSD), so it's rendered as an HTML overlay in matching
 // typography rather than coming from a layer here.
