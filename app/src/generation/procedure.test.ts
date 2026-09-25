@@ -92,6 +92,31 @@ describe('generateWeapon', () => {
       expect(allowed).toContain(w.type);
     }
   });
+
+  // v0.12: gun base damage is a flat integer per hit band, not dice.
+  it('gun base damage rows are flat integers (v0.12)', async () => {
+    for (let seed = 1; seed <= 60; seed += 1) {
+      const w = await generateWeapon(
+        { category: 'gun', tier: 2, redTextEnabled: false, seed },
+        autoChoice(),
+      );
+      assertDamageWeapon(w);
+      expect(w.damage.minor).toMatch(/^\d+$/);
+      expect(w.damage.major).toMatch(/^\d+$/);
+      expect(w.damage.grave).toMatch(/^\d+$/);
+    }
+  });
+
+  it('honors an explicit weapon type with the v0.12 damage/range (Sniper Rifle)', async () => {
+    const w = await generateWeapon(
+      { category: 'gun', tier: 3, redTextEnabled: false, seed: 7, weaponType: 'Sniper Rifle' },
+      autoChoice(),
+    );
+    assertDamageWeapon(w);
+    expect(w.type).toBe('Sniper Rifle');
+    expect(w.range).toBe('18');
+    expect(w.damage).toEqual({ minor: '7', major: '9', grave: '11' });
+  });
 });
 
 describe('generateWeapon(melee)', () => {

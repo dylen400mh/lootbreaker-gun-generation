@@ -9,8 +9,9 @@ export interface GuildDef {
   bonusByRarity: Record<Rarity, string>;
 }
 
-// Source: spec Step 2. "X" = no bonus (Common). Bonuses preserved as written
-// (mix of dice notation and flat numbers).
+// Source: spec v0.12 Step Two. "X" = no bonus (Common). Bonuses preserved as
+// written (mix of dice notation and flat numbers). Dominion is the only guild
+// with a Common-tier bonus.
 
 export const GUILD_BY_D12: ReadonlyArray<DamageGuildName> = [
   'Vandal',
@@ -69,14 +70,14 @@ export const GUILDS: Record<DamageGuildName, GuildDef> = {
   Dominion: {
     name: 'Dominion',
     passive:
-      "Smart-Bullets (Tiny micro-jets in each bullet help increase the wielder's Accuracy)",
-    bonusLabel: 'Accuracy',
+      'Riot Suppressor (All Dominion Guns grant a Bane to Impact Rolls to offer more damage)',
+    bonusLabel: 'Bonus Damage',
     bonusByRarity: {
-      Common: 'X',
-      Uncommon: '+1',
-      Rare: '+1',
-      Epic: '+2',
-      Legendary: '+3',
+      Common: '+1',
+      Uncommon: '+2',
+      Rare: '+4',
+      Epic: '+6',
+      Legendary: '+8',
     },
   },
   Ordis: {
@@ -173,7 +174,7 @@ export const GUILDS: Record<DamageGuildName, GuildDef> = {
   Banshee: {
     name: 'Banshee',
     passive:
-      'Curse of the Banshee (Major Hits apply Dark Affliction 1, Grave hits apply Dark Affliction 3. Additionally, Banshee weapons grant bonus Damage to Targets that suffer from Afflictions [Any Affliction])',
+      'Curse of the Banshee ([20+] Hits apply Dark Affliction 1. Additionally, Banshee weapons grant bonus Damage to Targets that suffer from Afflictions [Any Affliction])',
     bonusLabel: 'Damage to Afflicted Targets',
     bonusByRarity: {
       Common: 'X',

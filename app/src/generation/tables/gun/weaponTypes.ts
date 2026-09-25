@@ -9,86 +9,95 @@ export interface GunTypeDef {
   damage: Record<Tier, DamageRow>;
 }
 
-// Source: spec Step 1. v1 change:
-//   - Scout Rifle is dropped (slot 5 of the d8 silently re-rolls in procedure.ts).
+// Source: spec v0.12 Step One. Base damage is now a flat integer per tier ×
+// hit band (Minimum/Medium/Maximum) rather than dice — stored as numeric
+// strings so the shared DamageRow shape (dice strings for melee/spell) is
+// unchanged. Row keys map Minimum→minor, Medium→major, Maximum→grave.
+//
+// v1/v0.12 change: Scout Rifle is gone entirely (no longer a d8 slot); d8
+// slots 7 and 8 are both Player Choice.
 
 export const GUN_TYPES: Record<GunType, GunTypeDef> = {
   Pistol: {
     type: 'Pistol',
     baseDamage: 'Kinetic',
-    range: '8',
-    special: 'Light Frame (Dual Wield Attacks gain Bonus to Accuracy or Damage)',
+    range: '10',
+    special:
+      'Fan the Hammer: After making an Attack with a pistol at a target, as an Interact Action [1 AP], you may make a second attack at the same target with a Bane. This attack deals half damage.',
     damage: {
-      1: { minor: '1d4', major: '1d4', grave: '2d4' },
-      2: { minor: '1d6', major: '1d6', grave: '2d6' },
-      3: { minor: '2d6', major: '2d8', grave: '2d10' },
+      1: { minor: '1', major: '2', grave: '4' },
+      2: { minor: '2', major: '3', grave: '5' },
+      3: { minor: '3', major: '4', grave: '6' },
     },
   },
   SMG: {
     type: 'SMG',
     baseDamage: 'Kinetic',
-    range: '5',
+    range: '7',
+    special: 'Mobile: You gain +1 Speed after attacking with this weapon',
     damage: {
-      1: { minor: '1d4', major: '2d4', grave: '3d4' },
-      2: { minor: '2d4', major: '2d6', grave: '3d6' },
-      3: { minor: '2d6', major: '2d8', grave: '3d10' },
+      1: { minor: '2', major: '4', grave: '7' },
+      2: { minor: '4', major: '6', grave: '9' },
+      3: { minor: '6', major: '8', grave: '11' },
     },
   },
   Shotgun: {
     type: 'Shotgun',
     baseDamage: 'Kinetic',
-    range: '2',
+    range: '5',
+    special:
+      'Pointblank: Adjacent targets take an additional +1d6 Damage (Matching Damage Type)',
     damage: {
-      1: { minor: '1d6', major: '2d6', grave: '2d8' },
-      2: { minor: '1d8', major: '2d8', grave: '2d10' },
-      3: { minor: '1d10', major: '2d10', grave: '3d12' },
+      1: { minor: '4', major: '6', grave: '10' },
+      2: { minor: '6', major: '8', grave: '12' },
+      3: { minor: '8', major: '10', grave: '14' },
     },
   },
   'Combat Rifle': {
     type: 'Combat Rifle',
     baseDamage: 'Kinetic',
-    range: '8',
+    range: '10',
     damage: {
-      1: { minor: '1d6', major: '1d8', grave: '2d8' },
-      2: { minor: '1d8', major: '1d10', grave: '2d10' },
-      3: { minor: '1d10', major: '1d12', grave: '2d12' },
+      1: { minor: '4', major: '6', grave: '8' },
+      2: { minor: '6', major: '8', grave: '10' },
+      3: { minor: '8', major: '10', grave: '12' },
     },
   },
   'Sniper Rifle': {
     type: 'Sniper Rifle',
     baseDamage: 'Kinetic',
-    range: '12',
+    range: '18',
     special:
-      "Steady Shot (Reduce Movement Score to 0 to gain bonus to Accuracy Roll — can't use if already moved this turn)",
+      'Steady Shot: As an Interact Action [1 AP], reduce your Speed to 0. You gain a Boost on your Impact Roll with this weapon. You cannot use your Speed Score until your next turn.',
     damage: {
-      1: { minor: '1d4', major: '1d6', grave: '2d6' },
-      2: { minor: '1d6', major: '1d8', grave: '2d8' },
-      3: { minor: '1d8', major: '1d10', grave: '2d10' },
+      1: { minor: '3', major: '5', grave: '7' },
+      2: { minor: '5', major: '7', grave: '9' },
+      3: { minor: '7', major: '9', grave: '11' },
     },
   },
   Launcher: {
     type: 'Launcher',
     baseDamage: 'Kinetic',
-    range: '4',
-    special: 'Splash 1 (Deal 1/2 Damage to Adjacent Targets)',
+    range: '6',
+    special: 'Splash 1 (Deal 1/2 Damage to adjacent targets)',
     damage: {
-      1: { minor: '1d8', major: '1d10', grave: '2d10' },
-      2: { minor: '1d10', major: '1d12', grave: '2d12' },
-      3: { minor: '1d12', major: '1d20 + 1d12', grave: '2d20 + 1d12' },
+      1: { minor: '4', major: '6', grave: '9' },
+      2: { minor: '6', major: '8', grave: '11' },
+      3: { minor: '8', major: '10', grave: '13' },
     },
   },
 };
 
-// d8 roll → weapon type. Slot 5 (Scout Rifle position) is null and triggers a re-roll
-// in procedure.ts. Slot 8 ("Player Choice") is also null and triggers the choice modal.
+// d8 roll → weapon type. Slots 7 and 8 ("Player Choice") are null and trigger
+// the choice modal in procedure.ts.
 export const GUN_BY_D8: ReadonlyArray<GunType | null> = [
   'Pistol', // 1
   'SMG', // 2
   'Shotgun', // 3
   'Combat Rifle', // 4
-  null, // 5 — Scout Rifle (dropped in v1; re-roll)
-  'Sniper Rifle', // 6
-  'Launcher', // 7
+  'Sniper Rifle', // 5
+  'Launcher', // 6
+  null, // 7 — Player Choice
   null, // 8 — Player Choice
 ];
 

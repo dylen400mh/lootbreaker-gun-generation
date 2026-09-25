@@ -31,14 +31,22 @@ export function damageRowLayers(
   const slots: Array<
     | { kind: 'icon'; element: 'Kinetic' | 'Slashing' | string }
     | { kind: 'die'; sides: number }
+    | { kind: 'number' }
   > = [];
 
-  // Base-type dice → base damage icon.
+  // Base damage → base damage icon. v0.12 base damage is a flat integer (no
+  // dice terms); it occupies a single leading slot rendered as an HTML number
+  // overlay by the card, so reserve column 1 for it here without a PSD layer.
+  // Dice-based base formulas (melee/spell, pre-v0.12) still emit die layers.
   const baseTerms = parseDamage(baseFormula);
-  for (const term of baseTerms) {
-    for (let i = 0; i < term.count; i += 1) {
-      slots.push({ kind: 'die', sides: term.sides });
+  if (baseTerms.length > 0) {
+    for (const term of baseTerms) {
+      for (let i = 0; i < term.count; i += 1) {
+        slots.push({ kind: 'die', sides: term.sides });
+      }
     }
+  } else if (/\d/.test(baseFormula)) {
+    slots.push({ kind: 'number' });
   }
   slots.push({ kind: 'icon', element: baseDamage });
 
@@ -58,6 +66,9 @@ export function damageRowLayers(
   for (let i = 0; i < slots.length && i < MAX_COLUMNS; i += 1) {
     const column = i + 1;
     const slot = slots[i];
+    // 'number' slots reserve a column but carry no PSD layer — the flat
+    // base-damage number is drawn as an HTML overlay by the card.
+    if (slot.kind === 'number') continue;
     const layer =
       slot.kind === 'die'
         ? findDie(manifestKey, row, column, slot.sides)

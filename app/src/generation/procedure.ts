@@ -155,8 +155,6 @@ const TABLES_BY_DAMAGE_CATEGORY: Record<'gun' | 'melee', CategoryTables> = {
   },
 };
 
-const MAX_TYPE_REROLLS = 16;
-
 export async function generateWeapon(
   opts: GenerateOptions,
   askChoice: AskChoice,
@@ -634,25 +632,17 @@ async function rollGunType(
 ): Promise<ResolvedType> {
   let type: GunType | null = (opts.weaponType as GunType | undefined) ?? null;
   if (type == null) {
-    for (let i = 0; i < MAX_TYPE_REROLLS; i += 1) {
-      const roll = d(rng, 8);
-      const slot = GUN_BY_D8[roll - 1];
-      if (slot != null) {
-        type = slot;
-        break;
-      }
-      if (roll === 8) {
-        type = await askChoice({
-          title: 'Player Choice — Weapon Type',
-          description: 'You rolled an 8. Choose the weapon type.',
-          options: GUN_PLAYER_CHOICE_TYPES.map((t) => ({ label: t, value: t })),
-        });
-        break;
-      }
-      // roll === 5: slot is null and not Player Choice → re-roll silently.
-    }
-    if (type == null) {
-      throw new Error('Failed to resolve weapon type after re-rolls.');
+    // v0.12 d8: slots 1-6 are weapon types; 7 and 8 are Player Choice.
+    const roll = d(rng, 8);
+    const slot = GUN_BY_D8[roll - 1];
+    if (slot != null) {
+      type = slot;
+    } else {
+      type = await askChoice({
+        title: 'Player Choice — Weapon Type',
+        description: `You rolled a ${roll}. Choose the weapon type.`,
+        options: GUN_PLAYER_CHOICE_TYPES.map((t) => ({ label: t, value: t })),
+      });
     }
   }
   const def = GUN_TYPES[type];

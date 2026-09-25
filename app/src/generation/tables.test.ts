@@ -92,11 +92,25 @@ describe('module chance', () => {
 });
 
 describe('guild modules', () => {
-  it('every guild has exactly 6 modules', () => {
+  it('every guild has at least the 6 modules the 1d6 roll can reach', () => {
     const guildNames: DamageGuildName[] = [...GUILD_BY_D12];
     for (const g of guildNames) {
-      expect(GUILD_MODULES[g]).toHaveLength(6);
+      expect(GUILD_MODULES[g].length).toBeGreaterThanOrEqual(6);
+      for (let i = 0; i < 6; i += 1) {
+        expect(GUILD_MODULES[g][i].name).toBeTruthy();
+        expect(GUILD_MODULES[g][i].text).toBeTruthy();
+      }
     }
+  });
+
+  // v0.12 spec fidelity: Noctra lists a 7th module ("Deadly Rounds") that the
+  // 1d6 module roll can never reach. Kept in the data as written.
+  it('only Noctra carries the spec’s unreachable 7th module', () => {
+    const guildNames: DamageGuildName[] = [...GUILD_BY_D12];
+    for (const g of guildNames) {
+      expect(GUILD_MODULES[g]).toHaveLength(g === 'Noctra' ? 7 : 6);
+    }
+    expect(GUILD_MODULES.Noctra[6].name).toBe('Deadly Rounds');
   });
 });
 
