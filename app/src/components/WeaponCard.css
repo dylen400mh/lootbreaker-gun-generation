@@ -81,9 +81,9 @@
   justify-content: flex-start;
 }
 
-/* v0.12 flat base-damage number, painted into the reserved column-1 dice slot.
-   Sized to fill the die slot so it reads at the same scale as the die art it
-   replaces. */
+/* v0.12 flat base-damage number, painted into the raster's "X" value cell.
+   Sized to match the baked "< 13 / 14 - 19 / 20+" labels and the X placeholder
+   (≈33px glyph height on the 1000px canvas). */
 .weapon-card__damage-number-wrap {
   display: flex;
   align-items: center;
@@ -93,7 +93,7 @@
 .weapon-card__damage-number {
   font-family: 'Bahnschrift', 'Bahnschrift Condensed', system-ui, sans-serif;
   font-weight: 700;
-  font-size: 92px;
+  font-size: 46px;
   line-height: 1;
   color: #ffffff;
 }

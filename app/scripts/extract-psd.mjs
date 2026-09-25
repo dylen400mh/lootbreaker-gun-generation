@@ -30,7 +30,7 @@ const ROOT = resolve(__dirname, '..');
 const ASSETS_ROOT = resolve(__dirname, '..', '..', 'Lootbreaker_AppResources');
 
 const DEFAULT_PSD_BY_CATEGORY = {
-  gun: join(ASSETS_ROOT, 'Weapon_PSD.psd'),
+  gun: join(ASSETS_ROOT, 'GUN_Weapon_Cards_Version_0dot12.psd'),
   melee: join(ASSETS_ROOT, 'Melee Weapon Assets', 'Melee_Weapon_Card_Root.psd'),
   shield: join(ASSETS_ROOT, 'Shield Assets', 'Shield_Base.psd'),
   potion: join(ASSETS_ROOT, 'Potion Assets', 'Potion_Base.psd'),
@@ -97,6 +97,12 @@ const SKIP_NAMES = new Set([
   'Size and Location rectangle',
   'Mythic Rarity Setting',
   'Damage Section',
+  // v0.12 card PSDs ship the previous stats-table raster as "Statistics Table
+  // OLD" alongside the live "Statistics Tables NEW" — skip the stale one.
+  'Statistics Table OLD',
+  // Decorative Luminite/unique glyphs sitting in the damage-row band; not part
+  // of gun generation (Luminite isn't a rolled element).
+  'Unique Symbols',
 ]);
 
 // Semantic mappings discovered by visual inspection of extracted layers.
@@ -367,6 +373,33 @@ function resolveStrokeStyle(stroke) {
 // of each so the HTML value overlays don't visually collide with the "X".
 function postProcessRaster(layer, newPath) {
   const leaf = newPath[newPath.length - 1];
+
+  // v0.12 gun/melee/spell damage card: "Statistics Tables NEW" bakes in the
+  // dynamic header ("Tier 1 WEAPONTYPE" / "Range: XX"), the "< 13 / 14 - 19 /
+  // 20+" hit-band row labels, an "X" base-damage placeholder per row, and an
+  // "Ability/Description" footer placeholder. Keep the labels + dividers; clear
+  // the header, the three "X" value cells (the live base-damage number overlay
+  // sits there), and the footer. Measured in layer-local coords: layer bbox is
+  // 71,567 so canvas x=71 → local 0; dividers at local y 53/143/229/314; the
+  // "X" cells sit at canvas x≈237-254 → local x≈166-183.
+  if (leaf === 'Statistics Tables NEW') {
+    const src = layer.canvas;
+    const out = createCanvas(src.width, src.height);
+    const ctx = out.getContext('2d');
+    ctx.drawImage(src, 0, 0);
+    // Header row (above the first divider at local y≈53).
+    ctx.clearRect(0, 0, src.width, 50);
+    // Footer "Ability/Description" (below the last divider at local y≈314).
+    ctx.clearRect(0, 316, src.width, src.height - 316);
+    // The "X" base-damage placeholder in each row, between the dividers so the
+    // rule lines stay intact.
+    const xCell = { x: 150, w: 60 };
+    for (const [y1, y2] of [[55, 141], [145, 227], [231, 312]]) {
+      ctx.clearRect(xCell.x, y1, xCell.w, y2 - y1);
+    }
+    return out;
+  }
+
   if (leaf === 'Statistics Table') {
     const src = layer.canvas;
     const out = createCanvas(src.width, src.height);
@@ -680,7 +713,12 @@ function deriveSemantic(path, leafIdx) {
   ) {
     return { kind: 'potionArt' };
   }
-  if (leaf === 'Statistics Table') return { kind: 'statisticsTable' };
+  // v0.12 card PSDs renamed the live stats raster to "Statistics Tables NEW"
+  // (the old one is skipped via SKIP_NAMES). Potion still ships "Statistics
+  // Table".
+  if (leaf === 'Statistics Table' || leaf === 'Statistics Tables NEW') {
+    return { kind: 'statisticsTable' };
+  }
   if (leaf === 'Name Text Box') return { kind: 'nameTextbox' };
   if (leaf === 'Guild Text Box') return { kind: 'guildTextbox' };
   if (leaf === 'Quote Text Box') return { kind: 'quoteTextbox' };

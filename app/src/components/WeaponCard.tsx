@@ -171,14 +171,17 @@ function DamageWeaponCard({ weapon }: { weapon: GunWeapon | MeleeWeapon }) {
           </PsdOverlay>
         )}
 
-        {/* v0.12 flat base-damage numbers, one per row, in the reserved
-            column-1 dice slot. */}
+        {/* v0.12 flat base-damage numbers, one per row — drawn at the size and
+            position of the raster's "X" value cell (canvas center ≈ slot.x+75,
+            the same text line as the "< 13 / 14 - 19 / 20+" labels). The die
+            slot (170-257) is wider/taller than the text line, so center a
+            fixed-width box on the X and let flex-centering align it. */}
         {baseNumbers.map(({ row, value, slot }) => (
           <PsdOverlay
             key={row}
-            x={slot.x}
-            y={slot.y}
-            width={slot.width}
+            x={slot.x + 45}
+            y={slot.y + 8}
+            width={60}
             height={slot.height}
             className="weapon-card__damage-number-wrap"
           >
