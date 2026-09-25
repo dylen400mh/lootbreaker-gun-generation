@@ -220,6 +220,32 @@ describe('generateWeapon(melee)', () => {
       expect(w.baseDamage).toBe(expected[w.type as string]);
     }
   });
+
+  // v0.12: melee base damage is a flat integer per hit band, not dice.
+  it('melee base damage rows are flat integers (v0.12)', async () => {
+    for (let seed = 1; seed <= 60; seed += 1) {
+      const w = await generateWeapon(
+        { category: 'melee', tier: 2, redTextEnabled: false, seed },
+        autoChoice(),
+      );
+      assertDamageWeapon(w);
+      expect(w.damage.minor).toMatch(/^\d+$/);
+      expect(w.damage.major).toMatch(/^\d+$/);
+      expect(w.damage.grave).toMatch(/^\d+$/);
+    }
+  });
+
+  it('honors an explicit weapon type with the v0.12 damage/range (Warhammer)', async () => {
+    const w = await generateWeapon(
+      { category: 'melee', tier: 3, redTextEnabled: false, seed: 7, weaponType: 'Warhammer' },
+      autoChoice(),
+    );
+    assertDamageWeapon(w);
+    expect(w.type).toBe('Warhammer');
+    expect(w.range).toBe('1/1');
+    expect(w.baseDamage).toBe('Kinetic');
+    expect(w.damage).toEqual({ minor: '12', major: '14', grave: '17' });
+  });
 });
 
 function assertShieldWeapon(w: Weapon): asserts w is import('./types').ShieldWeapon {
