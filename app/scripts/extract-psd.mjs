@@ -31,7 +31,7 @@ const ASSETS_ROOT = resolve(__dirname, '..', '..', 'Lootbreaker_AppResources');
 
 const DEFAULT_PSD_BY_CATEGORY = {
   gun: join(ASSETS_ROOT, 'GUN_Weapon_Cards_Version_0dot12.psd'),
-  melee: join(ASSETS_ROOT, 'Melee Weapon Assets', 'Melee_Weapon_Card_Root.psd'),
+  melee: join(ASSETS_ROOT, 'Melee Weapon Assets', 'Weapon_Cards_Version_0dot12.psd'),
   shield: join(ASSETS_ROOT, 'Shield Assets', 'Shield_Base.psd'),
   potion: join(ASSETS_ROOT, 'Potion Assets', 'Potion_Base.psd'),
 };

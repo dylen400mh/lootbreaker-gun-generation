@@ -85,7 +85,7 @@ These are intentional and live in code/tables, not in the spec — keep them in 
 **Melee** (migrated to the v0.12 spec — `Lootbreaker_MeleeWeaponGeneration_Version0dot12.pdf`)
 - **Base damage is a flat integer**, not dice — same treatment as guns (numeric strings in `MELEE_TYPES.damage`, rendered via the shared `DamageWeaponCard` number overlay). Updated ranges (Sword `1/3`, Axe `1/4`, Warhammer/Gauntlet `1/1`) and specials (Twinstrike, Cleave, Reach, Heavy, Forceful).
 - **Guilds:** only Dominion (→ Riot Suppressor, `+1/+2/+4/+6/+8`) and Banshee (Medium/Maximum wording) changed; the other 10 already matched v0.12. Modules and red-text re-transcribed verbatim. A few melee modules still read "Major and Grave Hits" (pre-v0.12 terminology) in the spec — kept as written (Ordis "Stalker Enhancement", Wytchwyrd "Curse-Born").
-- **Card row labels stay `Minor/Major/Grave`** (same deferral as guns; no PSD/extract work).
+- **Card visuals use the new v0.12 template** `Melee Weapon Assets/Weapon_Cards_Version_0dot12.psd` (RGB), same as guns: `Statistics Tables NEW` bakes the `< 13` / `14 - 19` / `20+` hit-band labels, base-damage numbers overlaid in the value cell. Uses the shared `extract-psd` NEW-table handling and `WeaponCard` number renderer.
 - **Dagger's asset slug is `dagger`** but the source PNG file is `Kunai.png`. The user-facing label and `MeleeType` are `Dagger` per the spec; only the on-disk source filename differs.
 
 **Shields**

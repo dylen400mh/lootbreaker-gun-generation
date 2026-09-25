@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useLayoutEffect, useRef, useState } from 'react';
 import type { CSSProperties, ReactNode } from 'react';
 import { PSD_CANVAS, type PsdLayer } from '../assets/psdManifest';
 import './PsdComposite.css';
@@ -15,12 +15,16 @@ export function PsdComposite({ layers, children }: Props) {
   const wrapRef = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState(1);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const el = wrapRef.current;
     if (!el) return;
+    // Measure synchronously on mount so cards that mount already laid out
+    // (e.g. after a category-tab switch, where the ResizeObserver's first
+    // async callback can be missed) render at the correct scale immediately.
+    if (el.clientWidth > 0) setScale(el.clientWidth / PSD_CANVAS.width);
     const ro = new ResizeObserver((entries) => {
       const w = entries[0]?.contentRect.width ?? el.clientWidth;
-      setScale(w / PSD_CANVAS.width);
+      if (w > 0) setScale(w / PSD_CANVAS.width);
     });
     ro.observe(el);
     return () => ro.disconnect();
