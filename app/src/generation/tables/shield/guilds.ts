@@ -1,7 +1,7 @@
 import type { GuildName, Rarity } from '../../types';
 
-// Source: spec Step 1 (2d8 guild table). Sums 2..16. Sum 16 = Player Choice.
-// Indexed [sum - 2] so the first entry is the 2d8 = 2 result.
+// Source: spec v0.12 "Determine Guild" (2d8). Sums 2..16. Sum 16 = Player
+// Choice. Indexed [sum - 2] so the first entry is the 2d8 = 2 result.
 export const SHIELD_GUILD_BY_2D8: ReadonlyArray<GuildName | 'PlayerChoice'> = [
   'Vandal',          // 2
   'Stormforged',     // 3
@@ -28,18 +28,15 @@ export const SHIELD_PLAYER_CHOICE_GUILDS: ReadonlyArray<GuildName> =
 export interface ShieldGuildDef {
   name: GuildName;
   passiveName: string;
-  // Full passive description text — transcribed verbatim per the spec. Two
-  // entries (Stormforged, Banshee) are truncated in the source PDF; preserve
-  // as-is rather than guessing.
+  // Full passive description text with a `{value}` placeholder for the
+  // per-rarity value. Transcribed verbatim from the v0.12 spec.
   description: string;
-  // The numeric value scales per rarity. "X" means no bonus at this rarity.
+  // The value scales per rarity. "X" means no bonus at this rarity.
   valueByRarity: Record<Rarity, string>;
 }
 
-// Source: spec Step 5 (Guild Bonuses). Transcribed verbatim per
-// CLAUDE.md spec-fidelity rule. Stormforged ("Voltaic Core: Decreases
-// incoming Volt") and Banshee ("Scream of Despair…") descriptions are cut
-// off in the PDF — preserved as-is.
+// Source: spec v0.12 "Determine Guild Bonuses". Transcribed verbatim per the
+// CLAUDE.md spec-fidelity rule.
 export const SHIELD_GUILDS: Record<GuildName, ShieldGuildDef> = {
   Vandal: {
     name: 'Vandal',
@@ -57,7 +54,7 @@ export const SHIELD_GUILDS: Record<GuildName, ShieldGuildDef> = {
   Stormforged: {
     name: 'Stormforged',
     passiveName: 'Voltaic Core',
-    description: '{value} Resistance to incoming Volt damage',
+    description: 'Gain {value} Volt Damage Resistance',
     valueByRarity: {
       Common: '+1',
       Uncommon: '+1',
@@ -82,7 +79,7 @@ export const SHIELD_GUILDS: Record<GuildName, ShieldGuildDef> = {
   Dominion: {
     name: 'Dominion',
     passiveName: 'Shield Excel',
-    description: '{value} bonus to Capacity',
+    description: '{value} Bonus to Capacity',
     valueByRarity: {
       Common: '+1',
       Uncommon: '+3',
@@ -93,40 +90,38 @@ export const SHIELD_GUILDS: Record<GuildName, ShieldGuildDef> = {
   },
   Ordis: {
     name: 'Ordis',
-    passiveName: 'Automatic Targeting',
-    description:
-      'Gain {value} to Accuracy Rolls against the last target that damaged you.',
-    valueByRarity: {
-      Common: 'X',
-      Uncommon: '+1',
-      Rare: '+1',
-      Epic: '+2',
-      Legendary: '+3',
-    },
-  },
-  'Ironwood Rangers': {
-    name: 'Ironwood Rangers',
-    passiveName: 'Passive Sound Dampeners',
-    description: 'Gain {value} to Shadow Checks',
+    passiveName: 'Nanomesh Barrier',
+    description: 'Gain {value} Kinetic Damage Resistance',
     valueByRarity: {
       Common: '+1',
-      Uncommon: '+2',
+      Uncommon: '+1',
       Rare: '+2',
       Epic: '+3',
       Legendary: '+5',
     },
   },
+  'Ironwood Rangers': {
+    name: 'Ironwood Rangers',
+    passiveName: 'Shadow Steps',
+    description: 'Gain Skills based on rarity: {value}',
+    valueByRarity: {
+      Common: 'X',
+      Uncommon: 'Disguise',
+      Rare: 'Disguise, Escape',
+      Epic: 'Disguise, Escape, Sneaking',
+      Legendary: 'Disguise, Escape, Sneaking, Lockpicking',
+    },
+  },
   Wytchwyrd: {
     name: 'Wytchwyrd',
-    passiveName: 'Hexfield',
-    description:
-      '{value} bonus to Checks against Spells, or other effects that would apply a Condition on you',
+    passiveName: 'Darkweave',
+    description: 'Gain {value} Dark Damage Resistance',
     valueByRarity: {
       Common: '+1',
       Uncommon: '+1',
       Rare: '+2',
-      Epic: '+2',
-      Legendary: '+3',
+      Epic: '+3',
+      Legendary: '+5',
     },
   },
   NecroTek: {
@@ -145,7 +140,7 @@ export const SHIELD_GUILDS: Record<GuildName, ShieldGuildDef> = {
   'Vow of Vending': {
     name: 'Vow of Vending',
     passiveName: "Paladin's Codex",
-    description: 'Gain {value} to Regeneration Score',
+    description: 'Gain a {value} bonus to Regeneration Score',
     valueByRarity: {
       Common: 'X',
       Uncommon: '+1',
@@ -158,7 +153,7 @@ export const SHIELD_GUILDS: Record<GuildName, ShieldGuildDef> = {
     name: 'Arkana',
     passiveName: 'Arcane Overflow',
     description:
-      'When casting a Spell, gain {value} to Damage (Matching Damage Type of Spell)',
+      'When casting a Spell, gain a {value} bonus to Damage (Matching Damage Type of Spell)',
     valueByRarity: {
       Common: 'X',
       Uncommon: '+1',
@@ -181,21 +176,20 @@ export const SHIELD_GUILDS: Record<GuildName, ShieldGuildDef> = {
   },
   Banshee: {
     name: 'Banshee',
-    passiveName: 'Scream of Despair',
-    description:
-      'The first time your Shields are depleted in an encounter, they release a scream of psychic energy, granting enemies within 8 Squares {value} to Willpower and Mind Checks until the end of their next turn.',
+    passiveName: 'Spectral Infusion',
+    description: 'Gain immunity to loud noises, gain {value} to Speed',
     valueByRarity: {
       Common: 'X',
-      Uncommon: '-1',
-      Rare: '-2',
-      Epic: '-3',
-      Legendary: '-5',
+      Uncommon: '+1',
+      Rare: '+1',
+      Epic: '+2',
+      Legendary: '+3',
     },
   },
   Fortis: {
     name: 'Fortis',
     passiveName: 'Bulwark Frame',
-    description: 'Provides {value}',
+    description: 'Bonus to Capacity, Penalty to Regeneration: {value}',
     valueByRarity: {
       Common: '+5 Capacity, -1 Regeneration',
       Uncommon: '+10 Capacity, -2 Regeneration',
@@ -206,15 +200,14 @@ export const SHIELD_GUILDS: Record<GuildName, ShieldGuildDef> = {
   },
   Ressurecta: {
     name: 'Ressurecta',
-    passiveName: 'Threshold Boost',
-    description: 'Increase Thresholds: {value}',
+    passiveName: 'Bulwark Barrier',
+    description: 'Gain Damage Resistance and Vulnerability: {value}',
     valueByRarity: {
-      Common: 'X',
-      Uncommon: '+1 Grave Hit Threshold',
-      Rare: '+2 Grave Hit Threshold',
-      Epic: '+1 Major Hit Threshold, +2 Grave Hit Threshold',
-      Legendary:
-        '+1 Minor Hit, +2 Major Hit and +3 to Grave Hit Thresholds',
+      Common: '+4 Fire Resistance, +4 Volt Vulnerability',
+      Uncommon: '+4 Acid Resistance, +4 Entropy Vulnerability',
+      Rare: '+4 Cold Resistance, +4 Dark Vulnerability',
+      Epic: '+4 Volt Resistance, +4 Light Vulnerability',
+      Legendary: '+4 Entropy Resistance, +4 Dark Vulnerability',
     },
   },
 };

@@ -36,14 +36,13 @@ import {
   SHIELD_GUILDS,
   SHIELD_PLAYER_CHOICE_GUILDS,
 } from './tables/shield/guilds';
-import { SHIELD_BASE_NAMES } from './tables/shield/naming';
+import {
+  SHIELD_BASE_NAMES,
+  SHIELD_PREFIXES,
+  SHIELD_SUFFIXES,
+} from './tables/shield/naming';
 import { CAPACITY_BY_TIER_RARITY } from './tables/shield/capacity';
 import { REGEN_BASE_BY_RARITY } from './tables/shield/regeneration';
-import { BASE_THRESHOLDS_BY_TIER } from './tables/shield/thresholds';
-import {
-  MOD_CHANCE_BY_RARITY,
-  THRESHOLD_MODIFIER_TABLE,
-} from './tables/shield/thresholdModifier';
 import { SUB_TYPE_BY_D20, SUB_TYPE_PLAYER_CHOICE } from './tables/spell/subType';
 import {
   OFFENSIVE_DELIVERY_BY_D20,
@@ -304,7 +303,7 @@ async function generateShield(
   // STEP 3 — Capacity (tier × rarity).
   const capacity = CAPACITY_BY_TIER_RARITY[opts.tier][rarity];
 
-  // STEP 4 — Regeneration base (rarity → integer; "+ MND" rendered literally).
+  // STEP 4 — Regeneration base (rarity → integer; "+ INT" rendered literally).
   const regenerationBase = REGEN_BASE_BY_RARITY[rarity];
 
   // STEP 5 — Guild passive value scaled by rarity.
@@ -314,20 +313,14 @@ async function generateShield(
     value: guild.valueByRarity[rarity],
   };
 
-  // STEP 6 — Base thresholds (player-tier only) + optional rarity-gated modifier.
-  const thresholds = BASE_THRESHOLDS_BY_TIER[opts.tier];
-  let thresholdModifier: ShieldWeapon['thresholdModifier'] = null;
-  if (d(rng, 100) <= MOD_CHANCE_BY_RARITY[rarity]) {
-    const modRoll = d(rng, 12);
-    thresholdModifier = THRESHOLD_MODIFIER_TABLE[modRoll - 1];
-  }
-
-  // STEP 7 — Name (1d100 split: 1–50 prefix, 51–100 suffix) + 1d10 base name.
-  const placementRoll = d(rng, 100);
-  const usePrefix = placementRoll <= 50;
+  // STEP 6 — Name. A shield gets either a prefix or a suffix (coin flip), from
+  // the shield-specific 1d100 tables (each entry spans two rolls → 50 entries),
+  // plus a 1d10 base name and optional trailing digits.
+  const usePrefix = d(rng, 2) === 1;
+  const nameRoll = d(rng, 100);
   const modifier = usePrefix
-    ? PREFIXES[d(rng, 100) - 1]
-    : SUFFIXES[d(rng, 100) - 1];
+    ? SHIELD_PREFIXES[Math.floor((nameRoll - 1) / 2)]
+    : SHIELD_SUFFIXES[Math.floor((nameRoll - 1) / 2)];
   const baseName = SHIELD_BASE_NAMES[d(rng, 10) - 1];
   // Optional digits — controlled by the UI checkbox. When on, roll the length
   // (1..3) then a uniform integer with that many digits.
@@ -346,8 +339,6 @@ async function generateShield(
     rarity,
     capacity,
     regenerationBase,
-    thresholds: { ...thresholds },
-    thresholdModifier,
     guildPassive,
     name: {
       kind: 'shield',

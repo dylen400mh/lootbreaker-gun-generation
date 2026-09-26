@@ -566,9 +566,9 @@
       ],
       "file": "psd/shield/layers/spell-defaultbox--table-2.png",
       "x": 61,
-      "y": 731,
+      "y": 498,
       "width": 877,
-      "height": 108,
+      "height": 118,
       "hidden": false,
       "opacity": 1,
       "semantic": {
@@ -584,8 +584,8 @@
       ],
       "file": "psd/shield/layers/spell-defaultbox--layer-61.png",
       "x": 61,
-      "y": 283,
-      "width": 877,
+      "y": 274,
+      "width": 429,
       "height": 205,
       "hidden": false,
       "opacity": 1,
@@ -602,8 +602,8 @@
         "Layer 62"
       ],
       "file": "psd/shield/layers/spell-defaultbox--layer-62.png",
-      "x": 61,
-      "y": 507,
+      "x": 510,
+      "y": 274,
       "width": 429,
       "height": 205,
       "hidden": false,
@@ -614,78 +614,6 @@
       }
     },
     {
-      "id": "spell-defaultbox--layer-63",
-      "name": "Layer 63",
-      "path": [
-        "Spell_DefaultBox",
-        "Layer 63"
-      ],
-      "file": "psd/shield/layers/spell-defaultbox--layer-63.png",
-      "x": 510,
-      "y": 507,
-      "width": 429,
-      "height": 205,
-      "hidden": false,
-      "opacity": 1,
-      "semantic": {
-        "kind": "effectsPanel",
-        "slot": "regen"
-      }
-    },
-    {
-      "id": "threshold-table",
-      "name": "Threshold Table",
-      "path": [
-        "Threshold Table"
-      ],
-      "file": "psd/shield/layers/threshold-table.png",
-      "x": 163,
-      "y": 322,
-      "width": 676,
-      "height": 124,
-      "hidden": false,
-      "opacity": 1,
-      "semantic": {
-        "kind": "thresholdTable"
-      }
-    },
-    {
-      "id": "layer-244",
-      "name": "Layer 244",
-      "path": [
-        "Layer 244"
-      ],
-      "file": "psd/shield/layers/layer-244.png",
-      "x": 319,
-      "y": 289,
-      "width": 71,
-      "height": 193,
-      "hidden": false,
-      "opacity": 1,
-      "semantic": {
-        "kind": "decorAccent",
-        "side": "left"
-      }
-    },
-    {
-      "id": "layer-245",
-      "name": "Layer 245",
-      "path": [
-        "Layer 245"
-      ],
-      "file": "psd/shield/layers/layer-245.png",
-      "x": 610,
-      "y": 289,
-      "width": 71,
-      "height": 193,
-      "hidden": false,
-      "opacity": 1,
-      "semantic": {
-        "kind": "decorAccent",
-        "side": "right"
-      }
-    },
-    {
       "id": "regen-table",
       "name": "Regen Table",
       "path": [
@@ -693,7 +621,7 @@
       ],
       "file": "psd/shield/layers/regen-table.png",
       "x": 617,
-      "y": 547,
+      "y": 314,
       "width": 216,
       "height": 125,
       "hidden": false,
@@ -710,7 +638,7 @@
       ],
       "file": "psd/shield/layers/capacity-table.png",
       "x": 207,
-      "y": 547,
+      "y": 314,
       "width": 140,
       "height": 125,
       "hidden": false,

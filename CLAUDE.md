@@ -9,7 +9,7 @@ Two top-level pieces:
 - `Lootbreaker_AppResources/` — the **authoritative specs**:
   - Guns: `Lootbreaker_GunGeneration_Version0dot10_StepByStep.md` (`.pdf` alongside), `Weapon_PSD.psd` template, source art (`Weapon Art/`, `Icons/`, `Dice/`).
   - Melee: `Melee Weapon Assets/Lootbreaker_MeleeWeaponGeneration_Version0dot10.pdf`, `Melee_Weapon_Card_Root.psd` template, and the 6 melee weapon PNGs in the same folder.
-  - Shields: `Shield Assets/Shield_Generation_V_0dot10.pdf` (`.odt` alongside) and `Shield_Base.psd` template. No raw weapon art — the shield card is fully PSD-driven.
+  - Shields: `Shield Assets/Shield_Generation_V_0dot12.pdf` (v0.10 `.pdf`/`.odt` alongside) and `Shield_Cards_Version_0dot12.psd` template (must be RGB). No raw weapon art — the shield card is fully PSD-driven.
   - Spells: `Spell Assets/Spell_Generation_V0_dot_10.pdf` (`.odt` alongside) and two PSDs — `Spell_AOE_Base.psd` (one Damage Section MINOR row for Line/Cone/Cube/Cylinder/Sphere deliveries) and `Spell_Missile_Beam_Base.psd` (Minor/Major/Grave rows for Missile/Beam/Multi-Target Missile deliveries). No raw weapon art — both spell cards are fully PSD-driven.
   - Potions: `Potion Assets/Potion List New Master.pdf` and `Potion_Base.psd` template. No raw weapon art — the potion card is fully PSD-driven. The PSD ships a hero potion-bottle illustration baked in as a single raster layer.
 - `app/` — Vite + React 19 + TypeScript web app that runs all five v0.10 procedures and lets the user switch between them via the category tabs. **All commands below run from `app/`.**
@@ -88,8 +88,13 @@ These are intentional and live in code/tables, not in the spec — keep them in 
 - **Card visuals use the new v0.12 template** `Melee Weapon Assets/Weapon_Cards_Version_0dot12.psd` (RGB), same as guns: `Statistics Tables NEW` bakes the `< 13` / `14 - 19` / `20+` hit-band labels, base-damage numbers overlaid in the value cell. Uses the shared `extract-psd` NEW-table handling and `WeaponCard` number renderer.
 - **Dagger's asset slug is `dagger`** but the source PNG file is `Kunai.png`. The user-facing label and `MeleeType` are `Dagger` per the spec; only the on-disk source filename differs.
 
-**Shields**
+**Shields** (migrated to the v0.12 spec — `Shield Assets/Shield_Generation_V_0dot12.pdf`)
 - No source weapon art — the shield card is fully PSD-driven (no `optimize-assets.mjs` slugs to keep in sync).
+- **Thresholds are gone.** v0.12 shields have no Impact-Threshold table or threshold modifier — those tables/types were removed. A shield is now just Guild (2d8) → Rarity (2d6) → Capacity (tier × rarity) → Regeneration (`N + INT`, rarity-only, no tier) → Guild Bonus → Name.
+- **Regeneration is `N + INT`** (was `+ MND`); base 1..5 by rarity, unchanged across tiers.
+- **Guild bonuses re-transcribed** to v0.12 (Ordis→Nanomesh Barrier, Ironwood→Shadow Steps, Wytchwyrd→Darkweave, Banshee→Spectral Infusion, Ressurecta→Bulwark Barrier changed; others mostly matched). 14 guilds (2d8 adds Fortis + Ressurecta).
+- **Naming uses shield-specific 1d100 prefix/suffix lists** (`SHIELD_PREFIXES` / `SHIELD_SUFFIXES`, 50 each over paired rolls), not the shared gun/melee lists — plus a 1d10 base name and optional digits. A shield gets either a prefix or a suffix.
+- **Card uses the new v0.12 template** `Shield Assets/Shield_Cards_Version_0dot12.psd` (RGB, root group `Base`). Two framed stat boxes (Capacity left, Regeneration right) over an effects-box header (`Tier X Shield | Guild`) with the guild passive below — no Threshold table. `getShieldTableLayers` renders capacity/regen/effectsBox/quote (the `Statistics Table` strip is skipped — it bakes a stray "Effects" label).
 
 **Potions**
 - No source weapon art — the potion card is fully PSD-driven.

@@ -267,13 +267,6 @@ export interface MeleeWeapon extends DamageWeaponCommon {
   name: Extract<WeaponName, { kind: 'melee' }>;
 }
 
-export interface ShieldThresholdModifier {
-  name: string;
-  minor: number;
-  major: number;
-  grave: number;
-}
-
 // One per-guild passive scaled by rarity. Description text is constant across
 // rarities; only the value (e.g. "+1", "1d6", "+5 Capacity, -1 Regeneration")
 // changes. Spec uses literal "X" for Common when the guild has no bonus.
@@ -308,17 +301,12 @@ export interface ShieldWeapon {
   tier: Tier;
   guild: GuildName;
   rarity: Rarity;
-  // Capacity is rarity × tier (3×5 table). Stored as the resolved scalar.
+  // Capacity is tier × rarity (3×5 table). Stored as the resolved scalar.
   capacity: number;
-  // Spec writes regeneration as "<base> + MND" where base depends on rarity
-  // (1..5) and MND is a player stat we don't evaluate. Card renders the
-  // formula literally.
+  // v0.12 regeneration is "<base> + INT" where base depends on rarity (1..5)
+  // and INT is a player stat we don't evaluate. Card renders the formula
+  // literally. Does not change across tiers.
   regenerationBase: number;
-  // Base thresholds determined by player tier alone (Minor/Major/Grave).
-  thresholds: { minor: number; major: number; grave: number };
-  // Optional bonus from Step 6 — present only when the rarity-gated percentile
-  // check succeeded. Deltas may be positive, negative, or zero.
-  thresholdModifier: ShieldThresholdModifier | null;
   guildPassive: ShieldGuildPassive;
   name: Extract<WeaponName, { kind: 'shield' }>;
 }
