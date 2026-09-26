@@ -159,6 +159,14 @@
   color: #d34d52;
 }
 
+/* Offensive spell card: a separator rule between the delivery description and
+   the red guild-bonus line. */
+.weapon-card__effect--separated {
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 2px solid rgba(255, 255, 255, 0.5);
+}
+
 /* Red-text section under the bottom rectangle: bold red title + white effect,
    sized via --quote-size by AutoFitQuote (max 34 PSD-px, min 20 PSD-px) so
    long effects shrink to fit instead of bleeding past the rule or off the
