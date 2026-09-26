@@ -1,4 +1,4 @@
-// Source: spec Step 5 (Offensive — 1d12) and Step 5 (Support — 1d6).
+// Source: spec v0.12 Step 5 (Offensive — 1d12) and Step 5 (Support — 1d6).
 // Each guild ships a flavor name, a verbatim passive description, and a
 // per-rarity value string. Spec uses literal "X" in the Common column when the
 // guild offers no bonus at that rarity.
@@ -65,27 +65,25 @@ export const OFFENSIVE_SPELL_GUILDS: Record<DamageGuildName, OffensiveGuildSpell
     },
   },
   Dominion: {
-    passiveName: 'Refined Spellcraft',
-    description:
-      'ReAction (1 AP, 0 MP): You may re-roll {value} damage dice.',
+    passiveName: 'Explosive Hit',
+    description: 'Gain {value} bonus Kinetic Damage',
+    valueByRarity: {
+      Common:    'X',
+      Uncommon:  '+1d6',
+      Rare:      '+1d8',
+      Epic:      '+1d10',
+      Legendary: '+1d12',
+    },
+  },
+  Ordis: {
+    passiveName: 'Tactical-Spell-Shot',
+    description: 'Range is increased by {value}',
     valueByRarity: {
       Common:    'X',
       Uncommon:  '1',
       Rare:      '2',
       Epic:      '3',
-      Legendary: '5',
-    },
-  },
-  Ordis: {
-    passiveName: 'Tactical Spell-Scope',
-    description:
-      'Gain {value} to Accuracy Rolls, or to your Spell DC',
-    valueByRarity: {
-      Common:    'X',
-      Uncommon:  '+1',
-      Rare:      '+1',
-      Epic:      '+2',
-      Legendary: '+3',
+      Legendary: '4',
     },
   },
   'Ironwood Rangers': {
@@ -103,7 +101,7 @@ export const OFFENSIVE_SPELL_GUILDS: Record<DamageGuildName, OffensiveGuildSpell
   Wytchwyrd: {
     passiveName: 'Hex of Eternal Suffering',
     description:
-      'Targets suffering from negative Conditions take {value} additional Dark Damage',
+      'Targets suffering from Debuffs take {value} additional Dark Damage',
     valueByRarity: {
       Common:    'X',
       Uncommon:  '+1d4',
@@ -229,15 +227,14 @@ export const SUPPORT_SPELL_GUILDS: Partial<Record<GuildName, SupportGuildSpellEn
     },
   },
   Dominion: {
-    passiveName: 'Firmware Update',
-    description:
-      "Gain {value} to the target(s) of this spell's Impact Threshold until the end of their next turn.",
+    passiveName: 'Imperial Reinforcement',
+    description: 'The target(s) of this spell gain {value} Overshields',
     valueByRarity: {
       Common:    'X',
-      Uncommon:  '+1 Major Threshold',
-      Rare:      '+1 Major Threshold',
-      Epic:      '+2 Major Threshold',
-      Legendary: '+3 Major Threshold, +3 Grave Threshold',
+      Uncommon:  '1d4',
+      Rare:      '1d6',
+      Epic:      '1d8',
+      Legendary: '1d10',
     },
   },
   'Vow of Vending': {

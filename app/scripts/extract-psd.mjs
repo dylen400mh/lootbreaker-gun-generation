@@ -38,8 +38,10 @@ const DEFAULT_PSD_BY_CATEGORY = {
 
 // Spell category ships two PSDs (selected by delivery type at render time).
 const DEFAULT_PSD_BY_SPELL_VARIANT = {
+  // Support spells still render on the old AOE (single healing row) frame.
   aoe: join(ASSETS_ROOT, 'Spell Assets', 'Spell_AOE_Base.psd'),
-  'missile-beam': join(ASSETS_ROOT, 'Spell Assets', 'Spell_Missile_Beam_Base.psd'),
+  // Offensive spells use the new v0.12 three-row card template (RGB).
+  'missile-beam': join(ASSETS_ROOT, 'Spell Assets', 'Spell_Cards_Version_0dot12.psd'),
 };
 
 const { category, variant, psdPath } = parseArgs(process.argv.slice(2));
@@ -387,13 +389,28 @@ function postProcessRaster(layer, newPath) {
     const out = createCanvas(src.width, src.height);
     const ctx = out.getContext('2d');
     ctx.drawImage(src, 0, 0);
-    // Header row (above the first divider at local y≈53).
-    ctx.clearRect(0, 0, src.width, 50);
-    // Footer "Ability/Description" (below the last divider at local y≈314).
-    ctx.clearRect(0, 316, src.width, src.height - 316);
-    // The "X" base-damage placeholder in each row, between the dividers so the
-    // rule lines stay intact.
+    // Value cell x-range shared by all damage rows (canvas x≈237-254 → local
+    // x≈166-183, clearing 150-210 to swallow anti-aliasing).
     const xCell = { x: 150, w: 60 };
+    if (category === 'spell') {
+      // Spell card (offensive/missile-beam frame). Layer top = canvas y 567,
+      // dividers at canvas 620/679/737/828/913/998. Clear the three top
+      // label/value rows (Tier/Range, Type, MP Cost) so live overlays render
+      // there, the three damage "X" value cells, and the "Ability/Description"
+      // footer; keep the dividers + "< 13 / 14 - 19 / 20+" labels.
+      for (const [y1, y2] of [[0, 51], [55, 110], [114, 168]]) {
+        ctx.clearRect(0, y1, src.width, y2 - y1);
+      }
+      for (const [y1, y2] of [[173, 258], [264, 343], [349, 428]]) {
+        ctx.clearRect(xCell.x, y1, xCell.w, y2 - y1);
+      }
+      ctx.clearRect(0, 434, src.width, src.height - 434);
+      return out;
+    }
+    // Gun/melee card. Layer top = canvas y 567; dividers at local 53/143/229/
+    // 314. Header row (above first divider) + footer + the three "X" cells.
+    ctx.clearRect(0, 0, src.width, 50);
+    ctx.clearRect(0, 316, src.width, src.height - 316);
     for (const [y1, y2] of [[55, 141], [145, 227], [231, 312]]) {
       ctx.clearRect(xCell.x, y1, xCell.w, y2 - y1);
     }

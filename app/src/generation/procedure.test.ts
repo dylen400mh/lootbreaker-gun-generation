@@ -409,8 +409,11 @@ describe('generateWeapon(spell)', () => {
       found = true;
       expect(w.damageType).toBeTruthy();
       expect(Array.isArray(w.conditions)).toBe(true);
-      // Damage discriminant is set; either kind is valid.
-      expect(['single-target', 'aoe']).toContain(w.damage.kind);
+      // v0.12: all offensive deliveries carry flat-integer Min/Med/Max damage.
+      expect(w.damage.minor).toMatch(/^\d+$/);
+      expect(w.damage.major).toMatch(/^\d+$/);
+      expect(w.damage.grave).toMatch(/^\d+$/);
+      expect(w.damage.range).toBeGreaterThan(0);
       // MP cost includes 1 (base) + rarity adder + condition MP.
       expect(w.mpCost).toBeGreaterThanOrEqual(1);
       // Guild is one of the 12 damage guilds.
