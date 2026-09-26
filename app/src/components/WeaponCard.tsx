@@ -377,25 +377,21 @@ function formatBonus(raw: string): string {
 // Column centers below were measured by sampling each table raster's text
 // pixels — labels aren't always evenly distributed, so geometric thirds give
 // misaligned values.
+// v0.12 shield card (Shield_Cards_Version_0dot12.psd). Two framed stat boxes
+// sit side by side (Capacity left, Regeneration right, raster y≈314-439), the
+// effects-box header frame (Tier X Shield | Guild) is below them (y≈498-616),
+// and the guild passive fills the open band down to the quote rule. No
+// Threshold table in v0.12. Values in canvas px.
 const SHIELD_LAYOUT = {
-  // Threshold Table bounds: x=163,y=322,w=676,h=124. 3 columns Minor/Major/Grave.
-  // Label x-centers in the raster: 45 / 338 / 630. Add layer.x = 163.
-  threshold: {
-    valuesY: 378,
-    valuesHeight: 60,
-    columnCenters: [208, 501, 793] as [number, number, number],
-    columnWidth: 220,
-  },
-  // Capacity Table bounds: x=207,y=547,w=140,h=125. Label fills width.
-  capacity: { centerX: 277, valueY: 610, height: 60 },
-  // Regen Table bounds: x=617,y=547,w=216,h=125. Label fills width.
-  regen: { centerX: 725, valueY: 610, height: 60 },
-  // Effects-box header (Spell_DefaultBox > Table): x=61,y=731,w=877,h=108.
-  // Top half is the "Tier X Shield | Guild" header; the divider rule sits
-  // around local y≈50; the bottom half used to be the "Effects" label and is
-  // now empty — the effects content overlay anchors right below the divider.
-  effectsHeader: { x: 81, y: 731, width: 837, height: 50 },
-  effects: { x: 81, y: 790, width: 837 },
+  // Capacity Table raster: x=207,y=314,w=140,h=125 — label on top, value cell
+  // in the lower half.
+  capacity: { centerX: 277, valueY: 380, height: 56 },
+  // Regen Table raster: x=617,y=314,w=216,h=125.
+  regen: { centerX: 725, valueY: 380, height: 56 },
+  // Effects-box header (Spell_DefaultBox Table): x=61,y=498,w=877,h=118. Top
+  // holds the "Tier X Shield | Guild" header; effects content sits below it.
+  effectsHeader: { x: 81, y: 508, width: 837, height: 46 },
+  effects: { x: 81, y: 562, width: 837 },
 };
 
 function ShieldCard({ weapon }: { weapon: ShieldWeapon }) {
@@ -411,11 +407,6 @@ function ShieldCard({ weapon }: { weapon: ShieldWeapon }) {
     () => [...baseLayers, ...rarityLayers, ...tableLayers],
     [baseLayers, rarityLayers, tableLayers],
   );
-
-  const mod = weapon.thresholdModifier;
-  const minor = weapon.thresholds.minor + (mod?.minor ?? 0);
-  const major = weapon.thresholds.major + (mod?.major ?? 0);
-  const grave = weapon.thresholds.grave + (mod?.grave ?? 0);
 
   return (
     <div className={`weapon-card weapon-card--${weapon.rarity.toLowerCase()}`}>
@@ -433,25 +424,7 @@ function ShieldCard({ weapon }: { weapon: ShieldWeapon }) {
           </PsdOverlay>
         )}
 
-        {/* Threshold values — Minor / Major / Grave, aligned under the actual
-            raster label positions (not geometric thirds). */}
-        {SHIELD_LAYOUT.threshold.columnCenters.map((cx, i) => {
-          const value = [minor, major, grave][i];
-          return (
-            <PsdOverlay
-              key={i}
-              x={cx - SHIELD_LAYOUT.threshold.columnWidth / 2}
-              y={SHIELD_LAYOUT.threshold.valuesY}
-              width={SHIELD_LAYOUT.threshold.columnWidth}
-              height={SHIELD_LAYOUT.threshold.valuesHeight}
-              className="shield-card__stat-cell"
-            >
-              <div className="shield-card__stat-value">{value}</div>
-            </PsdOverlay>
-          );
-        })}
-
-        {/* Capacity value — single number, centered. */}
+        {/* Capacity value — single number, centered in the Capacity box. */}
         <PsdOverlay
           x={SHIELD_LAYOUT.capacity.centerX - 70}
           y={SHIELD_LAYOUT.capacity.valueY}
@@ -462,7 +435,7 @@ function ShieldCard({ weapon }: { weapon: ShieldWeapon }) {
           <div className="shield-card__stat-value">{weapon.capacity}</div>
         </PsdOverlay>
 
-        {/* Regen formula — "<base> + MND". */}
+        {/* Regen formula — "<base> + INT". */}
         <PsdOverlay
           x={SHIELD_LAYOUT.regen.centerX - 108}
           y={SHIELD_LAYOUT.regen.valueY}
@@ -470,12 +443,11 @@ function ShieldCard({ weapon }: { weapon: ShieldWeapon }) {
           height={SHIELD_LAYOUT.regen.height}
           className="shield-card__stat-cell"
         >
-          <div className="shield-card__stat-value">{weapon.regenerationBase} + MND</div>
+          <div className="shield-card__stat-value">{weapon.regenerationBase} + INT</div>
         </PsdOverlay>
 
         {/* Effects-box header overlay: Tier + "Shield" on the left, guild on
-            the right — same idea as the gun stats-table "Tier X TYPE | Range"
-            header that gets masked from the raster and replaced live. */}
+            the right. */}
         <PsdOverlay
           x={SHIELD_LAYOUT.effectsHeader.x}
           y={SHIELD_LAYOUT.effectsHeader.y}
@@ -487,9 +459,8 @@ function ShieldCard({ weapon }: { weapon: ShieldWeapon }) {
           <span>{weapon.guild}</span>
         </PsdOverlay>
 
-        {/* Effects content — guild passive, in the same shrink-to-fit style
-            as gun/melee. Bounded between the effects-box bottom (y≈839) and
-            the quote bottom rectangle (y≈1168). */}
+        {/* Effects content — guild passive (red name + description), shrink-to-fit,
+            in the open band below the effects-box header down to the quote rule. */}
         {quoteRect && (
           <PsdOverlay
             x={SHIELD_LAYOUT.effects.x}
@@ -505,10 +476,10 @@ function ShieldCard({ weapon }: { weapon: ShieldWeapon }) {
   );
 }
 
-// Renders the shield's guild passive (with the rolled value woven into the
-// description text via a `{value}` placeholder) plus the optional threshold
-// modifier. Guilds whose value is the spec's "X" marker (no bonus at Common)
-// skip the passive line entirely. Shrinks font until everything fits.
+// Renders the shield's guild passive in the middle band: the passive name (red)
+// followed by its description (with the rolled value woven in via the `{value}`
+// placeholder). Guilds whose value is the spec's "X" marker (no bonus at Common)
+// render nothing. Shrinks font until everything fits.
 function AutoFitShieldEffects({ weapon }: { weapon: ShieldWeapon }) {
   const ref = useRef<HTMLDivElement>(null);
   const hasBonus = weapon.guildPassive.value !== 'X';
@@ -527,34 +498,15 @@ function AutoFitShieldEffects({ weapon }: { weapon: ShieldWeapon }) {
       el.style.setProperty('--effect-size', `${size}px`);
     }
   }, [weapon, passiveText]);
-  const mod = weapon.thresholdModifier;
+  if (!hasBonus) return null;
   return (
     <div ref={ref} className="weapon-card__effects">
-      {hasBonus && (
-        <div className="weapon-card__effect">
-          <span className="weapon-card__module-name">{weapon.guildPassive.name}:</span>{' '}
-          {passiveText}
-        </div>
-      )}
-      {mod && (
-        <div className="weapon-card__effect">
-          <span className="weapon-card__module-name">Threshold Modifier:</span>{' '}
-          {mod.name} (Minor {signed(mod.minor)}, Major {signed(mod.major)}, Grave{' '}
-          {signed(mod.grave)})
-        </div>
-      )}
-      {mod && (
-        <div className="weapon-card__effect shield-card__threshold-note">
-          Modifier Included in Impact Threshold
-        </div>
-      )}
+      <div className="weapon-card__effect">
+        <span className="weapon-card__module-name">{weapon.guildPassive.name}:</span>{' '}
+        {passiveText}
+      </div>
     </div>
   );
-}
-
-function signed(n: number): string {
-  if (n === 0) return '0';
-  return n > 0 ? `+${n}` : String(n);
 }
 
 // ---- Spell card ------------------------------------------------------------

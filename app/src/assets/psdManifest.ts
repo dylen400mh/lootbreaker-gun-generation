@@ -219,14 +219,13 @@ export function getBackgroundLayers(key: ManifestKey): PsdLayer[] {
   return layers;
 }
 
-// Shield "stats card" foreground layers — the threshold/capacity/regen
-// labels, the effects-box header frame, and the quote rule. Panels are part
-// of the background (see getBackgroundLayers) so the decor accents paint in
-// front of them.
+// Shield "stats card" foreground layers — the v0.12 card has a Capacity table
+// and a Regeneration table (no Threshold table), a header/divider strip, the
+// effects-box header frame, and the quote rule. The framed sub-boxes are part
+// of the background (see getBackgroundLayers).
 export function getShieldTableLayers(): PsdLayer[] {
   const out: PsdLayer[] = [];
   const push = (l?: PsdLayer) => l && out.push(l);
-  push(findByKind('shield', 'thresholdTable'));
   push(findByKind('shield', 'capacityTable'));
   push(findByKind('shield', 'regenTable'));
   push(findByKind('shield', 'effectsBox'));

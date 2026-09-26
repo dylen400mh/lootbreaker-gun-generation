@@ -267,9 +267,6 @@ describe('generateWeapon(shield)', () => {
     expect(w.guild).toBeTruthy();
     expect(typeof w.capacity).toBe('number');
     expect(typeof w.regenerationBase).toBe('number');
-    expect(w.thresholds.minor).toBeGreaterThan(0);
-    expect(w.thresholds.major).toBeGreaterThan(w.thresholds.minor);
-    expect(w.thresholds.grave).toBeGreaterThan(w.thresholds.major);
     expect(w.guildPassive.name).toBeTruthy();
     expect(w.guildPassive.description).toBeTruthy();
     expect(w.name.kind).toBe('shield');
@@ -287,14 +284,17 @@ describe('generateWeapon(shield)', () => {
     expect(a).toEqual(b);
   });
 
-  it('Legendary rarity always rolls a threshold modifier (100% chance)', async () => {
-    for (let seed = 1; seed <= 50; seed += 1) {
+  it('regeneration base matches rarity (1..5), independent of tier', async () => {
+    const byRarity: Record<string, number> = {
+      Common: 1, Uncommon: 2, Rare: 3, Epic: 4, Legendary: 5,
+    };
+    for (let seed = 1; seed <= 40; seed += 1) {
       const w = await generateWeapon(
-        { category: 'shield', tier: 2, redTextEnabled: false, seed, rarity: 'Legendary' },
+        { category: 'shield', tier: 3, redTextEnabled: false, seed },
         autoChoice(),
       );
       assertShieldWeapon(w);
-      expect(w.thresholdModifier).not.toBeNull();
+      expect(w.regenerationBase).toBe(byRarity[w.rarity]);
     }
   });
 
@@ -320,7 +320,9 @@ describe('generateWeapon(shield)', () => {
     }
   });
 
-  it('name uses one prefix or one suffix and a base name', async () => {
+  it('name uses one shield prefix or one shield suffix and a base name', async () => {
+    const { SHIELD_PREFIXES, SHIELD_SUFFIXES, SHIELD_BASE_NAMES } =
+      await import('./tables/shield/naming');
     let prefixHits = 0;
     let suffixHits = 0;
     for (let seed = 1; seed <= 100; seed += 1) {
@@ -329,14 +331,15 @@ describe('generateWeapon(shield)', () => {
         autoChoice(),
       );
       assertShieldWeapon(w);
+      if (w.name.kind !== 'shield') continue;
+      expect(SHIELD_BASE_NAMES).toContain(w.name.baseName);
       if (w.name.placement === 'prefix') {
-        expect(PREFIXES).toContain(w.name.modifier);
+        expect(SHIELD_PREFIXES).toContain(w.name.modifier);
         prefixHits += 1;
       } else {
-        expect(SUFFIXES).toContain(w.name.modifier);
+        expect(SHIELD_SUFFIXES).toContain(w.name.modifier);
         suffixHits += 1;
       }
-      expect(w.name.baseName).toBeTruthy();
       // Digits suppressed by default (shieldDigits omitted).
       expect(w.name.digits).toBeUndefined();
     }
