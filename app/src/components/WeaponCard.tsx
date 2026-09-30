@@ -82,6 +82,10 @@ const SPELL_LAYOUT = {
   valueW: 60,
   valueH: 32,
   damageRowY: { minor: 767, major: 855, grave: 940 } as const,
+  // Cap for the damage-type icon beside each number: the narrowest damage row
+  // interior between two dividers is ~81px, so keep icons under that to stop
+  // the tallest ones (Kinetic, 98px in the PSD) crossing a divider.
+  iconMaxH: 78,
 };
 
 export function WeaponCard({ weapon }: Props) {
@@ -635,9 +639,8 @@ function OffensiveSpellCard({ weapon }: { weapon: OffensiveSpellWeapon }) {
   }, [key]);
 
   // Offensive base damage is a flat integer per hit band. The new PSD's dice
-  // columns don't line up with the new damage rows, and the raster has no
-  // per-row damage-type icon slot, so we render just the three numbers in the
-  // damage rows' value cells (the damage type is carried by the name).
+  // columns don't line up with the new damage rows, so we render the numbers in
+  // the damage rows' value cells at SPELL_LAYOUT coordinates.
   const baseNumbers = useMemo(() => {
     const rows: Array<'minor' | 'major' | 'grave'> = ['minor', 'major', 'grave'];
     return rows.flatMap((row) => {
@@ -646,6 +649,32 @@ function OffensiveSpellCard({ weapon }: { weapon: OffensiveSpellWeapon }) {
       return [{ row, value: value.trim(), y: SPELL_LAYOUT.damageRowY[row] }];
     });
   }, [weapon.damage]);
+
+  // Damage-type icon beside each number, as on the gun/melee card. The PSD's
+  // icon layers still sit at the old dice-row y, so each one is re-centered on
+  // its new damage row (native size, scaled down only if it would cross a
+  // divider) and drawn as an HTML <img> rather than a composited layer.
+  const damageIcons = useMemo(
+    () =>
+      baseNumbers.flatMap(({ row, y }) => {
+        const icon = findDamageIcon(key, row, 2, weapon.damageType);
+        if (!icon) return [];
+        const scale = Math.min(1, SPELL_LAYOUT.iconMaxH / icon.height);
+        const width = icon.width * scale;
+        const height = icon.height * scale;
+        return [
+          {
+            row,
+            src: `/${icon.file}`,
+            x: icon.x + (icon.width - width) / 2,
+            y: y + SPELL_LAYOUT.valueH / 2 - height / 2,
+            width,
+            height,
+          },
+        ];
+      }),
+    [key, baseNumbers, weapon.damageType],
+  );
 
   const allLayers = useMemo(
     () => [
@@ -749,6 +778,26 @@ function OffensiveSpellCard({ weapon }: { weapon: OffensiveSpellWeapon }) {
             className="weapon-card__damage-number-wrap"
           >
             <span className="weapon-card__damage-number">{value}</span>
+          </PsdOverlay>
+        ))}
+
+        {/* Damage-type icon in each damage row, right of the number. */}
+        {damageIcons.map((icon) => (
+          <PsdOverlay
+            key={`icon-${icon.row}`}
+            x={icon.x}
+            y={icon.y}
+            width={icon.width}
+            height={icon.height}
+          >
+            <img
+              src={icon.src}
+              alt=""
+              aria-hidden="true"
+              className="weapon-card__damage-type-icon"
+              decoding="async"
+              crossOrigin="anonymous"
+            />
           </PsdOverlay>
         ))}
 

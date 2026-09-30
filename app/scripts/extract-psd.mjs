@@ -381,39 +381,40 @@ function postProcessRaster(layer, newPath) {
   // 20+" hit-band row labels, an "X" base-damage placeholder per row, and an
   // "Ability/Description" footer placeholder. Keep the labels + dividers; clear
   // the header, the three "X" value cells (the live base-damage number overlay
-  // sits there), and the footer. Measured in layer-local coords: layer bbox is
-  // 71,567 so canvas x=71 → local 0; dividers at local y 53/143/229/314; the
-  // "X" cells sit at canvas x≈237-254 → local x≈166-183.
+  // sits there), and the footer.
+  //
+  // All ranges below are in PSD *canvas* coords and converted to layer-local by
+  // subtracting the layer bbox. The gun and melee rasters draw identical
+  // geometry (dividers at canvas y 619/709/794/880) but their layer bboxes
+  // differ — gun/spell top at 567, melee at 563 — so local-coord constants
+  // would land 4px high on melee and shave the dividers.
   if (leaf === 'Statistics Tables NEW') {
     const src = layer.canvas;
     const out = createCanvas(src.width, src.height);
     const ctx = out.getContext('2d');
     ctx.drawImage(src, 0, 0);
-    // Value cell x-range shared by all damage rows (canvas x≈237-254 → local
-    // x≈166-183, clearing 150-210 to swallow anti-aliasing).
-    const xCell = { x: 150, w: 60 };
+    const left = layer.left ?? 0;
+    const top = layer.top ?? 0;
+    const clearRows = (y1, y2) => ctx.clearRect(0, y1 - top, src.width, y2 - y1);
+    // Value cell x-range shared by all damage rows: the "X" glyph sits at
+    // canvas x≈237-254; clear 221-281 to swallow anti-aliasing.
+    const clearCell = (y1, y2) => ctx.clearRect(221 - left, y1 - top, 60, y2 - y1);
     if (category === 'spell') {
-      // Spell card (offensive/missile-beam frame). Layer top = canvas y 567,
-      // dividers at canvas 620/679/737/828/913/998. Clear the three top
-      // label/value rows (Tier/Range, Type, MP Cost) so live overlays render
-      // there, the three damage "X" value cells, and the "Ability/Description"
-      // footer; keep the dividers + "< 13 / 14 - 19 / 20+" labels.
-      for (const [y1, y2] of [[0, 51], [55, 110], [114, 168]]) {
-        ctx.clearRect(0, y1, src.width, y2 - y1);
-      }
-      for (const [y1, y2] of [[173, 258], [264, 343], [349, 428]]) {
-        ctx.clearRect(xCell.x, y1, xCell.w, y2 - y1);
-      }
-      ctx.clearRect(0, 434, src.width, src.height - 434);
+      // Spell card (offensive/missile-beam frame). Dividers at canvas
+      // 620/679/737/828/913/998. Clear the three top label/value rows
+      // (Tier/Range, Type, MP Cost) so live overlays render there, the three
+      // damage "X" value cells, and the "Ability/Description" footer; keep the
+      // dividers + "< 13 / 14 - 19 / 20+" labels.
+      for (const [y1, y2] of [[567, 618], [622, 677], [681, 735]]) clearRows(y1, y2);
+      for (const [y1, y2] of [[740, 825], [831, 910], [916, 995]]) clearCell(y1, y2);
+      ctx.clearRect(0, 1001 - top, src.width, src.height - (1001 - top));
       return out;
     }
-    // Gun/melee card. Layer top = canvas y 567; dividers at local 53/143/229/
-    // 314. Header row (above first divider) + footer + the three "X" cells.
-    ctx.clearRect(0, 0, src.width, 50);
-    ctx.clearRect(0, 316, src.width, src.height - 316);
-    for (const [y1, y2] of [[55, 141], [145, 227], [231, 312]]) {
-      ctx.clearRect(xCell.x, y1, xCell.w, y2 - y1);
-    }
+    // Gun/melee card. Dividers at canvas 619/709/794/880. Header row (above the
+    // first divider) + footer (below the last) + the three "X" cells.
+    clearRows(top, 617);
+    ctx.clearRect(0, 883 - top, src.width, src.height - (883 - top));
+    for (const [y1, y2] of [[623, 708], [713, 793], [798, 879]]) clearCell(y1, y2);
     return out;
   }
 
