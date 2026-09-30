@@ -114,6 +114,14 @@
   object-fit: contain;
 }
 
+/* Offensive spell damage-type icon. The overlay box is already the icon's own
+   PSD bounds (scaled to fit the damage row), so it just fills its container. */
+.weapon-card__damage-type-icon {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
 /* Range: label sits at PSD-x ≈706 (overlay-local ≈626) in the original
    Statistics Table raster; the value's right edge sits at the overlay's
    right edge. The value gets a fixed-width slot (right-aligned, sized to
