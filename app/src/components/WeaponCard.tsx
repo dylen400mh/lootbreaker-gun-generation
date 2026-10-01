@@ -14,7 +14,7 @@ import {
   type PsdLayer,
 } from '../assets/psdManifest';
 import { HP_ICON_URL, weaponArtUrl, pickWeaponWidth } from '../assets/manifest';
-import { damageRowLayers } from '../generation/cardLayout';
+import { damageRowLayers, fitSlotToRow } from '../generation/cardLayout';
 import { parseDamage } from '../generation/damage';
 import {
   OFFENSIVE_DELIVERY_DESCRIPTIONS,
@@ -78,14 +78,17 @@ const SPELL_LAYOUT = {
   mpY: 685,
   rowHeight: 48,
   effectsY: 1004,
+  // Bottom edge of the offensive effects block. The offensive card does not
+  // draw the bottom rule (quoteBottomRect) or a quote — statsLayers drops it —
+  // so the whole band below it is empty backdrop and the effects text is free
+  // to use it. Running to 1350 (13px off the card's 1363 bottom) gives a 346px
+  // box, which is what lets the text stay pinned at full size on ~97% of rolls
+  // instead of 37% in the old 210px box.
+  effectsBottom: 1350,
   valueX: 215,
   valueW: 60,
   valueH: 32,
   damageRowY: { minor: 767, major: 855, grave: 940 } as const,
-  // Cap for the damage-type icon beside each number: the narrowest damage row
-  // interior between two dividers is ~81px, so keep icons under that to stop
-  // the tallest ones (Kinetic, 98px in the PSD) crossing a divider.
-  iconMaxH: 78,
 };
 
 export function WeaponCard({ weapon }: Props) {
@@ -603,27 +606,17 @@ function OffensiveSpellCard({ weapon }: { weapon: OffensiveSpellWeapon }) {
   }, [weapon.damage]);
 
   // Damage-type icon beside each number, as on the gun/melee card. The PSD's
-  // icon layers still sit at the old dice-row y, so each one is re-centered on
-  // its new damage row (native size, scaled down only if it would cross a
-  // divider) and drawn as an HTML <img> rather than a composited layer.
+  // icon layers still sit at the old dice-row y and are sized for the old
+  // table, so each one goes through the shared `fitSlotToRow` refit (same
+  // height cap as gun/melee) and is drawn as an HTML <img> rather than a
+  // composited layer.
   const damageIcons = useMemo(
     () =>
-      baseNumbers.flatMap(({ row, y }) => {
+      baseNumbers.flatMap(({ row }) => {
         const icon = findDamageIcon(key, row, 2, weapon.damageType);
         if (!icon) return [];
-        const scale = Math.min(1, SPELL_LAYOUT.iconMaxH / icon.height);
-        const width = icon.width * scale;
-        const height = icon.height * scale;
-        return [
-          {
-            row,
-            src: `/${icon.file}`,
-            x: icon.x + (icon.width - width) / 2,
-            y: y + SPELL_LAYOUT.valueH / 2 - height / 2,
-            width,
-            height,
-          },
-        ];
+        const fitted = fitSlotToRow(icon, key, row);
+        return [{ row, src: `/${fitted.file}`, ...fitted }];
       }),
     [key, baseNumbers, weapon.damageType],
   );
@@ -641,7 +634,6 @@ function OffensiveSpellCard({ weapon }: { weapon: OffensiveSpellWeapon }) {
 
   const nameSlot = useMemo(() => findByKind(key, 'nameTextbox'), [key]);
   const guildSlot = useMemo(() => findByKind(key, 'guildTextbox'), [key]);
-  const quoteRect = useMemo(() => findByKind(key, 'quoteBottomRect'), [key]);
 
   const rangeValue = String(weapon.damage.range);
   const areaValue = weapon.damage.area ?? '';
@@ -754,21 +746,19 @@ function OffensiveSpellCard({ weapon }: { weapon: OffensiveSpellWeapon }) {
         ))}
 
         {/* Effects footer: conditions, delivery description, guild bonus. */}
-        {quoteRect && (
-          <PsdOverlay
-            x={STATS_LAYOUT.contentLeftX}
-            y={SPELL_LAYOUT.effectsY}
-            width={STATS_LAYOUT.tableX + STATS_LAYOUT.tableWidth - STATS_LAYOUT.contentLeftX - 20}
-            height={quoteRect.y - SPELL_LAYOUT.effectsY - 8}
-          >
-            <AutoFitSpellEffects
-              conditions={weapon.conditions}
-              description={OFFENSIVE_DELIVERY_DESCRIPTIONS[weapon.deliveryType]}
-              bonus={weapon.guildBonus}
-              bonusSeparator
-            />
-          </PsdOverlay>
-        )}
+        <PsdOverlay
+          x={STATS_LAYOUT.contentLeftX}
+          y={SPELL_LAYOUT.effectsY}
+          width={STATS_LAYOUT.tableX + STATS_LAYOUT.tableWidth - STATS_LAYOUT.contentLeftX - 20}
+          height={SPELL_LAYOUT.effectsBottom - SPELL_LAYOUT.effectsY}
+        >
+          <AutoFitSpellEffects
+            conditions={weapon.conditions}
+            description={OFFENSIVE_DELIVERY_DESCRIPTIONS[weapon.deliveryType]}
+            bonus={weapon.guildBonus}
+            bonusSeparator
+          />
+        </PsdOverlay>
       </PsdComposite>
     </div>
   );
@@ -949,12 +939,19 @@ function AutoFitSpellEffects({
   const conditionsText = conditions && conditions.length > 0
     ? conditions.map((c) => `${c.name} (${c.duration} turn${c.duration === 1 ? '' : 's'})`).join(', ')
     : '';
+  // Unlike the other cards, spell effects text is pinned to one size so it
+  // reads the same on every spell card rather than shrinking per roll. The pin
+  // is 44px — the size the auto-fit used to start from — which the widened
+  // offensive box (see SPELL_LAYOUT.effectsBottom) fits on ~97% of rolls, and
+  // the support card's 444px box always fits. The shrink loop stays only as a
+  // safety net for the heaviest rolls, so they step down a little instead of
+  // losing text off the bottom.
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
-    const MAX = 44;
+    const PINNED = 44;
     const MIN = 24;
-    let size = MAX;
+    let size = PINNED;
     el.style.setProperty('--effect-size', `${size}px`);
     while (size > MIN && el.scrollHeight > el.clientHeight) {
       size -= 1;

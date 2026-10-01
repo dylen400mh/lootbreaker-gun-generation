@@ -10,6 +10,74 @@ import { parseDamage } from './damage';
 
 const MAX_COLUMNS = 7;
 
+interface RowBand {
+  top: number;
+  bottom: number;
+}
+
+// Interior of each damage row in the v0.12 "Statistics Tables NEW" rasters —
+// the band between two dividers, in PSD canvas px. Gun and melee bake identical
+// geometry (dividers at 619/709/794/880) so they share one table; the offensive
+// spell frame is taller and has its own (dividers at 736/826/911/997).
+const GUN_MELEE_ROW_BANDS: Record<DamageRowName, RowBand> = {
+  minor: { top: 623, bottom: 708 },
+  major: { top: 713, bottom: 793 },
+  grave: { top: 798, bottom: 879 },
+};
+
+const SPELL_ROW_BANDS: Record<DamageRowName, RowBand> = {
+  minor: { top: 740, bottom: 825 },
+  major: { top: 831, bottom: 910 },
+  grave: { top: 916, bottom: 996 },
+};
+
+// Frames that have damage rows. The AOE/support spell frame and the shield and
+// potion cards have none.
+const ROW_BANDS: Partial<Record<ManifestKey, Record<DamageRowName, RowBand>>> = {
+  gun: GUN_MELEE_ROW_BANDS,
+  melee: GUN_MELEE_ROW_BANDS,
+  'spell-missile-beam': SPELL_ROW_BANDS,
+};
+
+// Breathing room between a slot glyph and the divider above/below it.
+const ROW_PADDING = 4;
+
+// One height cap for every dice/icon slot on every frame, taken from the
+// tightest row across all of them (the spell major row, 80px). Capping globally
+// rather than per row keeps an icon the same size in all three rows and across
+// gun / melee / spell, which is what a stats table wants.
+export const SLOT_MAX_HEIGHT =
+  Math.min(
+    ...Object.values(ROW_BANDS).flatMap((bands) =>
+      Object.values(bands).map((b) => b.bottom - b.top + 1),
+    ),
+  ) - ROW_PADDING * 2;
+
+// The PSDs' dice and damage-icon slots still sit at the pre-v0.12 row y and are
+// sized for the taller old table, so every one of them overlaps a divider in the
+// v0.12 rasters. Refit a slot into its row: scale down to the shared height cap
+// (preserving aspect) and centre it on the row band, keeping the glyph's
+// horizontal centre so column alignment is unchanged. Returns the layer
+// unchanged for frames without damage rows.
+export function fitSlotToRow(
+  layer: PsdLayer,
+  manifestKey: ManifestKey,
+  row: DamageRowName,
+): PsdLayer {
+  const band = ROW_BANDS[manifestKey]?.[row];
+  if (!band) return layer;
+  const scale = Math.min(1, SLOT_MAX_HEIGHT / layer.height);
+  const width = layer.width * scale;
+  const height = layer.height * scale;
+  return {
+    ...layer,
+    x: layer.x + (layer.width - width) / 2,
+    y: (band.top + band.bottom + 1) / 2 - height / 2,
+    width,
+    height,
+  };
+}
+
 // Decide which dice/element layers to render for a single damage row.
 // Layout (left → right): each damage block is dice followed by its type icon,
 // matching the example cards.
@@ -73,7 +141,7 @@ export function damageRowLayers(
       slot.kind === 'die'
         ? findDie(manifestKey, row, column, slot.sides)
         : findDamageIcon(manifestKey, row, column, slot.element as never);
-    if (layer) out.push(layer);
+    if (layer) out.push(fitSlotToRow(layer, manifestKey, row));
   }
 
   return out;
